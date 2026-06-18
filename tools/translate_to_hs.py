@@ -10,7 +10,7 @@ is left untouched.
 """
 import re, os
 
-SRC = "reference/original-3d-floorplan.html"
+SRC = "src/tour-base.html"   # editable base (light-theme 3D + walkthrough); reference/ stays pristine
 OUT = "index.html"
 FEEDBACK_EMAIL = "omar.z.baba@gmail.com"   # responses are emailed here via FormSubmit
 
@@ -245,6 +245,95 @@ inject = (inject
           .replace("__CLARITY__", opts("Clarity", ["Very easy", "Easy", "A bit hard", "Hard"]))
           .replace("__CAREER__", opts("Career interest", ["Yes", "Maybe", "Not sure", "No"]))
           .replace("__EMAIL__", FEEDBACK_EMAIL))
+inject += """
+<style>
+/* ===================== LIGHT THEME OVERRIDE + Henry Ford branding ===================== */
+:root{
+  --navy-900:#eef3fa!important;--navy-800:#ffffff!important;--navy-700:#e8eef7!important;
+  --navy-600:#d8e3f1!important;--navy-500:#c4d5ea!important;--navy-300:#5f7ba6!important;
+  --cream:#13233d!important;--text:#13233d!important;--text-dim:#5a6b88!important;
+  --accent:#0067a0!important;--accent-warm:#0067a0!important;--border:rgba(14,34,66,.12)!important;
+}
+body{background:#eef3fa!important;color:#13233d!important}
+#sidebar{background:linear-gradient(180deg,#ffffff 0%,#f3f8fd 100%)!important;border-right:1px solid var(--border)!important}
+.sidebar-title{color:#13233d!important}
+.sidebar-subtitle{color:#5a6b88!important}
+.sidebar-eyebrow{color:#0067a0!important}
+.room-list,.tour-stop,.tour-stop-title{color:#13233d!important}
+.tour-stop-sub{color:#64748b!important}
+.tour-stop:hover{background:rgba(0,103,160,.07)!important}
+.tour-stop.active{background:rgba(0,103,160,.12)!important;border-left-color:#0067a0!important}
+.tour-stop-num{background:#e6eef8!important;color:#0067a0!important}
+.tour-stop.active .tour-stop-num{background:#0067a0!important;color:#fff!important}
+.tour-controls{border-top:1px solid var(--border)!important}
+.tour-ctrl-btn{background:#f0f5fb!important;border:1px solid var(--border)!important;color:#13233d!important}
+.tour-ctrl-btn:hover{background:#e3edf8!important}
+#tour-panel{background:#ffffff!important;color:#13233d!important;box-shadow:-16px 0 50px rgba(20,40,80,.13)!important}
+.tp-header{background:linear-gradient(135deg,#0067a0,#00497a)!important}
+.tp-header,.tp-header *{color:#ffffff!important}
+.tp-section-h{color:#0067a0!important;border-bottom-color:var(--border)!important}
+.tp-overview,.tp-list,.tp-list li,.tp-body{color:#27364f!important}
+.tp-footer{background:#f7fafd!important;border-top:1px solid var(--border)!important}
+.tp-nav-btn{background:#eef4fb!important;color:#13233d!important;border:1px solid var(--border)!important}
+.tp-nav-btn.primary{background:#0067a0!important;color:#fff!important;border-color:#0067a0!important}
+#hud-info,#hud-info *{color:#13233d!important;text-shadow:0 1px 3px rgba(255,255,255,.7)!important}
+#loading{background:#eef3fa!important;color:#13233d!important}
+/* a small Henry Ford lockup at the very top of the sidebar */
+.hs-brandbar{display:flex;align-items:center;gap:10px;padding:14px 22px 0}
+.hs-brandbar .m{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#0067a0,#00497a);color:#fff;display:grid;place-items:center;font:700 15px Georgia,serif;flex-shrink:0}
+.hs-brandbar .t{line-height:1.12}
+.hs-brandbar .t b{display:block;font:600 13px system-ui;color:#0067a0}
+.hs-brandbar .t span{font:500 10.5px system-ui;color:#64748b}
+/* ===================== WELCOME SCREEN ===================== */
+#hs-welcome{position:fixed;inset:0;z-index:100001;background:radial-gradient(120% 120% at 80% 0%,#dbe8f7 0%,#ffffff 55%);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .55s ease}
+#hs-welcome.hide{opacity:0;pointer-events:none}
+.hw-card{max-width:640px;text-align:center;font-family:system-ui,-apple-system,sans-serif;color:#13233d}
+.hw-brand{display:inline-flex;align-items:center;gap:13px;margin-bottom:24px}
+.hw-mark{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#0067a0,#00497a);color:#fff;display:grid;place-items:center;font:700 23px Georgia,serif;box-shadow:0 12px 28px rgba(0,73,122,.35)}
+.hw-bt{text-align:left;line-height:1.15}
+.hw-bt b{display:block;font-size:18px;color:#0067a0}
+.hw-bt span{font-size:13px;color:#5a6b88}
+.hw-card h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(34px,6vw,54px);font-weight:600;line-height:1.04;margin:6px 0 16px}
+.hw-card h1 em{color:#0067a0;font-style:italic}
+.hw-card p{font-size:clamp(15px,2.3vw,18px);color:#41526e;line-height:1.55;max-width:50ch;margin:0 auto 28px}
+.hw-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hw-btn{font:600 15px system-ui;padding:14px 26px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease}
+.hw-btn.primary{background:#0067a0;color:#fff;box-shadow:0 12px 28px rgba(0,73,122,.34)}
+.hw-btn.primary:hover{transform:translateY(-2px)}
+.hw-btn.ghost{background:#fff;color:#13233d;border-color:#cdd8e8}
+.hw-btn.ghost:hover{transform:translateY(-2px);border-color:#0067a0}
+.hw-note{margin-top:24px;font-size:12px;color:#8493ac}
+@media(max-width:768px){.hw-card h1{font-size:32px}.hw-brand{margin-bottom:18px}}
+</style>
+<div id="hs-welcome">
+  <div class="hw-card">
+    <div class="hw-brand"><div class="hw-mark">HF</div><div class="hw-bt"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div></div>
+    <h1>Welcome inside the <em>Pathology Lab</em></h1>
+    <p>Step into one of the largest hospital labs in the country. Follow a real sample on its journey — from the moment it arrives to the final diagnosis — and meet the science at every stop.</p>
+    <div class="hw-actions">
+      <button class="hw-btn primary" id="hw-start">▶ Start the guided walkthrough</button>
+      <button class="hw-btn ghost" id="hw-explore">Explore on my own</button>
+    </div>
+    <div class="hw-note">An unofficial educational orientation for high‑school students · built with public Henry Ford Health information.</div>
+  </div>
+</div>
+<script>
+(function(){
+  // Henry Ford lockup at the top of the sidebar
+  var sb=document.getElementById('sidebar');
+  if(sb){var bar=document.createElement('div');bar.className='hs-brandbar';
+    bar.innerHTML='<div class="m">HF</div><div class="t"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div>';
+    sb.insertBefore(bar, sb.firstChild);}
+  // Welcome screen
+  var w=document.getElementById('hs-welcome');if(!w)return;
+  function go(walk){w.classList.add('hide');setTimeout(function(){w.style.display='none';},600);
+    if(walk&&window.__startWalkthrough){setTimeout(window.__startWalkthrough,650);}}
+  var s=document.getElementById('hw-start'),e=document.getElementById('hw-explore');
+  if(s)s.addEventListener('click',function(){go(true);});
+  if(e)e.addEventListener('click',function(){go(false);});
+})();
+</script>
+"""
 html = html.replace("</body>", inject + "</body>")
 
 open(OUT, "w", encoding="utf-8").write(html)

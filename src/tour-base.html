@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Inside the Lab · 3D Tour for Students</title>
+<title>Henry Ford Pathology · 3D Floor Plan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -662,7 +661,7 @@ body.passive .tour-stop:hover {
   <div class="sidebar-header">
     <div class="sidebar-eyebrow">Henry Ford Health · Detroit</div>
     <h1 class="sidebar-title">Pathology <em>Lab Tour</em></h1>
-    <div class="sidebar-subtitle">Follow a real sample on its journey through the lab — tap a stop or use the arrows. Each room shows what happens there in plain language.</div>
+    <div class="sidebar-subtitle">A guided sequence through the department, following the journey of a specimen from intake to final diagnosis.</div>
   </div>
   <div style="padding: 14px 24px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); font-weight: 500; border-bottom: 1px solid var(--border);">
     Guided tour · 16 stops
@@ -833,90 +832,90 @@ const SECTION_ORDER = ['core_lab','bb','autopsy','cytopath','gross','histology',
 // ============================================================================
 const TOUR_STOPS = [
   // ============ SOUTH BUILDING (Education / Research wing) ============
-  { id:'accessioning',   title:'Accessioning', subtitle:'Where every sample checks in', roomId:'accession',
-    overview:"This is the front door for every tissue sample. When a doctor removes tissue during surgery, it comes here first. Each sample is scanned and given its own barcode, like a boarding pass, so it can never be mixed up with anyone else.",
-    tests:['Logging in every sample','Giving each one a barcode ID','Double-checking the patient','Sending it next door to grossing'],
-    methods:['Barcode scanners','A computer tracking system','Tubes that shoot samples in','Careful chain-of-custody records'] },
+  { id:'accessioning',   title:'Accessioning', subtitle:'The intake door for surgical specimens', roomId:'accession',
+    overview:"The intake desk for the entire surgical pathology service. Specimens arrive from operating rooms, clinics, and outside hospitals; each gets logged into the LIS, given a unique case number, and routed next door to grossing. Chain-of-custody starts here.",
+    tests:['Specimen log-in and labeling','Case numbering (e.g. S26-12345)','Requisition reconciliation','Routing to grossing (next door)'],
+    methods:['Barcode scanning','LIS data entry (Beaker, CoPath)','Pneumatic tube intake','Chain-of-custody documentation'] },
 
-  { id:'grossing',       title:'Grossing', subtitle:'Looking at tissue with the naked eye', roomId:'gross',
-    overview:"Right next door, scientists examine the tissue without a microscope. They measure it, describe it, take photos, and cut tiny pieces to turn into slides. Their notes become part of the diagnosis.",
-    tests:['Examining tumors removed in surgery','Checking the edges to see if a cancer was fully removed','Sampling lymph nodes','Photographing each specimen'],
-    methods:['Stainless-steel cutting stations','Special inks to mark the edges','Tiny cassettes to hold the pieces','Voice dictation into the computer'] },
+  { id:'grossing',       title:'Grossing', subtitle:'Multiple stations · description and dissection', roomId:'gross',
+    overview:"Right next door to accessioning. Pathologists' assistants and residents work at four grossing stations, each with its own downdraft hood and sink. Specimens are measured, photographed, inked at margins, and submitted as small tissue cassettes. How a specimen is grossed often determines whether the diagnosis can be made downstream.",
+    tests:['Colon resection (margins, lymph nodes)','Breast lumpectomy with localization','Prostate radical prostatectomy','Lymph node staging for cancer'],
+    methods:['4 grossing stations with downdraft hoods','Multi-color ink margin marking','Breadloaf sectioning, cassette templates','Dictation directly into the LIS'] },
 
-  { id:'molecular',      title:'Molecular Diagnostics', subtitle:'Reading the DNA', roomId:'molec1',
-    overview:"Here, DNA and RNA do the talking. Machines read the genetic code inside cells to find the exact change that is driving a disease, which helps doctors pick a medicine aimed right at it.",
-    tests:['Finding the gene changes behind a cancer','Matching patients to targeted medicines','Checking for inherited risks','Reading a tumor\'s genetic fingerprint'],
-    methods:['DNA sequencing machines','PCR machines that copy DNA','FISH (glowing DNA markers)','Powerful analysis computers'] },
+  { id:'molecular',      title:'Molecular Diagnostics', subtitle:'DNA · RNA · the molecular signature', roomId:'molec1',
+    overview:"Where DNA and RNA do the talking. PCR, sequencing, FISH, and microarray-based assays detect mutations, fusions, and copy-number changes — most of which directly drive cancer treatment decisions today. Targeted therapy in oncology starts with a result from this lab.",
+    tests:['KRAS / BRAF / EGFR mutation testing','ALK / ROS1 fusion in NSCLC','BCR-ABL monitoring in CML','HER2 FISH for breast cancer','Microsatellite instability (MSI) for Lynch'],
+    methods:['Real-time PCR machines','Sanger sequencing','NGS panels (Illumina, Ion Torrent)','FISH on FFPE slides'] },
 
-  { id:'hist-process',   title:'Histology · Processing', subtitle:'Turning tissue into wax blocks', roomId:'processing',
-    overview:"Tissue is too soft and wet to slice thin, so overnight machines soak it in wax. By morning, each piece is a solid wax block, ready to be sliced paper-thin.",
-    tests:['Preparing almost every surgery sample','Fast runs for tiny biopsies'],
-    methods:['Automated tissue processors','Wax (paraffin) embedding','Overnight processing'] },
+  { id:'hist-process',   title:'Histology · Processing', subtitle:'Tissue cassettes → paraffin blocks', roomId:'processing',
+    overview:"Cassettes go in here at the end of the day and emerge as paraffin-embedded blocks the next morning. Overnight, automated tissue processors run them through graded alcohols, xylene, and molten paraffin so they can be sectioned for microscopy.",
+    tests:['Routine processing for nearly every surgical specimen','Rapid runs for small biopsies and frozens'],
+    methods:['Tissue processors (Leica, Sakura)','Graded alcohol dehydration','Xylene clearing','Paraffin infiltration at 60 °C'] },
 
-  { id:'hist-microtomy', title:'Histology · Microtomy', subtitle:'Wax blocks into glass slides', roomId:'microtomy',
-    overview:"A machine called a microtome shaves the wax block into ribbons thinner than a hair. The slices float on warm water and are lifted onto glass slides.",
-    tests:['Making the standard pink-and-purple slides','Extra-deep slices to find tiny clues','Re-cuts for special tests'],
-    methods:['A microtome (super-precise slicer)','Warm water baths','Specially coated glass slides'] },
+  { id:'hist-microtomy', title:'Histology · Microtomy', subtitle:'Blocks → glass slides', roomId:'microtomy',
+    overview:"Where blocks become slides. Microtome stations shave 4-µm ribbons off the embedded paraffin block; ribbons get floated on warm water and lifted onto charged glass slides. The slides you've stared at all year were made here.",
+    tests:['Routine H&E sections','Levels for elusive lesions','Recuts for IHC and special stains'],
+    methods:['Rotary microtome at 4 µm','Warm water bath (~40 °C) for ribbon flotation','Charged slides for tissue adherence','3-level cuts on small biopsies'] },
 
-  { id:'hist-collation', title:'Histology · Collation', subtitle:'Coloring and finishing the slides', roomId:'collation',
-    overview:"The last step in the slide lab. Slides are dipped in dyes so the cells show up, sealed with a thin glass cover, matched to their paperwork, and sent to the pathologist.",
-    tests:['The classic pink-and-purple (H&E) stain','Special stains that reveal germs or fibers','Matching every slide to the right case'],
-    methods:['Automated staining machines','Coverslipping machines','Careful sorting by case'] },
+  { id:'hist-collation', title:'Histology · Collation', subtitle:'Stain · coverslip · deliver', roomId:'collation',
+    overview:"The last stop in histology. Slides are stained with H&E, coverslipped, paired with paperwork, sorted by case, and delivered to the pathologist's queue. If a slide is missing at sign-out, this is where the search begins.",
+    tests:['H&E staining','Special stains (PAS, GMS, trichrome, iron)','Slide-paperwork reconciliation'],
+    methods:['Automated stainer (Leica Autostainer XL)','Automated coverslipper','Slide barcoding tied to case accession','QC review pre-delivery'] },
 
-  { id:'scanning',       title:'Slide Scanning', subtitle:'Turning glass slides into digital images', roomId:'scanning',
-    overview:"Scanners photograph entire slides at very high zoom, making huge digital images. Pathologists can then read them on a computer, share them with experts anywhere, and even get help from AI.",
-    tests:['Getting expert second opinions from far away','Sharing cases between hospitals','AI helping to count cells','Building teaching libraries'],
-    methods:['Whole-slide scanners','Giant digital image files','Telepathology (pathology over the internet)'] },
+  { id:'scanning',       title:'Slide Scanning', subtitle:'Glass → digital images', roomId:'scanning',
+    overview:"Whole-slide scanners image entire slides at 20× or 40× and produce gigabyte-scale digital files. Telepathology, AI-assisted screening, and educational archives all start here. Increasingly, this is also where the day starts for pathologists who sign out fully digitally.",
+    tests:['Telepathology consults','Second-opinion referrals across sites','AI-assisted Ki67 / HER2 scoring','Education and research archives'],
+    methods:['WSI scanners (Leica Aperio, 3DHistech, Hamamatsu)','20× and 40× scanning','Pyramid-tile file formats (SVS, MIRAX)','PACS-style digital pathology platforms'] },
 
-  { id:'ihc',            title:'IHC Staining', subtitle:'Using antibodies to reveal clues', roomId:'ihc_lab',
-    overview:"Some cells look alike under a regular stain. Antibody stains attach to one specific protein and add color only where it is, helping identify exactly what kind of cell or cancer it is.",
-    tests:['Figuring out the exact type of a cancer','Finding where a cancer started','Guiding which targeted medicine to use','Telling apart kinds of lymphoma'],
-    methods:['Antibodies that find one protein','Automated staining robots','Color tags you can see under the microscope'] },
+  { id:'ihc',            title:'IHC Staining', subtitle:'Antibody-based protein detection', roomId:'ihc_lab',
+    overview:"Immunohistochemistry uses antibodies to detect specific proteins in tissue. IHC is the workhorse of modern surgical pathology — it's how pathologists distinguish melanoma from carcinoma, find an unknown primary, classify lymphomas, and quantify HER2 to guide breast cancer therapy.",
+    tests:['ER / PR / HER2 panel (breast cancer)','CK7 / CK20 panel (origin of adenocarcinoma)','S100 / SOX10 / HMB45 (melanoma)','CD20 / CD3 / CD30 (lymphoma typing)'],
+    methods:['Automated platforms (Ventana BenchMark, Leica Bond)','HRP / DAB chromogen detection','Heat-induced antigen retrieval','Dual-color stains (e.g. PIN-4 for prostate)'] },
 
-  { id:'micro',          title:'Microbiology · Walk-through', subtitle:'Hunting germs', roomId:'micro1',
-    overview:"On the way to the core lab we pass Microbiology, where the team grows and identifies the bacteria, viruses, and fungi that make people sick, and tests which medicine will beat them.",
-    tests:['Blood and urine cultures','Strep and stomach-bug tests','Tests for viruses like HIV and hepatitis','Respiratory virus panels'],
-    methods:['Biosafety cabinets (safe work hoods)','Incubators that grow microbes','A machine that IDs germs (MALDI-TOF)','Automated culture systems'] },
+  { id:'micro',          title:'Microbiology · Walk-through', subtitle:'Then cross the bridge to the Core Lab', roomId:'micro1',
+    overview:"On our way back from IHC we pass through Microbiology — biosafety cabinets for working with cultures, MALDI-TOF for organism ID from colonies, automated culture instruments, and serology platforms. Most ID consults start with results from this floor. From here, the sky bridge takes us across to the Core Lab in the main hospital.",
+    tests:['Blood and urine cultures','Rapid strep, GI panels','HIV / HBV / HCV serology','Syphilis screening','Respiratory viral panel'],
+    methods:['Automated culture instruments (BD BACTEC)','MALDI-TOF for organism ID from colonies','MIC susceptibility plates','ELISA · lateral flow · chemiluminescence'] },
 
   // ============ NORTH BUILDING (Main Hospital · across the bridge) ============
-  { id:'core-overview',  title:'Core Laboratory · Overview', subtitle:'The 24/7 high-speed lab', roomId:'core_lab',
-    overview:"This is the biggest room in the department, and it never closes. A conveyor belt, like an airport baggage system, carries thousands of blood tubes to machines that run most of the hospital's everyday tests.",
-    tests:['Everyday blood chemistry','Blood cell counts','Heart-attack markers','Thyroid, pregnancy, and more'],
-    methods:['A robotic conveyor track','Rows of automated analyzers','Open day and night'] },
+  { id:'core-overview',  title:'Core Laboratory · Overview', subtitle:'The 24/7 STAT lab · ~80% of clinical tests', roomId:'core_lab',
+    overview:"This is the 24/7 STAT lab — the largest single room in the department. The conveyor track running down the room is a Beckman Coulter automation line: tubes arrive by pneumatic tube, get centrifuged, decapped, sampled by analyzers in series, then recapped and stored. One sample feeds hematology, coagulation, immunoassay and chemistry analyzers in parallel. Volume and turnaround are the metrics: chemistry ~30 min, troponin under an hour, CBC under 30 min.",
+    tests:['BMP, CMP, CBC with diff','Troponin, BNP, D-dimer','Lipid panel, HbA1c, glucose','Coag panel (PT/PTT/INR)','TSH, free T4, βHCG, PSA, drug levels'],
+    methods:['Total laboratory automation (Beckman Coulter line)','Beckman DxH (heme), DxI (immunoassay), AU 5800 (chem)','Roche cobas (chemistry) · Stago STA (coag)','Sample tracking via barcoded tubes on conveyor'] },
 
-  { id:'core-inlet',     title:'Core Lab · Sample Inlet & Pre-analytics', subtitle:'Where blood tubes arrive and get prepped', roomId:'core_lab',
+  { id:'core-inlet',     title:'Core Lab · Sample Inlet & Pre-analytics', subtitle:'Dynamic Inlet · Centrifuges · Decapper · Aliquoter', roomId:'core_lab',
     focusPoint:{ x:-32, z:-13 }, focusZoom:4,
-    overview:"Tubes drop in here and get scanned, spun very fast to separate the liquid from the cells, uncapped, and split into smaller portions so several machines can test them at once.",
-    tests:['Checking in and scanning each tube','Spinning to separate the blood','Removing caps for the machines','Splitting samples for many tests'],
-    methods:['High-speed centrifuges (spinners)','An automatic decapper','A robot that splits samples'] },
+    overview:"Tubes drop in at the Dynamic Inlet, get scanned, then pass through four high-speed centrifuges that spin plasma/serum off the cells. Next is the Decapper — the cap pops off so analyzer probes can sip directly from the tube — then the Aliquoter splits each sample into daughter tubes when the panel needs to run on multiple analyzers in parallel. This pre-analytical phase is invisible to clinicians but is where roughly 70% of all lab errors actually originate (mislabel, hemolysis, clotted tubes, wrong tube type).",
+    tests:['Sample receipt, barcode verification','Plasma / serum separation','Cap removal for analyzer access','Aliquoting for multi-platform panels'],
+    methods:['Dynamic Inlet (1) — pneumatic tube interface','Centrifuges 5.1–5.4 — high-speed serum sep','Decapper (3) — robotic cap removal','Aliquoter — daughter-tube splitter'] },
 
-  { id:'core-heme-coag', title:'Core Lab · Hematology & Coagulation', subtitle:'Blood counts and clotting tests', roomId:'core_lab',
+  { id:'core-heme-coag', title:'Core Lab · Hematology & Coagulation', subtitle:'Beckman DxH · Stago STA · CBC · clot times', roomId:'core_lab',
     focusPoint:{ x:-32, z:-7 }, focusZoom:4,
-    overview:"Machines here count your red cells, white cells, and platelets, and measure how fast your blood clots, which is important for people on blood thinners.",
-    tests:['Complete blood count (CBC)','Clotting-time tests','Young red blood cell counts','Flagging unusual cells for a human to check'],
-    methods:['Cell-counting analyzers','Clot-detection machines','Expert manual review'] },
+    overview:"Two Stago STA-series analyzers do the coag panel — PT, PTT, INR, fibrinogen, D-dimer — using clot detection (mechanical or photometric). PTs are critical for warfarin monitoring and pre-op clearance; D-dimers are first-line for ruling out PE. Just downstream, the Beckman DxH3s and DxH2s run the CBC with differential at 150–500 samples/hour. Their VCS technology (Volume, Conductivity, light Scatter) measures every cell's size, internal complexity, and granularity simultaneously — that's how the analyzer distinguishes neutrophils from lymphocytes from blasts and flags acute leukemia for human review.",
+    tests:['PT, PTT, INR · fibrinogen · D-dimer','CBC with 5-part differential','Reticulocyte count, NRBC count','Manual review flagging for blasts and dysplasia'],
+    methods:['Stago STA Compact / Max — clot-based assays','Beckman DxH 800/900 — VCS flow cytometry','Reflex slide review on flagged samples','Command Central middleware'] },
 
-  { id:'core-imm-chem',  title:'Core Lab · Immunoassay & Chemistry', subtitle:'Hormones, heart markers, and chemistry', roomId:'core_lab',
+  { id:'core-imm-chem',  title:'Core Lab · Immunoassay & Chemistry', subtitle:'Beckman DxI · AU 5800 · Roche cobas', roomId:'core_lab',
     focusPoint:{ x:-32, z:-3 }, focusZoom:4,
-    overview:"These analyzers measure hormones, heart-attack markers, tumor markers, and the basic chemicals in your blood like sodium, sugar, and cholesterol.",
-    tests:['Thyroid and other hormones','Heart-attack markers','Blood sugar, salts, and cholesterol','Liver tests'],
-    methods:['Immunoassay analyzers','Chemistry analyzers','Light-based measurements'] },
+    overview:"Three Beckman DxI 800 chemiluminescent immunoassay analyzers handle hormones (TSH, free T4, cortisol, βHCG), cardiac markers (troponin, BNP), tumor markers (PSA, CEA, AFP, CA-125, CA 19-9), drug levels (digoxin, valproate), and viral serologies. Paramagnetic-bead capture chemistry: antibody on bead, sample binds, wash, light reader. Right after them, the Beckman AU 5800 (modules 7.8 and 7.9) and Roche cobas (7.10) handle the workhorse chemistries — BMP, CMP, lipid, liver, HbA1c — at ~2,000 tests/hour. Methods include photometric (most enzymatic assays), ion-selective electrodes (Na, K, Cl, ionized Ca), and turbidimetric (CRP, IgG).",
+    tests:['Hormones · cardiac · tumor markers · drug levels','BMP / CMP — Na, K, Cl, BUN, Cr, glucose, Ca','Liver panel · lipid panel · HbA1c','CRP, IgG, complement (turbidimetric)'],
+    methods:['Beckman DxI 800 — chemiluminescent immunoassay','Beckman AU 5800 — photometric / ISE chemistry','Roche cobas — backup / specialty chemistry','Command Central middleware for autoverification'] },
 
-  { id:'core-outlet',    title:'Core Lab · Outlet & Stockyards', subtitle:'Capping and storing samples', roomId:'core_lab',
+  { id:'core-outlet',    title:'Core Lab · Outlet & Stockyards', subtitle:'Recapper · refrigerated retention storage', roomId:'core_lab',
     focusPoint:{ x:-32, z:0.5 }, focusZoom:4,
-    overview:"After testing, tubes get re-capped to stay clean and are stored cold in case a doctor needs an extra test later, like a giant, well-organized refrigerator.",
-    tests:['Adding extra tests later','Re-running important results','Finding samples to send out','Quality checks'],
-    methods:['An automatic recapper','Refrigerated storage','Barcode retrieval'] },
+    overview:"After every analyzer that needs to has sampled, tubes pass through the Recapper (which puts the cap back on for sterility) and head to the refrigerated Stockyards — robotic carousels that store samples at 4 °C for ~7 days. That window covers add-on test orders, dilution reruns on critical values, and troubleshooting unexpected results.",
+    tests:['Add-on test orders within retention window','Critical-value reruns and dilutions','Send-out specimen retrieval','QA / troubleshooting investigations'],
+    methods:['Secondary Decapper (14) and Recapper (15)','Refrigerated robotic Stockyards (4 °C)','~7-day default retention','Manual Outlet 2 access for staff retrieval'] },
 
-  { id:'surgpath',       title:'Surgical Pathology · Sign-Out', subtitle:'Where the diagnosis is made', roomId:'sp_off_08',
-    overview:"This is the answer at the end of the journey. In their offices, pathologists study the glass slides under a microscope (or on a big screen) and write the report that tells your doctor exactly what is going on.",
-    tests:['Reading biopsies','Working up surgery samples','Sizing up (staging) cancers','Getting expert second opinions'],
-    methods:['Microscopes','Digital pathology screens','16 individual sign-out offices'] },
+  { id:'surgpath',       title:'Surgical Pathology · Sign-Out', subtitle:'16 individual sign-out offices · where the diagnosis lives', roomId:'sp_off_08',
+    overview:"This is the answer at the end of every surgical specimen's journey. Pathologists examine glass slides under the microscope at one of 16 individual sign-out offices and put their name on the diagnosis. Almost every cancer diagnosis you've read in a chart was signed out from a desk like one of these — slides, microscope, monitor for the digital queue, dictation system into the LIS.",
+    tests:['Routine biopsy review','Surgical resection workup','Complex tumor staging','Second-opinion consults'],
+    methods:['Light microscopy on H&E and special stains','Digital sign-out queues in the LIS','Multi-headed teaching scopes for tumor boards','Dictation directly into the LIS'] },
 
-  { id:'transfusion',    title:'Transfusion · Blood Bank', subtitle:'Keeping blood transfusions safe', roomId:'bb',
-    overview:"The blood bank types and matches donated blood so it is safe to give to patients, and double-checks every unit before a transfusion.",
-    tests:['Finding your blood type','Checking for antibodies','Matching donor blood to the patient','Working up transfusion reactions'],
-    methods:['Blood-typing tests','Crossmatching','Refrigerated blood storage'] },
+  { id:'transfusion',    title:'Transfusion · Blood Bank', subtitle:'If we have time — last stop on the tour', roomId:'bb',
+    overview:"Where blood is typed, screened, crossmatched, and dispensed for transfusion. This is also where transfusion reactions get worked up and apheresis (e.g. plasma exchange for TTP) is coordinated. The clock here matters: trauma cases are measured in minutes. If we have time at the end of the tour, we'll come up here.",
+    tests:['ABO / Rh typing','Antibody screen and identification','Crossmatch (immediate spin, electronic, AHG)','Direct antiglobulin test (DAT)','Apheresis order coordination'],
+    methods:['Gel column technology','Tube agglutination','Automated immunohematology analyzers (Ortho Vision)','Electronic crossmatch when eligible'] },
 ];
 
 // ============================================================================
@@ -2066,13 +2065,13 @@ function openTourPanel(stop, idx) {
 
   if (stop.tests && stop.tests.length) {
     html += '<div class="tp-section">' +
-      '<div class="tp-section-h">What they do here</div>' +
+      '<div class="tp-section-h">Common tests</div>' +
       '<ul class="tp-list">' + stop.tests.map(t => '<li>' + t + '</li>').join('') + '</ul>' +
     '</div>';
   }
   if (stop.methods && stop.methods.length) {
     html += '<div class="tp-section">' +
-      '<div class="tp-section-h">Tools they use</div>' +
+      '<div class="tp-section-h">Methods &amp; instruments</div>' +
       '<ul class="tp-list">' + stop.methods.map(m => '<li>' + m + '</li>').join('') + '</ul>' +
     '</div>';
   }
@@ -2313,181 +2312,6 @@ setTimeout(() => document.getElementById('loading').classList.add('hidden'), 350
 // and the tour stays hidden behind interaction.
 setTimeout(() => { selectTourStop(0); }, 1100);
 
-</script>
-
-<style>
-#hs-credit{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:99990;font:11px/1.4 system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.4);max-width:60ch;text-align:center;pointer-events:none}
-#hs-fb{position:fixed;right:14px;bottom:12px;z-index:99991;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:600 13px system-ui,sans-serif;background:#2f6fed;color:#fff;padding:10px 16px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .15s ease}
-#hs-fb:hover{transform:translateY(-2px)}
-#hs-modal{position:fixed;inset:0;z-index:100000;background:rgba(5,10,25,.72);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:18px}
-#hs-modal[hidden]{display:none}
-.hs-card{background:#fff;color:#0f172a;width:min(560px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:24px 22px;box-shadow:0 30px 80px rgba(0,0,0,.5);font-family:system-ui,-apple-system,sans-serif}
-.hs-card h2{margin:0 0 4px;font-size:22px;font-weight:700}
-.hs-card .sub{margin:0 0 16px;color:#475569;font-size:14px}
-.hs-field{margin-bottom:14px}
-.hs-field .q{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
-.hs-field input[type=text],.hs-field textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;box-sizing:border-box}
-.hs-field textarea{min-height:70px;resize:vertical}
-.hs-opts{display:flex;flex-wrap:wrap;gap:6px}
-.hs-opts label{font-size:13px;border:1px solid #cbd5e1;border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none}
-.hs-opts input{position:absolute;opacity:0;width:0;height:0}
-.hs-opts label:has(input:checked){background:#2f6fed;color:#fff;border-color:#2f6fed}
-.hs-opts input:focus-visible + span{outline:2px solid #2f6fed;outline-offset:2px;border-radius:4px}
-.hs-actions{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap}
-.hs-submit{background:#2f6fed;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 14px system-ui;cursor:pointer}
-.hs-cancel{background:none;border:0;color:#475569;cursor:pointer;font:14px system-ui}
-.hs-status{font-size:13px;color:#475569}
-.hs-thanks{text-align:center;padding:18px 6px}
-.hs-thanks h2{font-size:22px;margin-bottom:8px}
-.hs-thanks p{color:#475569;font-size:15px;margin-bottom:16px}
-@media(max-width:768px){
-  #hs-credit{display:none}
-  #hs-fb{bottom:10px;right:10px;padding:9px 14px;font-size:12px}
-  body{flex-direction:column!important}
-  #sidebar{width:100%!important;height:40vh!important;max-height:40vh!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
-  .sidebar-header{padding:12px 16px 8px!important}
-  .sidebar-title{font-size:21px!important}
-  .sidebar-subtitle{display:none!important}
-  .room-list{padding:6px 0 10px!important}
-  #canvas-host{flex:1 1 auto!important;min-height:58vh!important}
-  #tour-panel{width:100%!important;height:100%!important;max-height:100%!important;overflow-y:auto!important}
-  .hs-card{max-height:94vh}
-}
-</style>
-<div id="hs-credit">Unofficial educational orientation for high‑school students · facts from public Henry Ford Health information · not an official Henry Ford Health publication.</div>
-<button id="hs-fb" type="button">💬 Feedback</button>
-<div id="hs-modal" hidden role="dialog" aria-modal="true" aria-label="Tour feedback">
-  <div class="hs-card">
-    <form id="hs-form" novalidate>
-      <h2>Tell us what you think</h2>
-      <p class="sub">A few quick questions — it helps us make this better. Thanks!</p>
-      <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
-      <input type="hidden" name="_subject" value="New Lab Tour feedback 🎉">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_captcha" value="false">
-      <div class="hs-field"><span class="q">Your name (optional)</span><input type="text" name="Name" autocomplete="off"></div>
-      <div class="hs-field"><span class="q">How much did you enjoy the tour?</span><div class="hs-opts"><label><input type="radio" name="Enjoyment" value="Loved it"><span>Loved it</span></label><label><input type="radio" name="Enjoyment" value="Liked it"><span>Liked it</span></label><label><input type="radio" name="Enjoyment" value="It was OK"><span>It was OK</span></label><label><input type="radio" name="Enjoyment" value="Not really"><span>Not really</span></label></div></div>
-      <div class="hs-field"><span class="q">Which station was most interesting?</span><input type="text" name="Most interesting station" autocomplete="off"></div>
-      <div class="hs-field"><span class="q">How easy was it to understand?</span><div class="hs-opts"><label><input type="radio" name="Clarity" value="Very easy"><span>Very easy</span></label><label><input type="radio" name="Clarity" value="Easy"><span>Easy</span></label><label><input type="radio" name="Clarity" value="A bit hard"><span>A bit hard</span></label><label><input type="radio" name="Clarity" value="Hard"><span>Hard</span></label></div></div>
-      <div class="hs-field"><span class="q">One thing you learned today</span><textarea name="Learned"></textarea></div>
-      <div class="hs-field"><span class="q">Any questions or comments for the team?</span><textarea name="Comments"></textarea></div>
-      <div class="hs-field"><span class="q">Could you see yourself in science or medicine?</span><div class="hs-opts"><label><input type="radio" name="Career interest" value="Yes"><span>Yes</span></label><label><input type="radio" name="Career interest" value="Maybe"><span>Maybe</span></label><label><input type="radio" name="Career interest" value="Not sure"><span>Not sure</span></label><label><input type="radio" name="Career interest" value="No"><span>No</span></label></div></div>
-      <div class="hs-actions"><button type="submit" class="hs-submit">Send feedback</button><button type="button" class="hs-cancel">Cancel</button><span class="hs-status"></span></div>
-    </form>
-    <div class="hs-thanks" hidden><h2>Thank you! 🎉</h2><p>Your feedback was sent to the workshop team.</p><button type="button" class="hs-cancel hs-submit">Close</button></div>
-  </div>
-</div>
-<script>
-(function(){
-  var btn=document.getElementById('hs-fb'),modal=document.getElementById('hs-modal');
-  if(!btn||!modal)return;
-  var panel=document.getElementById('tour-panel');
-  function sync(){btn.style.display=(panel&&panel.classList.contains('show'))?'none':'inline-flex';}
-  if(panel&&window.MutationObserver){new MutationObserver(sync).observe(panel,{attributes:true,attributeFilter:['class']});}
-  sync();
-  function close(){modal.hidden=true;}
-  btn.addEventListener('click',function(){modal.hidden=false;});
-  modal.addEventListener('click',function(e){if(e.target===modal)close();});
-  Array.prototype.forEach.call(modal.querySelectorAll('.hs-cancel'),function(b){b.addEventListener('click',close);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
-  var form=document.getElementById('hs-form'),status=form.querySelector('.hs-status');
-  form.addEventListener('submit',function(e){
-    e.preventDefault();status.textContent='Sending…';
-    var data={};new FormData(form).forEach(function(v,k){if(k!=='_honey')data[k]=v;});
-    fetch('https://formsubmit.co/ajax/omar.z.baba@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
-      .then(function(r){return r.json();})
-      .then(function(){form.style.display='none';modal.querySelector('.hs-thanks').hidden=false;})
-      .catch(function(){status.textContent='Could not send — please check your connection and try again.';});
-  });
-})();
-</script>
-
-<style>
-/* ===================== LIGHT THEME OVERRIDE + Henry Ford branding ===================== */
-:root{
-  --navy-900:#eef3fa!important;--navy-800:#ffffff!important;--navy-700:#e8eef7!important;
-  --navy-600:#d8e3f1!important;--navy-500:#c4d5ea!important;--navy-300:#5f7ba6!important;
-  --cream:#13233d!important;--text:#13233d!important;--text-dim:#5a6b88!important;
-  --accent:#0067a0!important;--accent-warm:#0067a0!important;--border:rgba(14,34,66,.12)!important;
-}
-body{background:#eef3fa!important;color:#13233d!important}
-#sidebar{background:linear-gradient(180deg,#ffffff 0%,#f3f8fd 100%)!important;border-right:1px solid var(--border)!important}
-.sidebar-title{color:#13233d!important}
-.sidebar-subtitle{color:#5a6b88!important}
-.sidebar-eyebrow{color:#0067a0!important}
-.room-list,.tour-stop,.tour-stop-title{color:#13233d!important}
-.tour-stop-sub{color:#64748b!important}
-.tour-stop:hover{background:rgba(0,103,160,.07)!important}
-.tour-stop.active{background:rgba(0,103,160,.12)!important;border-left-color:#0067a0!important}
-.tour-stop-num{background:#e6eef8!important;color:#0067a0!important}
-.tour-stop.active .tour-stop-num{background:#0067a0!important;color:#fff!important}
-.tour-controls{border-top:1px solid var(--border)!important}
-.tour-ctrl-btn{background:#f0f5fb!important;border:1px solid var(--border)!important;color:#13233d!important}
-.tour-ctrl-btn:hover{background:#e3edf8!important}
-#tour-panel{background:#ffffff!important;color:#13233d!important;box-shadow:-16px 0 50px rgba(20,40,80,.13)!important}
-.tp-header{background:linear-gradient(135deg,#0067a0,#00497a)!important}
-.tp-header,.tp-header *{color:#ffffff!important}
-.tp-section-h{color:#0067a0!important;border-bottom-color:var(--border)!important}
-.tp-overview,.tp-list,.tp-list li,.tp-body{color:#27364f!important}
-.tp-footer{background:#f7fafd!important;border-top:1px solid var(--border)!important}
-.tp-nav-btn{background:#eef4fb!important;color:#13233d!important;border:1px solid var(--border)!important}
-.tp-nav-btn.primary{background:#0067a0!important;color:#fff!important;border-color:#0067a0!important}
-#hud-info,#hud-info *{color:#13233d!important;text-shadow:0 1px 3px rgba(255,255,255,.7)!important}
-#loading{background:#eef3fa!important;color:#13233d!important}
-/* a small Henry Ford lockup at the very top of the sidebar */
-.hs-brandbar{display:flex;align-items:center;gap:10px;padding:14px 22px 0}
-.hs-brandbar .m{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#0067a0,#00497a);color:#fff;display:grid;place-items:center;font:700 15px Georgia,serif;flex-shrink:0}
-.hs-brandbar .t{line-height:1.12}
-.hs-brandbar .t b{display:block;font:600 13px system-ui;color:#0067a0}
-.hs-brandbar .t span{font:500 10.5px system-ui;color:#64748b}
-/* ===================== WELCOME SCREEN ===================== */
-#hs-welcome{position:fixed;inset:0;z-index:100001;background:radial-gradient(120% 120% at 80% 0%,#dbe8f7 0%,#ffffff 55%);display:flex;align-items:center;justify-content:center;padding:24px;transition:opacity .55s ease}
-#hs-welcome.hide{opacity:0;pointer-events:none}
-.hw-card{max-width:640px;text-align:center;font-family:system-ui,-apple-system,sans-serif;color:#13233d}
-.hw-brand{display:inline-flex;align-items:center;gap:13px;margin-bottom:24px}
-.hw-mark{width:56px;height:56px;border-radius:14px;background:linear-gradient(135deg,#0067a0,#00497a);color:#fff;display:grid;place-items:center;font:700 23px Georgia,serif;box-shadow:0 12px 28px rgba(0,73,122,.35)}
-.hw-bt{text-align:left;line-height:1.15}
-.hw-bt b{display:block;font-size:18px;color:#0067a0}
-.hw-bt span{font-size:13px;color:#5a6b88}
-.hw-card h1{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(34px,6vw,54px);font-weight:600;line-height:1.04;margin:6px 0 16px}
-.hw-card h1 em{color:#0067a0;font-style:italic}
-.hw-card p{font-size:clamp(15px,2.3vw,18px);color:#41526e;line-height:1.55;max-width:50ch;margin:0 auto 28px}
-.hw-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.hw-btn{font:600 15px system-ui;padding:14px 26px;border-radius:999px;cursor:pointer;border:1px solid transparent;transition:transform .15s ease}
-.hw-btn.primary{background:#0067a0;color:#fff;box-shadow:0 12px 28px rgba(0,73,122,.34)}
-.hw-btn.primary:hover{transform:translateY(-2px)}
-.hw-btn.ghost{background:#fff;color:#13233d;border-color:#cdd8e8}
-.hw-btn.ghost:hover{transform:translateY(-2px);border-color:#0067a0}
-.hw-note{margin-top:24px;font-size:12px;color:#8493ac}
-@media(max-width:768px){.hw-card h1{font-size:32px}.hw-brand{margin-bottom:18px}}
-</style>
-<div id="hs-welcome">
-  <div class="hw-card">
-    <div class="hw-brand"><div class="hw-mark">HF</div><div class="hw-bt"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div></div>
-    <h1>Welcome inside the <em>Pathology Lab</em></h1>
-    <p>Step into one of the largest hospital labs in the country. Follow a real sample on its journey — from the moment it arrives to the final diagnosis — and meet the science at every stop.</p>
-    <div class="hw-actions">
-      <button class="hw-btn primary" id="hw-start">▶ Start the guided walkthrough</button>
-      <button class="hw-btn ghost" id="hw-explore">Explore on my own</button>
-    </div>
-    <div class="hw-note">An unofficial educational orientation for high‑school students · built with public Henry Ford Health information.</div>
-  </div>
-</div>
-<script>
-(function(){
-  // Henry Ford lockup at the top of the sidebar
-  var sb=document.getElementById('sidebar');
-  if(sb){var bar=document.createElement('div');bar.className='hs-brandbar';
-    bar.innerHTML='<div class="m">HF</div><div class="t"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div>';
-    sb.insertBefore(bar, sb.firstChild);}
-  // Welcome screen
-  var w=document.getElementById('hs-welcome');if(!w)return;
-  function go(walk){w.classList.add('hide');setTimeout(function(){w.style.display='none';},600);
-    if(walk&&window.__startWalkthrough){setTimeout(window.__startWalkthrough,650);}}
-  var s=document.getElementById('hw-start'),e=document.getElementById('hw-explore');
-  if(s)s.addEventListener('click',function(){go(true);});
-  if(e)e.addEventListener('click',function(){go(false);});
-})();
 </script>
 </body>
 </html>
