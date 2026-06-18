@@ -12,3 +12,8 @@ Thumbs.db
 
 # Local server logs
 *.log
+
+# Blender working files (keep scripts + final assets, not heavy intermediates)
+blender/renders/
+*.blend
+*.blend1

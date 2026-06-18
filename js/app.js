@@ -71,11 +71,12 @@
     </svg>`;
   }
 
-  /* ---------- hero visual ---------- */
+  /* ---------- hero visual (Blender 3D floor-plan render, SVG fallback) ---------- */
   function renderHero() {
     const host = $("#hero-visual");
     const accents = ["#2f6fed", "#06b6d4", "#a855f7", "#22c55e"];
-    host.innerHTML = `
+    const fallback = () => {
+      host.innerHTML = `
       <svg viewBox="0 0 520 440" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <rect width="520" height="440" fill="#0b1322"/>
         <g opacity=".9">
@@ -88,6 +89,13 @@
           }).join("")}
         </g>
       </svg>`;
+    };
+    const img = new Image();
+    img.alt = "3D floor plan of the pathology department";
+    img.style.cssText = "width:100%;height:100%;object-fit:cover;display:block";
+    img.onload = () => { host.innerHTML = ""; host.appendChild(img); };
+    img.onerror = fallback;
+    img.src = "assets/map/floorplan-3d.jpg";
   }
 
   /* ---------- facts ---------- */
@@ -163,7 +171,7 @@
     const figure = $("#walk-figure");
     state.stations.forEach((st, i) => {
       const ph = el("div", { class: "stage-placeholder", "data-i": i }, placeholderScene(st));
-      const img = el("img", { class: "stage-img", "data-i": i, alt: st.name + " — lab station", loading: "lazy" });
+      const img = el("img", { class: "stage-img", "data-i": i, alt: st.name + " — lab station", decoding: "async" });
       // try to load a real render; keep placeholder visible if it fails
       tryLoadRender(img, st);
       view.insertBefore(ph, figure);

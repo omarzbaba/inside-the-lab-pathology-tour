@@ -1,0 +1,230 @@
+[
+ {
+  "id": "accessioning",
+  "title": "Accessioning",
+  "subtitle": "The intake door for surgical specimens",
+  "roomId": "accession",
+  "overview": "The intake desk for the entire surgical pathology service. Specimens arrive from operating rooms, clinics, and outside hospitals; each gets logged into the LIS, given a unique case number, and routed next door to grossing. Chain-of-custody starts here.",
+  "tests": [
+   "Specimen log-in and labeling",
+   "Case numbering (e.g. S26-12345)",
+   "Requisition reconciliation",
+   "Routing to grossing (next door)"
+  ],
+  "methods": [
+   "Barcode scanning",
+   "LIS data entry (Beaker, CoPath)",
+   "Pneumatic tube intake",
+   "Chain-of-custody documentation"
+  ]
+ },
+ {
+  "id": "grossing",
+  "title": "Grossing",
+  "subtitle": "Multiple stations \u00b7 description and dissection",
+  "roomId": "gross",
+  "overview": "Right next door to accessioning. Pathologists' assistants and residents work at four grossing stations, each with its own downdraft hood and sink. Specimens are measured, photographed, inked at margins, and submitted as small tissue cassettes. How a specimen is grossed often determines whether the diagnosis can be made downstream.",
+  "tests": [
+   "Colon resection (margins, lymph nodes)",
+   "Breast lumpectomy with localization",
+   "Prostate radical prostatectomy",
+   "Lymph node staging for cancer"
+  ],
+  "methods": [
+   "4 grossing stations with downdraft hoods",
+   "Multi-color ink margin marking",
+   "Breadloaf sectioning, cassette templates",
+   "Dictation directly into the LIS"
+  ]
+ },
+ {
+  "id": "molecular",
+  "title": "Molecular Diagnostics",
+  "subtitle": "DNA \u00b7 RNA \u00b7 the molecular signature",
+  "roomId": "molec1",
+  "overview": "Where DNA and RNA do the talking. PCR, sequencing, FISH, and microarray-based assays detect mutations, fusions, and copy-number changes \u2014 most of which directly drive cancer treatment decisions today. Targeted therapy in oncology starts with a result from this lab.",
+  "tests": [
+   "KRAS / BRAF / EGFR mutation testing",
+   "ALK / ROS1 fusion in NSCLC",
+   "BCR-ABL monitoring in CML",
+   "HER2 FISH for breast cancer",
+   "Microsatellite instability (MSI) for Lynch"
+  ],
+  "methods": [
+   "Real-time PCR machines",
+   "Sanger sequencing",
+   "NGS panels (Illumina, Ion Torrent)",
+   "FISH on FFPE slides"
+  ]
+ },
+ {
+  "id": "hist-process",
+  "title": "Histology \u00b7 Processing",
+  "subtitle": "Tissue cassettes \u2192 paraffin blocks",
+  "roomId": "processing",
+  "overview": "Cassettes go in here at the end of the day and emerge as paraffin-embedded blocks the next morning. Overnight, automated tissue processors run them through graded alcohols, xylene, and molten paraffin so they can be sectioned for microscopy.",
+  "tests": [
+   "Routine processing for nearly every surgical specimen",
+   "Rapid runs for small biopsies and frozens"
+  ],
+  "methods": [
+   "Tissue processors (Leica, Sakura)",
+   "Graded alcohol dehydration",
+   "Xylene clearing",
+   "Paraffin infiltration at 60 \u00b0C"
+  ]
+ },
+ {
+  "id": "hist-microtomy",
+  "title": "Histology \u00b7 Microtomy",
+  "subtitle": "Blocks \u2192 glass slides",
+  "roomId": "microtomy",
+  "overview": "Where blocks become slides. Microtome stations shave 4-\u00b5m ribbons off the embedded paraffin block; ribbons get floated on warm water and lifted onto charged glass slides. The slides you've stared at all year were made here.",
+  "tests": [
+   "Routine H&E sections",
+   "Levels for elusive lesions",
+   "Recuts for IHC and special stains"
+  ],
+  "methods": [
+   "Rotary microtome at 4 \u00b5m",
+   "Warm water bath (~40 \u00b0C) for ribbon flotation",
+   "Charged slides for tissue adherence",
+   "3-level cuts on small biopsies"
+  ]
+ },
+ {
+  "id": "hist-collation",
+  "title": "Histology \u00b7 Collation",
+  "subtitle": "Stain \u00b7 coverslip \u00b7 deliver",
+  "roomId": "collation",
+  "overview": "The last stop in histology. Slides are stained with H&E, coverslipped, paired with paperwork, sorted by case, and delivered to the pathologist's queue. If a slide is missing at sign-out, this is where the search begins.",
+  "tests": [
+   "H&E staining",
+   "Special stains (PAS, GMS, trichrome, iron)",
+   "Slide-paperwork reconciliation"
+  ],
+  "methods": [
+   "Automated stainer (Leica Autostainer XL)",
+   "Automated coverslipper",
+   "Slide barcoding tied to case accession",
+   "QC review pre-delivery"
+  ]
+ },
+ {
+  "id": "scanning",
+  "title": "Slide Scanning",
+  "subtitle": "Glass \u2192 digital images",
+  "roomId": "scanning",
+  "overview": "Whole-slide scanners image entire slides at 20\u00d7 or 40\u00d7 and produce gigabyte-scale digital files. Telepathology, AI-assisted screening, and educational archives all start here. Increasingly, this is also where the day starts for pathologists who sign out fully digitally.",
+  "tests": [
+   "Telepathology consults",
+   "Second-opinion referrals across sites",
+   "AI-assisted Ki67 / HER2 scoring",
+   "Education and research archives"
+  ],
+  "methods": [
+   "WSI scanners (Leica Aperio, 3DHistech, Hamamatsu)",
+   "20\u00d7 and 40\u00d7 scanning",
+   "Pyramid-tile file formats (SVS, MIRAX)",
+   "PACS-style digital pathology platforms"
+  ]
+ },
+ {
+  "id": "ihc",
+  "title": "IHC Staining",
+  "subtitle": "Antibody-based protein detection",
+  "roomId": "ihc_lab",
+  "overview": "Immunohistochemistry uses antibodies to detect specific proteins in tissue. IHC is the workhorse of modern surgical pathology \u2014 it's how pathologists distinguish melanoma from carcinoma, find an unknown primary, classify lymphomas, and quantify HER2 to guide breast cancer therapy.",
+  "tests": [
+   "ER / PR / HER2 panel (breast cancer)",
+   "CK7 / CK20 panel (origin of adenocarcinoma)",
+   "S100 / SOX10 / HMB45 (melanoma)",
+   "CD20 / CD3 / CD30 (lymphoma typing)"
+  ],
+  "methods": [
+   "Automated platforms (Ventana BenchMark, Leica Bond)",
+   "HRP / DAB chromogen detection",
+   "Heat-induced antigen retrieval",
+   "Dual-color stains (e.g. PIN-4 for prostate)"
+  ]
+ },
+ {
+  "id": "micro",
+  "title": "Microbiology \u00b7 Walk-through",
+  "subtitle": "Then cross the bridge to the Core Lab",
+  "roomId": "micro1",
+  "overview": "On our way back from IHC we pass through Microbiology \u2014 biosafety cabinets for working with cultures, MALDI-TOF for organism ID from colonies, automated culture instruments, and serology platforms. Most ID consults start with results from this floor. From here, the sky bridge takes us across to the Core Lab in the main hospital.",
+  "tests": [
+   "Blood and urine cultures",
+   "Rapid strep, GI panels",
+   "HIV / HBV / HCV serology",
+   "Syphilis screening",
+   "Respiratory viral panel"
+  ],
+  "methods": [
+   "Automated culture instruments (BD BACTEC)",
+   "MALDI-TOF for organism ID from colonies",
+   "MIC susceptibility plates",
+   "ELISA \u00b7 lateral flow \u00b7 chemiluminescence"
+  ]
+ },
+ {
+  "id": "core-overview",
+  "title": "Core Laboratory \u00b7 Overview",
+  "subtitle": "The 24/7 STAT lab \u00b7 ~80% of clinical tests",
+  "roomId": "core_lab",
+  "overview": "This is the 24/7 STAT lab \u2014 the largest single room in the department. The conveyor track running down the room is a Beckman Coulter automation line: tubes arrive by pneumatic tube, get centrifuged, decapped, sampled by analyzers in series, then recapped and stored. One sample feeds hematology, coagulation, immunoassay and chemistry analyzers in parallel. Volume and turnaround are the metrics: chemistry ~30 min, troponin under an hour, CBC under 30 min.",
+  "tests": [
+   "BMP, CMP, CBC with diff",
+   "Troponin, BNP, D-dimer",
+   "Lipid panel, HbA1c, glucose",
+   "Coag panel (PT/PTT/INR)",
+   "TSH, free T4, \u03b2HCG, PSA, drug levels"
+  ],
+  "methods": [
+   "Total laboratory automation (Beckman Coulter line)",
+   "Beckman DxH (heme), DxI (immunoassay), AU 5800 (chem)",
+   "Roche cobas (chemistry) \u00b7 Stago STA (coag)",
+   "Sample tracking via barcoded tubes on conveyor"
+  ]
+ },
+ {
+  "id": "surgpath",
+  "title": "Surgical Pathology \u00b7 Sign-Out",
+  "subtitle": "16 individual sign-out offices \u00b7 where the diagnosis lives",
+  "roomId": "sp_off_08",
+  "overview": "This is the answer at the end of every surgical specimen's journey. Pathologists examine glass slides under the microscope at one of 16 individual sign-out offices and put their name on the diagnosis. Almost every cancer diagnosis you've read in a chart was signed out from a desk like one of these \u2014 slides, microscope, monitor for the digital queue, dictation system into the LIS.",
+  "tests": [
+   "Routine biopsy review",
+   "Surgical resection workup",
+   "Complex tumor staging",
+   "Second-opinion consults"
+  ],
+  "methods": [
+   "Light microscopy on H&E and special stains",
+   "Digital sign-out queues in the LIS",
+   "Multi-headed teaching scopes for tumor boards",
+   "Dictation directly into the LIS"
+  ]
+ },
+ {
+  "id": "transfusion",
+  "title": "Transfusion \u00b7 Blood Bank",
+  "subtitle": "If we have time \u2014 last stop on the tour",
+  "roomId": "bb",
+  "overview": "Where blood is typed, screened, crossmatched, and dispensed for transfusion. This is also where transfusion reactions get worked up and apheresis (e.g. plasma exchange for TTP) is coordinated. The clock here matters: trauma cases are measured in minutes. If we have time at the end of the tour, we'll come up here.",
+  "tests": [
+   "ABO / Rh typing",
+   "Antibody screen and identification",
+   "Crossmatch (immediate spin, electronic, AHG)",
+   "Direct antiglobulin test (DAT)",
+   "Apheresis order coordination"
+  ],
+  "methods": [
+   "Gel column technology",
+   "Tube agglutination",
+   "Automated immunohematology analyzers (Ortho Vision)",
+   "Electronic crossmatch when eligible"
+  ]
+ }
+]

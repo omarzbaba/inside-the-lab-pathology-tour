@@ -1,0 +1,442 @@
+[
+ {
+  "id": "bb",
+  "name": "Blood Bank",
+  "dept": "bb",
+  "x1": 2,
+  "z1": -36,
+  "x2": 22,
+  "z2": -24,
+  "nested": false
+ },
+ {
+  "id": "coag",
+  "name": "Coagulation",
+  "dept": "coag",
+  "x1": 16,
+  "z1": -36,
+  "x2": 22,
+  "z2": -28,
+  "nested": true
+ },
+ {
+  "id": "n_corr",
+  "name": "North Corridor",
+  "dept": "corridor",
+  "x1": -36,
+  "z1": -24,
+  "x2": 24,
+  "z2": -22,
+  "nested": false
+ },
+ {
+  "id": "lab_cs",
+  "name": "Lab Customer Service",
+  "dept": "lab_cs",
+  "x1": -36,
+  "z1": -22,
+  "x2": -28,
+  "z2": -18,
+  "nested": false
+ },
+ {
+  "id": "core_lab",
+  "name": "Core Laboratory",
+  "dept": "core_lab",
+  "x1": -36,
+  "z1": -18,
+  "x2": -28,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "k_elev",
+  "name": "K Elevators",
+  "dept": "corridor",
+  "x1": -28,
+  "z1": -22,
+  "x2": -26,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "sp_off_01",
+  "name": "SP Sign-Out \u00b7 Office 1",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -22,
+  "x2": -22,
+  "z2": -19,
+  "nested": false
+ },
+ {
+  "id": "sp_off_02",
+  "name": "SP Sign-Out \u00b7 Office 2",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -22,
+  "x2": -18,
+  "z2": -19,
+  "nested": false
+ },
+ {
+  "id": "sp_off_03",
+  "name": "SP Sign-Out \u00b7 Office 3",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -19,
+  "x2": -22,
+  "z2": -17,
+  "nested": false
+ },
+ {
+  "id": "sp_off_04",
+  "name": "SP Sign-Out \u00b7 Office 4",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -19,
+  "x2": -18,
+  "z2": -17,
+  "nested": false
+ },
+ {
+  "id": "sp_off_05",
+  "name": "SP Sign-Out \u00b7 Office 5",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -17,
+  "x2": -22,
+  "z2": -14,
+  "nested": false
+ },
+ {
+  "id": "sp_off_06",
+  "name": "SP Sign-Out \u00b7 Office 6",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -17,
+  "x2": -18,
+  "z2": -14,
+  "nested": false
+ },
+ {
+  "id": "sp_off_07",
+  "name": "SP Sign-Out \u00b7 Office 7",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -14,
+  "x2": -22,
+  "z2": -12,
+  "nested": false
+ },
+ {
+  "id": "sp_off_08",
+  "name": "SP Sign-Out \u00b7 Office 8",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -14,
+  "x2": -18,
+  "z2": -12,
+  "nested": false
+ },
+ {
+  "id": "sp_off_09",
+  "name": "SP Sign-Out \u00b7 Office 9",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -12,
+  "x2": -22,
+  "z2": -9,
+  "nested": false
+ },
+ {
+  "id": "sp_off_10",
+  "name": "SP Sign-Out \u00b7 Office 10",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -12,
+  "x2": -18,
+  "z2": -9,
+  "nested": false
+ },
+ {
+  "id": "sp_off_11",
+  "name": "SP Sign-Out \u00b7 Office 11",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -9,
+  "x2": -22,
+  "z2": -7,
+  "nested": false
+ },
+ {
+  "id": "sp_off_12",
+  "name": "SP Sign-Out \u00b7 Office 12",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -9,
+  "x2": -18,
+  "z2": -7,
+  "nested": false
+ },
+ {
+  "id": "sp_off_13",
+  "name": "SP Sign-Out \u00b7 Office 13",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -7,
+  "x2": -22,
+  "z2": -4,
+  "nested": false
+ },
+ {
+  "id": "sp_off_14",
+  "name": "SP Sign-Out \u00b7 Office 14",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -7,
+  "x2": -18,
+  "z2": -4,
+  "nested": false
+ },
+ {
+  "id": "sp_off_15",
+  "name": "SP Sign-Out \u00b7 Office 15",
+  "dept": "sp_office",
+  "x1": -26,
+  "z1": -4,
+  "x2": -22,
+  "z2": -2,
+  "nested": false
+ },
+ {
+  "id": "sp_off_16",
+  "name": "SP Sign-Out \u00b7 Office 16",
+  "dept": "sp_office",
+  "x1": -22,
+  "z1": -4,
+  "x2": -18,
+  "z2": -2,
+  "nested": false
+ },
+ {
+  "id": "chair",
+  "name": "Office of the Chair \u00b7 Vice Chair",
+  "dept": "chair",
+  "x1": -26,
+  "z1": -2,
+  "x2": -18,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "bb_floor",
+  "name": "Blood Bank \u00b7 Floor",
+  "dept": "bb",
+  "x1": -18,
+  "z1": -22,
+  "x2": -10,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "cytopath",
+  "name": "Cytopathology",
+  "dept": "cytopath",
+  "x1": -10,
+  "z1": -22,
+  "x2": 2,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "autopsy",
+  "name": "Autopsy Suite",
+  "dept": "autopsy",
+  "x1": 2,
+  "z1": -22,
+  "x2": 24,
+  "z2": 2,
+  "nested": false
+ },
+ {
+  "id": "bridge",
+  "name": "2nd-Floor Sky Bridge",
+  "dept": "corridor",
+  "x1": -2,
+  "z1": 2,
+  "x2": 2,
+  "z2": 18,
+  "nested": false
+ },
+ {
+  "id": "entry_corr",
+  "name": "Entry Corridor",
+  "dept": "corridor",
+  "x1": -36,
+  "z1": 18,
+  "x2": 28,
+  "z2": 20,
+  "nested": false
+ },
+ {
+  "id": "molec1",
+  "name": "Molecular Lab",
+  "dept": "molec",
+  "x1": -36,
+  "z1": 20,
+  "x2": -28,
+  "z2": 32,
+  "nested": false
+ },
+ {
+  "id": "gross",
+  "name": "Grossing Area",
+  "dept": "gross",
+  "x1": -28,
+  "z1": 20,
+  "x2": -16,
+  "z2": 32,
+  "nested": false
+ },
+ {
+  "id": "accession",
+  "name": "Accessioning Area",
+  "dept": "gross",
+  "x1": -16,
+  "z1": 20,
+  "x2": -8,
+  "z2": 24,
+  "nested": false
+ },
+ {
+  "id": "quality",
+  "name": "Quality Room",
+  "dept": "quality",
+  "x1": -16,
+  "z1": 24,
+  "x2": -8,
+  "z2": 32,
+  "nested": false
+ },
+ {
+  "id": "micro1",
+  "name": "Microbiology Lab",
+  "dept": "micro",
+  "x1": -8,
+  "z1": 20,
+  "x2": 16,
+  "z2": 32,
+  "nested": false
+ },
+ {
+  "id": "hla1",
+  "name": "HLA Lab",
+  "dept": "hla",
+  "x1": 16,
+  "z1": 20,
+  "x2": 28,
+  "z2": 26,
+  "nested": false
+ },
+ {
+  "id": "special",
+  "name": "Special Heme",
+  "dept": "special",
+  "x1": 16,
+  "z1": 26,
+  "x2": 28,
+  "z2": 32,
+  "nested": false
+ },
+ {
+  "id": "mid_corr",
+  "name": "Mid Corridor",
+  "dept": "corridor",
+  "x1": -36,
+  "z1": 32,
+  "x2": 28,
+  "z2": 34,
+  "nested": false
+ },
+ {
+  "id": "microtomy",
+  "name": "Microtomy",
+  "dept": "histology",
+  "x1": -36,
+  "z1": 34,
+  "x2": -28,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "processing",
+  "name": "Histology \u00b7 Processing",
+  "dept": "histology",
+  "x1": -28,
+  "z1": 34,
+  "x2": -20,
+  "z2": 38,
+  "nested": false
+ },
+ {
+  "id": "collation",
+  "name": "Histology \u00b7 Collation",
+  "dept": "histology",
+  "x1": -28,
+  "z1": 38,
+  "x2": -20,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "scanning",
+  "name": "Scanning Room",
+  "dept": "histology",
+  "x1": -20,
+  "z1": 34,
+  "x2": -12,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "molec2",
+  "name": "Molecular Lab",
+  "dept": "molec",
+  "x1": -12,
+  "z1": 34,
+  "x2": -4,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "micro2",
+  "name": "Microbiology Lab",
+  "dept": "micro",
+  "x1": -4,
+  "z1": 34,
+  "x2": 8,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "hla2",
+  "name": "HLA Lab",
+  "dept": "hla",
+  "x1": 8,
+  "z1": 34,
+  "x2": 18,
+  "z2": 42,
+  "nested": false
+ },
+ {
+  "id": "ihc_lab",
+  "name": "IHC Lab",
+  "dept": "ihc",
+  "x1": 18,
+  "z1": 34,
+  "x2": 28,
+  "z2": 42,
+  "nested": false
+ }
+]
