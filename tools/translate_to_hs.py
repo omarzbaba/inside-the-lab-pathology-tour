@@ -139,6 +139,12 @@ html = html.replace(
 html = html.replace("<title>Henry Ford Pathology · 3D Floor Plan</title>",
                     "<title>Inside the Lab · 3D Tour for Students</title>")
 
+# CRITICAL for mobile: the original has no viewport meta, so phones render it at
+# ~980px (desktop) and zoom out. Add it so device-width + the media query apply.
+if 'name="viewport"' not in html:
+    html = html.replace('<meta charset="UTF-8" />',
+        '<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />', 1)
+
 # inject a small disclaimer + a feedback button (independent of the map's layout)
 fb_attr = ' target="_blank" rel="noopener"' if SURVEY_URL else ''
 fb_href = SURVEY_URL or '#'
@@ -147,12 +153,27 @@ inject = """
 #hs-credit{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:99999;font:11px/1.4 system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.4);max-width:60ch;text-align:center;pointer-events:none}
 #hs-fb{position:fixed;right:14px;bottom:12px;z-index:99999;font:600 13px system-ui,sans-serif;background:#2f6fed;color:#fff;padding:9px 15px;border-radius:999px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .15s ease}
 #hs-fb:hover{transform:translateY(-2px)}
-@media(max-width:720px){#hs-credit{display:none}#hs-fb{bottom:10px;right:10px;padding:8px 13px}}
+/* hide the floating Feedback button whenever a stop's info panel is open */
+#tour-panel.show ~ #hs-fb{display:none!important}
+/* ---- mobile layout: stack the sidebar above a full-width 3D map ---- */
+@media(max-width:768px){
+  #hs-credit{display:none}
+  #hs-fb{bottom:10px;right:10px;padding:8px 13px;font-size:12px}
+  body{flex-direction:column!important}
+  #sidebar{width:100%!important;height:40vh!important;max-height:40vh!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
+  .sidebar-header{padding:12px 16px 8px!important}
+  .sidebar-title{font-size:21px!important}
+  .sidebar-subtitle{display:none!important}
+  .room-list{padding:6px 0 10px!important}
+  #canvas-host{flex:1 1 auto!important;min-height:58vh!important}
+  #tour-panel{width:100%!important;height:100%!important;max-height:100%!important;overflow-y:auto!important}
+}
 </style>
 <div id="hs-credit">Unofficial educational orientation for high‑school students · facts from public Henry Ford Health information · not an official Henry Ford Health publication.</div>
-<a id="hs-fb" href="__HREF__"__ATTR__>\U0001F4AC Feedback</a>
 """
-inject = inject.replace("__HREF__", fb_href).replace("__ATTR__", fb_attr)
+# only show the Feedback button once a real survey URL is wired in
+if SURVEY_URL:
+    inject += '<a id="hs-fb" href="%s" target="_blank" rel="noopener">\U0001F4AC Feedback</a>\n' % SURVEY_URL
 html = html.replace("</body>", inject + "</body>")
 
 open(OUT, "w", encoding="utf-8").write(html)
