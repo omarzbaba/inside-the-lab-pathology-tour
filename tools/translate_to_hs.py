@@ -12,7 +12,7 @@ import re, os
 
 SRC = "reference/original-3d-floorplan.html"
 OUT = "index.html"
-SURVEY_URL = ""   # paste the Google Form share/embed URL here to switch the Feedback button on
+FEEDBACK_EMAIL = "omar.z.baba@gmail.com"   # responses are emailed here via FormSubmit
 
 # High-school content keyed by stop id. Keep it accurate but simple + friendly.
 HS = {
@@ -145,20 +145,42 @@ if 'name="viewport"' not in html:
     html = html.replace('<meta charset="UTF-8" />',
         '<meta charset="UTF-8" />\n<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />', 1)
 
-# inject a small disclaimer + a feedback button (independent of the map's layout)
-fb_attr = ' target="_blank" rel="noopener"' if SURVEY_URL else ''
-fb_href = SURVEY_URL or '#'
+# inject disclaimer + mobile layout + an on-site feedback form (FormSubmit-backed)
+def opts(name, values):
+    cells = "".join(
+        '<label><input type="radio" name="%s" value="%s"><span>%s</span></label>' % (name, v, v)
+        for v in values)
+    return '<div class="hs-opts">%s</div>' % cells
+
 inject = """
 <style>
-#hs-credit{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:99999;font:11px/1.4 system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.4);max-width:60ch;text-align:center;pointer-events:none}
-#hs-fb{position:fixed;right:14px;bottom:12px;z-index:99999;font:600 13px system-ui,sans-serif;background:#2f6fed;color:#fff;padding:9px 15px;border-radius:999px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .15s ease}
+#hs-credit{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:99990;font:11px/1.4 system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.4);max-width:60ch;text-align:center;pointer-events:none}
+#hs-fb{position:fixed;right:14px;bottom:12px;z-index:99991;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:600 13px system-ui,sans-serif;background:#2f6fed;color:#fff;padding:10px 16px;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .15s ease}
 #hs-fb:hover{transform:translateY(-2px)}
-/* hide the floating Feedback button whenever a stop's info panel is open */
-#tour-panel.show ~ #hs-fb{display:none!important}
-/* ---- mobile layout: stack the sidebar above a full-width 3D map ---- */
+#hs-modal{position:fixed;inset:0;z-index:100000;background:rgba(5,10,25,.72);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:18px}
+#hs-modal[hidden]{display:none}
+.hs-card{background:#fff;color:#0f172a;width:min(560px,100%);max-height:90vh;overflow:auto;border-radius:18px;padding:24px 22px;box-shadow:0 30px 80px rgba(0,0,0,.5);font-family:system-ui,-apple-system,sans-serif}
+.hs-card h2{margin:0 0 4px;font-size:22px;font-weight:700}
+.hs-card .sub{margin:0 0 16px;color:#475569;font-size:14px}
+.hs-field{margin-bottom:14px}
+.hs-field .q{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.hs-field input[type=text],.hs-field textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;font:inherit;font-size:14px;box-sizing:border-box}
+.hs-field textarea{min-height:70px;resize:vertical}
+.hs-opts{display:flex;flex-wrap:wrap;gap:6px}
+.hs-opts label{font-size:13px;border:1px solid #cbd5e1;border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none}
+.hs-opts input{position:absolute;opacity:0;width:0;height:0}
+.hs-opts label:has(input:checked){background:#2f6fed;color:#fff;border-color:#2f6fed}
+.hs-opts input:focus-visible + span{outline:2px solid #2f6fed;outline-offset:2px;border-radius:4px}
+.hs-actions{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap}
+.hs-submit{background:#2f6fed;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 14px system-ui;cursor:pointer}
+.hs-cancel{background:none;border:0;color:#475569;cursor:pointer;font:14px system-ui}
+.hs-status{font-size:13px;color:#475569}
+.hs-thanks{text-align:center;padding:18px 6px}
+.hs-thanks h2{font-size:22px;margin-bottom:8px}
+.hs-thanks p{color:#475569;font-size:15px;margin-bottom:16px}
 @media(max-width:768px){
   #hs-credit{display:none}
-  #hs-fb{bottom:10px;right:10px;padding:8px 13px;font-size:12px}
+  #hs-fb{bottom:10px;right:10px;padding:9px 14px;font-size:12px}
   body{flex-direction:column!important}
   #sidebar{width:100%!important;height:40vh!important;max-height:40vh!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.14)!important}
   .sidebar-header{padding:12px 16px 8px!important}
@@ -167,13 +189,62 @@ inject = """
   .room-list{padding:6px 0 10px!important}
   #canvas-host{flex:1 1 auto!important;min-height:58vh!important}
   #tour-panel{width:100%!important;height:100%!important;max-height:100%!important;overflow-y:auto!important}
+  .hs-card{max-height:94vh}
 }
 </style>
 <div id="hs-credit">Unofficial educational orientation for high‑school students · facts from public Henry Ford Health information · not an official Henry Ford Health publication.</div>
+<button id="hs-fb" type="button">\U0001F4AC Feedback</button>
+<div id="hs-modal" hidden role="dialog" aria-modal="true" aria-label="Tour feedback">
+  <div class="hs-card">
+    <form id="hs-form" novalidate>
+      <h2>Tell us what you think</h2>
+      <p class="sub">A few quick questions — it helps us make this better. Thanks!</p>
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
+      <input type="hidden" name="_subject" value="New Lab Tour feedback \U0001F389">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <div class="hs-field"><span class="q">Your name (optional)</span><input type="text" name="Name" autocomplete="off"></div>
+      <div class="hs-field"><span class="q">How much did you enjoy the tour?</span>__ENJOY__</div>
+      <div class="hs-field"><span class="q">Which station was most interesting?</span><input type="text" name="Most interesting station" autocomplete="off"></div>
+      <div class="hs-field"><span class="q">How easy was it to understand?</span>__CLARITY__</div>
+      <div class="hs-field"><span class="q">One thing you learned today</span><textarea name="Learned"></textarea></div>
+      <div class="hs-field"><span class="q">Any questions or comments for the team?</span><textarea name="Comments"></textarea></div>
+      <div class="hs-field"><span class="q">Could you see yourself in science or medicine?</span>__CAREER__</div>
+      <div class="hs-actions"><button type="submit" class="hs-submit">Send feedback</button><button type="button" class="hs-cancel">Cancel</button><span class="hs-status"></span></div>
+    </form>
+    <div class="hs-thanks" hidden><h2>Thank you! \U0001F389</h2><p>Your feedback was sent to the workshop team.</p><button type="button" class="hs-cancel hs-submit">Close</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var btn=document.getElementById('hs-fb'),modal=document.getElementById('hs-modal');
+  if(!btn||!modal)return;
+  var panel=document.getElementById('tour-panel');
+  function sync(){btn.style.display=(panel&&panel.classList.contains('show'))?'none':'inline-flex';}
+  if(panel&&window.MutationObserver){new MutationObserver(sync).observe(panel,{attributes:true,attributeFilter:['class']});}
+  sync();
+  function close(){modal.hidden=true;}
+  btn.addEventListener('click',function(){modal.hidden=false;});
+  modal.addEventListener('click',function(e){if(e.target===modal)close();});
+  Array.prototype.forEach.call(modal.querySelectorAll('.hs-cancel'),function(b){b.addEventListener('click',close);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!modal.hidden)close();});
+  var form=document.getElementById('hs-form'),status=form.querySelector('.hs-status');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();status.textContent='Sending…';
+    var data={};new FormData(form).forEach(function(v,k){if(k!=='_honey')data[k]=v;});
+    fetch('https://formsubmit.co/ajax/__EMAIL__',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+      .then(function(r){return r.json();})
+      .then(function(){form.style.display='none';modal.querySelector('.hs-thanks').hidden=false;})
+      .catch(function(){status.textContent='Could not send — please check your connection and try again.';});
+  });
+})();
+</script>
 """
-# only show the Feedback button once a real survey URL is wired in
-if SURVEY_URL:
-    inject += '<a id="hs-fb" href="%s" target="_blank" rel="noopener">\U0001F4AC Feedback</a>\n' % SURVEY_URL
+inject = (inject
+          .replace("__ENJOY__", opts("Enjoyment", ["Loved it", "Liked it", "It was OK", "Not really"]))
+          .replace("__CLARITY__", opts("Clarity", ["Very easy", "Easy", "A bit hard", "Hard"]))
+          .replace("__CAREER__", opts("Career interest", ["Yes", "Maybe", "Not sure", "No"]))
+          .replace("__EMAIL__", FEEDBACK_EMAIL))
 html = html.replace("</body>", inject + "</body>")
 
 open(OUT, "w", encoding="utf-8").write(html)
