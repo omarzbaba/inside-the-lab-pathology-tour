@@ -303,11 +303,17 @@ body{background:#eef3fa!important;color:#13233d!important}
 .hw-btn.ghost{background:#fff;color:#13233d;border-color:#cdd8e8}
 .hw-btn.ghost:hover{transform:translateY(-2px);border-color:#0067a0}
 .hw-note{margin-top:24px;font-size:12px;color:#8493ac}
-@media(max-width:768px){.hw-card h1{font-size:32px}.hw-brand{margin-bottom:18px}}
+.hw-brand{flex-direction:column;gap:8px}
+.hw-logo{max-width:360px;width:82%;height:auto;display:block}
+.hw-dept{font:600 13px system-ui;color:#0067a0;letter-spacing:.02em}
+.hs-brandbar{flex-direction:column!important;align-items:flex-start!important;gap:5px!important;padding:16px 22px 6px!important;border-bottom:1px solid var(--border)}
+.hs-logo{width:215px;max-width:100%;height:auto}
+.hs-dept{font:600 11px system-ui;color:#0067a0;letter-spacing:.01em}
+@media(max-width:768px){.hw-card h1{font-size:32px}.hw-brand{margin-bottom:18px}.hw-logo{width:74%}}
 </style>
 <div id="hs-welcome">
   <div class="hw-card">
-    <div class="hw-brand"><div class="hw-mark">HF</div><div class="hw-bt"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div></div>
+    <div class="hw-brand"><img class="hw-logo" src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences"><div class="hw-dept">Pathology &amp; Laboratory Medicine</div></div>
     <h1>Welcome inside the <em>Pathology Lab</em></h1>
     <p>Step into one of the largest hospital labs in the country. Follow a real sample on its journey — from the moment it arrives to the final diagnosis — and meet the science at every stop.</p>
     <div class="hw-actions">
@@ -322,7 +328,7 @@ body{background:#eef3fa!important;color:#13233d!important}
   // Henry Ford lockup at the top of the sidebar
   var sb=document.getElementById('sidebar');
   if(sb){var bar=document.createElement('div');bar.className='hs-brandbar';
-    bar.innerHTML='<div class="m">HF</div><div class="t"><b>Henry Ford Health</b><span>Pathology &amp; Laboratory Medicine</span></div>';
+    bar.innerHTML='<img class="hs-logo" src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences"><div class="hs-dept">Pathology &amp; Laboratory Medicine</div>';
     sb.insertBefore(bar, sb.firstChild);}
   // Welcome screen
   var w=document.getElementById('hs-welcome');if(!w)return;
