@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "title": "Inside the Lab: A Student's Tour of Pathology",
+    "subtitle": "Henry Ford Pathology & Laboratory Medicine",
+    "tagline": "Follow a real sample on its journey through one of the largest hospital labs in the country.",
+    "disclaimer": "This is an unofficial educational orientation created for visiting high‑school students. Facts are drawn from public Henry Ford Health information. It is not an official Henry Ford Health publication.",
+    "facts": [
+      { "value": "1917", "label": "Year the department was founded" },
+      { "value": "~11 million", "label": "Lab tests run every year" },
+      { "value": "~150,000", "label": "Tissue specimens examined each year" },
+      { "value": "6 + 30", "label": "Hospitals plus outpatient sites served" },
+      { "value": "40+", "label": "Board‑certified pathologists & scientists" },
+      { "value": "~710", "label": "Technical lab staff" },
+      { "value": "2,000+", "label": "Different tests offered" }
+    ]
+  },
+  "stations": [
+    {
+      "id": "accessioning",
+      "order": 1,
+      "name": "Specimen Check‑In",
+      "subtitle": "Accessioning",
+      "icon": "barcode",
+      "accent": "#3b82f6",
+      "map": { "x": 8, "y": 62 },
+      "hook": "Every sample's first stop — where it gets its ID badge.",
+      "what": "When a doctor removes tissue, blood, or fluid from a patient, it travels here first. Each sample is logged into the computer and given a unique barcode — like a boarding pass — so it can never be mixed up with anyone else's.",
+      "analogy": "Think of it like checking a bag at the airport: it gets tagged, scanned, and tracked everywhere it goes.",
+      "bullets": [
+        "Samples are matched to the right patient using two identifiers.",
+        "A barcode follows the sample through every step of the lab.",
+        "Getting this step right keeps every later result safe and correct."
+      ],
+      "tests": ["Specimen logging", "Barcode labeling", "Patient verification"],
+      "wow": "With ~11 million tests a year, this team helps check in tens of thousands of samples every single day."
+    },
+    {
+      "id": "grossing",
+      "order": 2,
+      "name": "The Grossing Room",
+      "subtitle": "Surgical Pathology",
+      "icon": "scalpel",
+      "accent": "#06b6d4",
+      "map": { "x": 24, "y": 40 },
+      "hook": "Where tissue from surgery is examined with the naked eye.",
+      "what": "\"Gross\" means looking at something without a microscope. Here, scientists describe, measure, and photograph tissue removed during surgery, then cut tiny pieces to turn into glass slides. Their notes become part of the patient's diagnosis.",
+      "analogy": "Like a detective examining evidence before sending the important clues to the lab for testing.",
+      "bullets": [
+        "Tissue is measured, described, and carefully sampled.",
+        "Special inks mark the edges so doctors know if a tumor was fully removed.",
+        "The pieces are placed in tiny cassettes for processing."
+      ],
+      "tests": ["Tissue examination", "Margin inking", "Specimen photography"],
+      "wow": "A single cancer surgery specimen can be sampled into dozens of slides so nothing is missed."
+    },
+    {
+      "id": "histology",
+      "order": 3,
+      "name": "The Histology Lab",
+      "subtitle": "Making the Slides",
+      "icon": "slide",
+      "accent": "#8b5cf6",
+      "map": { "x": 44, "y": 28 },
+      "hook": "Turning a piece of tissue into a glass slide you can see through.",
+      "what": "Tissue is too thick to see light through, so here it's soaked in wax, sliced thinner than a human hair, placed on glass, and stained with dyes so the cells show up in pink and purple.",
+      "analogy": "Like slicing a loaf of bread paper‑thin and coloring it so you can see every ingredient inside.",
+      "bullets": [
+        "A machine called a microtome cuts slices ~4 micrometers thick.",
+        "The classic 'H&E' stain turns nuclei purple and tissue pink.",
+        "Finished slides are ready for a pathologist to read."
+      ],
+      "tests": ["Tissue processing", "Microtomy (slicing)", "H&E staining"],
+      "wow": "A slice of tissue on these slides is about 20 times thinner than a sheet of paper."
+    },
+    {
+      "id": "frozen",
+      "order": 4,
+      "name": "Frozen Section Room",
+      "subtitle": "Answers During Surgery",
+      "icon": "snow",
+      "accent": "#0ea5e9",
+      "map": { "x": 60, "y": 44 },
+      "hook": "A diagnosis in minutes — while the patient is still in the operating room.",
+      "what": "Sometimes a surgeon needs an answer right now. Tissue is flash‑frozen solid, sliced, stained, and read under the microscope in about 15–20 minutes, so the surgeon knows what to do next.",
+      "analogy": "Like getting a rush lab result texted to the surgeon before they finish the operation.",
+      "bullets": [
+        "Tissue is frozen instead of waxed to save time.",
+        "Results guide the surgeon's next move in real time.",
+        "Speed and accuracy both matter enormously here."
+      ],
+      "tests": ["Intraoperative consultation", "Frozen sectioning", "Rapid diagnosis"],
+      "wow": "The freezing machine (a cryostat) chills tissue to around −20°C in seconds."
+    },
+    {
+      "id": "signout",
+      "order": 5,
+      "name": "The Microscope",
+      "subtitle": "Where the Diagnosis Is Made",
+      "icon": "microscope",
+      "accent": "#6366f1",
+      "map": { "x": 76, "y": 30 },
+      "hook": "The moment a pathologist names the disease.",
+      "what": "A pathologist is a doctor who diagnoses disease by examining cells. At the microscope (or on a giant digital screen), they study the slides and write the report that tells your doctor exactly what's going on.",
+      "analogy": "The pathologist is the 'doctor's doctor' — the expert other doctors rely on to know what a disease really is.",
+      "bullets": [
+        "Diagnoses cancer, infections, and hundreds of other conditions.",
+        "Many slides today are scanned and read on a computer (digital pathology).",
+        "The final report guides the patient's whole treatment plan."
+      ],
+      "tests": ["Microscopic diagnosis", "Digital pathology", "Pathology reporting"],
+      "wow": "About 70% of all decisions a doctor makes are based on a lab or pathology result."
+    },
+    {
+      "id": "ihc",
+      "order": 6,
+      "name": "Immunostains & Special Stains",
+      "subtitle": "Coloring the Clues",
+      "icon": "droplet",
+      "accent": "#ec4899",
+      "map": { "x": 60, "y": 18 },
+      "hook": "Using antibodies to light up specific cells.",
+      "what": "Some cells look alike under a regular stain. Special antibody stains attach to specific proteins and create a color only where that protein lives — helping identify exactly what type of cell or cancer is present.",
+      "analogy": "Like a highlighter that only colors the exact word you're searching for in a whole book.",
+      "bullets": [
+        "Antibodies find specific proteins inside cells.",
+        "Helps pinpoint the exact type and origin of a tumor.",
+        "Guides which targeted medicines might work best."
+      ],
+      "tests": ["Immunohistochemistry (IHC)", "Special stains", "Tumor typing"],
+      "wow": "Some stains reveal whether a cancer will respond to a specific modern drug."
+    },
+    {
+      "id": "cytology",
+      "order": 7,
+      "name": "Cytology",
+      "subtitle": "Diagnosis from Single Cells",
+      "icon": "cells",
+      "accent": "#14b8a6",
+      "map": { "x": 40, "y": 56 },
+      "hook": "Finding disease from just a few loose cells.",
+      "what": "Instead of a whole piece of tissue, cytology examines individual cells — like those from a Pap test or a needle sample. It can catch cancer and other diseases very early, often with a tiny, gentle sample.",
+      "analogy": "Like identifying a whole tree by carefully studying just a few of its leaves.",
+      "bullets": [
+        "The Pap test screens for cervical cancer using loose cells.",
+        "Fine‑needle samples check lumps without major surgery.",
+        "Early detection saves lives."
+      ],
+      "tests": ["Pap test screening", "Fine‑needle aspiration", "Fluid cytology"],
+      "wow": "The Pap test has helped cut cervical cancer deaths dramatically over the last 70 years."
+    },
+    {
+      "id": "neuropath",
+      "order": 8,
+      "name": "Neuropathology",
+      "subtitle": "The Brain & Nervous System",
+      "icon": "brain",
+      "accent": "#a855f7",
+      "map": { "x": 78, "y": 60 },
+      "hook": "The lab's specialty — diagnosing the brain, spine, and nerves.",
+      "what": "Neuropathologists are pathologists with extra training in the nervous system. They diagnose brain tumors, nerve and muscle diseases, and conditions like Alzheimer's — some of the most complex cases in all of medicine. This is the focus of the workshop you're visiting.",
+      "analogy": "If the brain is the world's most complicated computer, these are the specialists who diagnose what's gone wrong inside it.",
+      "bullets": [
+        "Diagnoses brain and spinal cord tumors.",
+        "Studies nerve and muscle diseases.",
+        "Works closely with neurosurgeons during operations."
+      ],
+      "tests": ["Brain tumor diagnosis", "Nerve & muscle biopsy", "Neurodegenerative disease"],
+      "wow": "The human brain has roughly 86 billion nerve cells — and pathologists help find disease among them."
+    },
+    {
+      "id": "molecular",
+      "order": 9,
+      "name": "Molecular & Precision Diagnostics",
+      "subtitle": "Reading DNA",
+      "icon": "dna",
+      "accent": "#f59e0b",
+      "map": { "x": 62, "y": 74 },
+      "hook": "Looking at disease at the level of genes.",
+      "what": "At the Center for Precision Diagnostics, scientists read the DNA inside cells using next‑generation sequencing. They can find the exact genetic change driving a cancer and help pick a medicine aimed right at it — this is 'precision medicine.'",
+      "analogy": "Like finding the one typo in a 3‑billion‑letter instruction manual — and then fixing the sentence.",
+      "bullets": [
+        "Next‑generation sequencing reads millions of DNA letters fast.",
+        "Finds the specific mutation behind a patient's cancer.",
+        "Matches patients to targeted, personalized treatments."
+      ],
+      "tests": ["Next‑generation sequencing", "Genetic & hereditary panels", "FISH cytogenetics"],
+      "wow": "Your DNA holds about 3 billion 'letters' — sequencers can now read them in days, not years."
+    },
+    {
+      "id": "micro",
+      "order": 10,
+      "name": "Microbiology",
+      "subtitle": "Hunting Germs",
+      "icon": "microbe",
+      "accent": "#22c55e",
+      "map": { "x": 40, "y": 78 },
+      "hook": "Catching the bacteria, viruses, and fungi that make us sick.",
+      "what": "This lab grows and identifies the microbes causing an infection, then tests which antibiotics will kill them. That helps doctors choose the right medicine instead of guessing.",
+      "analogy": "Like identifying an intruder and then figuring out exactly which key locks them out.",
+      "bullets": [
+        "Grows bacteria from samples to identify them.",
+        "Tests which antibiotics actually work (sensitivity).",
+        "Helps fight antibiotic resistance."
+      ],
+      "tests": ["Cultures", "Antibiotic sensitivity", "Virus & fungus detection"],
+      "wow": "Some bacteria double in number every 20 minutes — so speed really matters here."
+    },
+    {
+      "id": "core_clinical",
+      "order": 11,
+      "name": "Core Clinical Lab",
+      "subtitle": "Chemistry, Blood Counts & Blood Bank",
+      "icon": "tubes",
+      "accent": "#ef4444",
+      "map": { "x": 22, "y": 76 },
+      "hook": "The high‑speed engine room of everyday testing.",
+      "what": "This is where most blood tests happen. Automated machines measure things like blood sugar, cholesterol, and oxygen‑carrying cells. The blood bank also matches and stores donated blood so transfusions are safe.",
+      "analogy": "Like a super‑fast assembly line, running thousands of tests an hour around the clock.",
+      "bullets": [
+        "Chemistry measures sugar, salts, and organ health.",
+        "Hematology counts red cells, white cells, and platelets.",
+        "The blood bank keeps transfusions safe and matched."
+      ],
+      "tests": ["Blood chemistry", "Complete blood count (CBC)", "Blood typing & transfusion"],
+      "wow": "Big core labs can run several thousand tubes of blood every hour, day and night."
+    },
+    {
+      "id": "autopsy",
+      "order": 12,
+      "name": "Autopsy & Forensic Pathology",
+      "subtitle": "Learning from Those We've Lost",
+      "icon": "respect",
+      "accent": "#64748b",
+      "map": { "x": 12, "y": 40 },
+      "hook": "Answering questions that help families, doctors, and science.",
+      "what": "An autopsy is a careful, respectful examination after death to understand why someone died. It can comfort families, improve medical care for future patients, and advance medical knowledge. It is always done with dignity and consent.",
+      "analogy": "Like a final, caring review that turns one person's story into lessons that help many others.",
+      "bullets": [
+        "Helps explain a cause of death for families.",
+        "Teaches doctors and improves future care.",
+        "Always performed with respect and proper consent."
+      ],
+      "tests": ["Cause‑of‑death examination", "Medical research", "Teaching cases"],
+      "wow": "Much of what medicine knows about disease was first learned in the autopsy suite."
+    }
+  ],
+  "survey": {
+    "heading": "Tell us what you think",
+    "body": "We'd love your feedback! Let us know what you enjoyed, what confused you, and any questions you still have about working in a pathology lab.",
+    "embedUrl": "",
+    "fallbackUrl": ""
+  }
+}

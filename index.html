@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inside the Lab — A Student's Tour of Pathology | Henry Ford Pathology &amp; Lab Medicine</title>
+  <meta name="description" content="An interactive, student-friendly walkthrough of a hospital pathology laboratory — follow a real sample on its journey and learn what happens at every station." />
+  <meta name="color-scheme" content="light" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Inside the Lab — A Student's Tour of Pathology" />
+  <meta property="og:description" content="Walk through a real hospital pathology lab, station by station." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#top">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Inside the Lab<small>Pathology &amp; Lab Medicine · for students</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#map">Lab map</a>
+        <a href="#tour">Walkthrough</a>
+        <a href="#stations">Stations</a>
+        <a href="#survey">Feedback</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <span class="eyebrow">Henry Ford Pathology &amp; Laboratory Medicine</span>
+          <h1 id="hero-title">What really happens <span class="grad">inside a hospital lab?</span></h1>
+          <p class="lead" id="hero-lead">Follow a real sample on its journey through one of the largest hospital labs in the country — and meet the science at every stop.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#tour">▶ Start the walkthrough</a>
+            <a class="btn btn-ghost" href="#map">Explore the lab map</a>
+          </div>
+        </div>
+        <div class="hero-visual" id="hero-visual" aria-hidden="true"></div>
+      </div>
+
+      <div class="wrap facts">
+        <div class="facts-track" id="facts" role="list" aria-label="Quick facts about the department"></div>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section class="section" id="map">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">The big picture</span>
+          <h2>The lab, all on one map</h2>
+          <p>Tap any room to jump straight to it. Each color is a different part of the lab.</p>
+        </div>
+        <div class="map-shell" id="map-shell"></div>
+        <p class="map-hint">Tip: tap a room, then press play to take the guided walk.</p>
+      </div>
+    </section>
+
+    <!-- Walkthrough stage -->
+    <section class="section" id="tour" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Take the walk</span>
+          <h2>Walk the lab, station by station</h2>
+          <p>Press play for a guided tour, or use the arrows to move at your own pace.</p>
+        </div>
+        <div class="stage-shell">
+          <div class="stage-grid">
+            <div class="stage-view" id="stage-view">
+              <div class="stage-badge"><span class="ring" id="stage-ring"></span><span id="stage-badge-text">Station</span></div>
+              <!-- images / placeholders injected here -->
+              <img class="walk-figure" id="walk-figure" alt="" src="assets/icons/guide.svg" />
+            </div>
+            <div class="stage-info" id="stage-info"><!-- injected --></div>
+          </div>
+          <div class="stage-controls">
+            <button class="nav-btn" id="prev" aria-label="Previous station">&#8592;</button>
+            <button class="nav-btn" id="next" aria-label="Next station">&#8594;</button>
+            <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
+            <span class="counter" id="counter">1 / 12</span>
+            <button class="btn btn-ghost play-btn" id="play" aria-pressed="false">▶ Auto‑walk</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Station grid -->
+    <section class="section" id="stations" style="padding-top:0">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Jump anywhere</span>
+          <h2>All the stations</h2>
+          <p>Curious about one in particular? Tap a card to open it in the walkthrough.</p>
+        </div>
+        <div class="station-grid" id="station-grid"><!-- injected --></div>
+      </div>
+    </section>
+
+    <!-- Survey -->
+    <section class="section" id="survey" style="padding-top:0">
+      <div class="wrap">
+        <div class="survey-card">
+          <span class="eyebrow" style="color:#bcd2ff">Your turn</span>
+          <h2 id="survey-heading">Tell us what you think</h2>
+          <p id="survey-body"></p>
+          <div id="survey-mount"></div>
+          <p class="survey-note">No login needed. Your answers go straight to the workshop team.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <strong>Inside the Lab</strong> · A student orientation to Pathology &amp; Laboratory Medicine.
+      <p class="disclaimer" id="disclaimer"></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js" defer></script>
+</body>
+</html>

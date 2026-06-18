@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 220" aria-hidden="true">
+  <!-- Neutral, faceless lab-coat guide -->
+  <defs>
+    <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dde6f5"/>
+    </linearGradient>
+  </defs>
+  <!-- legs -->
+  <rect x="44" y="150" width="14" height="60" rx="6" fill="#1f2937"/>
+  <rect x="62" y="150" width="14" height="60" rx="6" fill="#111827"/>
+  <!-- shoes -->
+  <rect x="40" y="204" width="22" height="10" rx="4" fill="#0b1220"/>
+  <rect x="60" y="204" width="22" height="10" rx="4" fill="#0b1220"/>
+  <!-- coat body -->
+  <path d="M34 92 Q60 78 86 92 L94 168 Q60 178 26 168 Z" fill="url(#coat)" stroke="#c7d2e6" stroke-width="2"/>
+  <path d="M60 86 L60 168" stroke="#c7d2e6" stroke-width="2"/>
+  <!-- collar -->
+  <path d="M48 86 L60 100 L72 86 Z" fill="#eef2f9" stroke="#c7d2e6" stroke-width="1.5"/>
+  <!-- arms -->
+  <rect x="24" y="96" width="14" height="60" rx="7" fill="url(#coat)" stroke="#c7d2e6" stroke-width="2"/>
+  <rect x="82" y="96" width="14" height="60" rx="7" fill="url(#coat)" stroke="#c7d2e6" stroke-width="2"/>
+  <!-- neck + head (faceless) -->
+  <rect x="54" y="74" width="12" height="14" rx="5" fill="#caa07a"/>
+  <circle cx="60" cy="58" r="20" fill="#d8b08c"/>
+  <path d="M40 56 a20 20 0 0 1 40 0 q-20 -14 -40 0z" fill="#3b2d23"/>
+  <!-- ID badge -->
+  <rect x="68" y="112" width="14" height="20" rx="2" fill="#2f6fed"/>
+  <rect x="70" y="116" width="10" height="3" rx="1.5" fill="#fff" opacity=".9"/>
+  <rect x="70" y="122" width="7" height="3" rx="1.5" fill="#fff" opacity=".7"/>
+</svg>
