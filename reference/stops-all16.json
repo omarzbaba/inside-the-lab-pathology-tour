@@ -1,0 +1,306 @@
+[
+ {
+  "id": "accessioning",
+  "title": "Accessioning",
+  "subtitle": "The intake door for surgical specimens",
+  "roomId": "accession",
+  "overview": "The intake desk for the entire surgical pathology service. Specimens arrive from operating rooms, clinics, and outside hospitals; each gets logged into the LIS, given a unique case number, and routed next door to grossing. Chain-of-custody starts here.",
+  "tests": [
+   "Specimen log-in and labeling",
+   "Case numbering (e.g. S26-12345)",
+   "Requisition reconciliation",
+   "Routing to grossing (next door)"
+  ],
+  "methods": [
+   "Barcode scanning",
+   "LIS data entry (Beaker, CoPath)",
+   "Pneumatic tube intake",
+   "Chain-of-custody documentation"
+  ]
+ },
+ {
+  "id": "grossing",
+  "title": "Grossing",
+  "subtitle": "Multiple stations · description and dissection",
+  "roomId": "gross",
+  "overview": "Right next door to accessioning. Pathologists' assistants and residents work at four grossing stations, each with its own downdraft hood and sink. Specimens are measured, photographed, inked at margins, and submitted as small tissue cassettes. How a specimen is grossed often determines whether the diagnosis can be made downstream.",
+  "tests": [
+   "Colon resection (margins, lymph nodes)",
+   "Breast lumpectomy with localization",
+   "Prostate radical prostatectomy",
+   "Lymph node staging for cancer"
+  ],
+  "methods": [
+   "4 grossing stations with downdraft hoods",
+   "Multi-color ink margin marking",
+   "Breadloaf sectioning, cassette templates",
+   "Dictation directly into the LIS"
+  ]
+ },
+ {
+  "id": "molecular",
+  "title": "Molecular Diagnostics",
+  "subtitle": "DNA · RNA · the molecular signature",
+  "roomId": "molec1",
+  "overview": "Where DNA and RNA do the talking. PCR, sequencing, FISH, and microarray-based assays detect mutations, fusions, and copy-number changes — most of which directly drive cancer treatment decisions today. Targeted therapy in oncology starts with a result from this lab.",
+  "tests": [
+   "KRAS / BRAF / EGFR mutation testing",
+   "ALK / ROS1 fusion in NSCLC",
+   "BCR-ABL monitoring in CML",
+   "HER2 FISH for breast cancer",
+   "Microsatellite instability (MSI) for Lynch"
+  ],
+  "methods": [
+   "Real-time PCR machines",
+   "Sanger sequencing",
+   "NGS panels (Illumina, Ion Torrent)",
+   "FISH on FFPE slides"
+  ]
+ },
+ {
+  "id": "hist-process",
+  "title": "Histology · Processing",
+  "subtitle": "Tissue cassettes → paraffin blocks",
+  "roomId": "processing",
+  "overview": "Cassettes go in here at the end of the day and emerge as paraffin-embedded blocks the next morning. Overnight, automated tissue processors run them through graded alcohols, xylene, and molten paraffin so they can be sectioned for microscopy.",
+  "tests": [
+   "Routine processing for nearly every surgical specimen",
+   "Rapid runs for small biopsies and frozens"
+  ],
+  "methods": [
+   "Tissue processors (Leica, Sakura)",
+   "Graded alcohol dehydration",
+   "Xylene clearing",
+   "Paraffin infiltration at 60 °C"
+  ]
+ },
+ {
+  "id": "hist-microtomy",
+  "title": "Histology · Microtomy",
+  "subtitle": "Blocks → glass slides",
+  "roomId": "microtomy",
+  "overview": "Where blocks become slides. Microtome stations shave 4-µm ribbons off the embedded paraffin block; ribbons get floated on warm water and lifted onto charged glass slides. The slides you've stared at all year were made here.",
+  "tests": [
+   "Routine H&E sections",
+   "Levels for elusive lesions",
+   "Recuts for IHC and special stains"
+  ],
+  "methods": [
+   "Rotary microtome at 4 µm",
+   "Warm water bath (~40 °C) for ribbon flotation",
+   "Charged slides for tissue adherence",
+   "3-level cuts on small biopsies"
+  ]
+ },
+ {
+  "id": "hist-collation",
+  "title": "Histology · Collation",
+  "subtitle": "Stain · coverslip · deliver",
+  "roomId": "collation",
+  "overview": "The last stop in histology. Slides are stained with H&E, coverslipped, paired with paperwork, sorted by case, and delivered to the pathologist's queue. If a slide is missing at sign-out, this is where the search begins.",
+  "tests": [
+   "H&E staining",
+   "Special stains (PAS, GMS, trichrome, iron)",
+   "Slide-paperwork reconciliation"
+  ],
+  "methods": [
+   "Automated stainer (Leica Autostainer XL)",
+   "Automated coverslipper",
+   "Slide barcoding tied to case accession",
+   "QC review pre-delivery"
+  ]
+ },
+ {
+  "id": "scanning",
+  "title": "Slide Scanning",
+  "subtitle": "Glass → digital images",
+  "roomId": "scanning",
+  "overview": "Whole-slide scanners image entire slides at 20× or 40× and produce gigabyte-scale digital files. Telepathology, AI-assisted screening, and educational archives all start here. Increasingly, this is also where the day starts for pathologists who sign out fully digitally.",
+  "tests": [
+   "Telepathology consults",
+   "Second-opinion referrals across sites",
+   "AI-assisted Ki67 / HER2 scoring",
+   "Education and research archives"
+  ],
+  "methods": [
+   "WSI scanners (Leica Aperio, 3DHistech, Hamamatsu)",
+   "20× and 40× scanning",
+   "Pyramid-tile file formats (SVS, MIRAX)",
+   "PACS-style digital pathology platforms"
+  ]
+ },
+ {
+  "id": "ihc",
+  "title": "IHC Staining",
+  "subtitle": "Antibody-based protein detection",
+  "roomId": "ihc_lab",
+  "overview": "Immunohistochemistry uses antibodies to detect specific proteins in tissue. IHC is the workhorse of modern surgical pathology — it's how pathologists distinguish melanoma from carcinoma, find an unknown primary, classify lymphomas, and quantify HER2 to guide breast cancer therapy.",
+  "tests": [
+   "ER / PR / HER2 panel (breast cancer)",
+   "CK7 / CK20 panel (origin of adenocarcinoma)",
+   "S100 / SOX10 / HMB45 (melanoma)",
+   "CD20 / CD3 / CD30 (lymphoma typing)"
+  ],
+  "methods": [
+   "Automated platforms (Ventana BenchMark, Leica Bond)",
+   "HRP / DAB chromogen detection",
+   "Heat-induced antigen retrieval",
+   "Dual-color stains (e.g. PIN-4 for prostate)"
+  ]
+ },
+ {
+  "id": "micro",
+  "title": "Microbiology · Walk-through",
+  "subtitle": "Then cross the bridge to the Core Lab",
+  "roomId": "micro1",
+  "overview": "On our way back from IHC we pass through Microbiology — biosafety cabinets for working with cultures, MALDI-TOF for organism ID from colonies, automated culture instruments, and serology platforms. Most ID consults start with results from this floor. From here, the sky bridge takes us across to the Core Lab in the main hospital.",
+  "tests": [
+   "Blood and urine cultures",
+   "Rapid strep, GI panels",
+   "HIV / HBV / HCV serology",
+   "Syphilis screening",
+   "Respiratory viral panel"
+  ],
+  "methods": [
+   "Automated culture instruments (BD BACTEC)",
+   "MALDI-TOF for organism ID from colonies",
+   "MIC susceptibility plates",
+   "ELISA · lateral flow · chemiluminescence"
+  ]
+ },
+ {
+  "id": "core-overview",
+  "title": "Core Laboratory · Overview",
+  "subtitle": "The 24/7 STAT lab · ~80% of clinical tests",
+  "roomId": "core_lab",
+  "overview": "This is the 24/7 STAT lab — the largest single room in the department. The conveyor track running down the room is a Beckman Coulter automation line: tubes arrive by pneumatic tube, get centrifuged, decapped, sampled by analyzers in series, then recapped and stored. One sample feeds hematology, coagulation, immunoassay and chemistry analyzers in parallel. Volume and turnaround are the metrics: chemistry ~30 min, troponin under an hour, CBC under 30 min.",
+  "tests": [
+   "BMP, CMP, CBC with diff",
+   "Troponin, BNP, D-dimer",
+   "Lipid panel, HbA1c, glucose",
+   "Coag panel (PT/PTT/INR)",
+   "TSH, free T4, βHCG, PSA, drug levels"
+  ],
+  "methods": [
+   "Total laboratory automation (Beckman Coulter line)",
+   "Beckman DxH (heme), DxI (immunoassay), AU 5800 (chem)",
+   "Roche cobas (chemistry) · Stago STA (coag)",
+   "Sample tracking via barcoded tubes on conveyor"
+  ]
+ },
+ {
+  "id": "core-inlet",
+  "title": "Core Lab · Sample Inlet & Pre-analytics",
+  "subtitle": "Dynamic Inlet · Centrifuges · Decapper · Aliquoter",
+  "roomId": "core_lab",
+  "overview": "Tubes drop in at the Dynamic Inlet, get scanned, then pass through four high-speed centrifuges that spin plasma/serum off the cells. Next is the Decapper — the cap pops off so analyzer probes can sip directly from the tube — then the Aliquoter splits each sample into daughter tubes when the panel needs to run on multiple analyzers in parallel. This pre-analytical phase is invisible to clinicians but is where roughly 70% of all lab errors actually originate (mislabel, hemolysis, clotted tubes, wrong tube type).",
+  "tests": [
+   "Sample receipt, barcode verification",
+   "Plasma / serum separation",
+   "Cap removal for analyzer access",
+   "Aliquoting for multi-platform panels"
+  ],
+  "methods": [
+   "Dynamic Inlet (1) — pneumatic tube interface",
+   "Centrifuges 5.1–5.4 — high-speed serum sep",
+   "Decapper (3) — robotic cap removal",
+   "Aliquoter — daughter-tube splitter"
+  ]
+ },
+ {
+  "id": "core-heme-coag",
+  "title": "Core Lab · Hematology & Coagulation",
+  "subtitle": "Beckman DxH · Stago STA · CBC · clot times",
+  "roomId": "core_lab",
+  "overview": "Two Stago STA-series analyzers do the coag panel — PT, PTT, INR, fibrinogen, D-dimer — using clot detection (mechanical or photometric). PTs are critical for warfarin monitoring and pre-op clearance; D-dimers are first-line for ruling out PE. Just downstream, the Beckman DxH3s and DxH2s run the CBC with differential at 150–500 samples/hour. Their VCS technology (Volume, Conductivity, light Scatter) measures every cell's size, internal complexity, and granularity simultaneously — that's how the analyzer distinguishes neutrophils from lymphocytes from blasts and flags acute leukemia for human review.",
+  "tests": [
+   "PT, PTT, INR · fibrinogen · D-dimer",
+   "CBC with 5-part differential",
+   "Reticulocyte count, NRBC count",
+   "Manual review flagging for blasts and dysplasia"
+  ],
+  "methods": [
+   "Stago STA Compact / Max — clot-based assays",
+   "Beckman DxH 800/900 — VCS flow cytometry",
+   "Reflex slide review on flagged samples",
+   "Command Central middleware"
+  ]
+ },
+ {
+  "id": "core-imm-chem",
+  "title": "Core Lab · Immunoassay & Chemistry",
+  "subtitle": "Beckman DxI · AU 5800 · Roche cobas",
+  "roomId": "core_lab",
+  "overview": "Three Beckman DxI 800 chemiluminescent immunoassay analyzers handle hormones (TSH, free T4, cortisol, βHCG), cardiac markers (troponin, BNP), tumor markers (PSA, CEA, AFP, CA-125, CA 19-9), drug levels (digoxin, valproate), and viral serologies. Paramagnetic-bead capture chemistry: antibody on bead, sample binds, wash, light reader. Right after them, the Beckman AU 5800 (modules 7.8 and 7.9) and Roche cobas (7.10) handle the workhorse chemistries — BMP, CMP, lipid, liver, HbA1c — at ~2,000 tests/hour. Methods include photometric (most enzymatic assays), ion-selective electrodes (Na, K, Cl, ionized Ca), and turbidimetric (CRP, IgG).",
+  "tests": [
+   "Hormones · cardiac · tumor markers · drug levels",
+   "BMP / CMP — Na, K, Cl, BUN, Cr, glucose, Ca",
+   "Liver panel · lipid panel · HbA1c",
+   "CRP, IgG, complement (turbidimetric)"
+  ],
+  "methods": [
+   "Beckman DxI 800 — chemiluminescent immunoassay",
+   "Beckman AU 5800 — photometric / ISE chemistry",
+   "Roche cobas — backup / specialty chemistry",
+   "Command Central middleware for autoverification"
+  ]
+ },
+ {
+  "id": "core-outlet",
+  "title": "Core Lab · Outlet & Stockyards",
+  "subtitle": "Recapper · refrigerated retention storage",
+  "roomId": "core_lab",
+  "overview": "After every analyzer that needs to has sampled, tubes pass through the Recapper (which puts the cap back on for sterility) and head to the refrigerated Stockyards — robotic carousels that store samples at 4 °C for ~7 days. That window covers add-on test orders, dilution reruns on critical values, and troubleshooting unexpected results.",
+  "tests": [
+   "Add-on test orders within retention window",
+   "Critical-value reruns and dilutions",
+   "Send-out specimen retrieval",
+   "QA / troubleshooting investigations"
+  ],
+  "methods": [
+   "Secondary Decapper (14) and Recapper (15)",
+   "Refrigerated robotic Stockyards (4 °C)",
+   "~7-day default retention",
+   "Manual Outlet 2 access for staff retrieval"
+  ]
+ },
+ {
+  "id": "surgpath",
+  "title": "Surgical Pathology · Sign-Out",
+  "subtitle": "16 individual sign-out offices · where the diagnosis lives",
+  "roomId": "sp_off_08",
+  "overview": "This is the answer at the end of every surgical specimen's journey. Pathologists examine glass slides under the microscope at one of 16 individual sign-out offices and put their name on the diagnosis. Almost every cancer diagnosis you've read in a chart was signed out from a desk like one of these — slides, microscope, monitor for the digital queue, dictation system into the LIS.",
+  "tests": [
+   "Routine biopsy review",
+   "Surgical resection workup",
+   "Complex tumor staging",
+   "Second-opinion consults"
+  ],
+  "methods": [
+   "Light microscopy on H&E and special stains",
+   "Digital sign-out queues in the LIS",
+   "Multi-headed teaching scopes for tumor boards",
+   "Dictation directly into the LIS"
+  ]
+ },
+ {
+  "id": "transfusion",
+  "title": "Transfusion · Blood Bank",
+  "subtitle": "If we have time — last stop on the tour",
+  "roomId": "bb",
+  "overview": "Where blood is typed, screened, crossmatched, and dispensed for transfusion. This is also where transfusion reactions get worked up and apheresis (e.g. plasma exchange for TTP) is coordinated. The clock here matters: trauma cases are measured in minutes. If we have time at the end of the tour, we'll come up here.",
+  "tests": [
+   "ABO / Rh typing",
+   "Antibody screen and identification",
+   "Crossmatch (immediate spin, electronic, AHG)",
+   "Direct antiglobulin test (DAT)",
+   "Apheresis order coordination"
+  ],
+  "methods": [
+   "Gel column technology",
+   "Tube agglutination",
+   "Automated immunohematology analyzers (Ortho Vision)",
+   "Electronic crossmatch when eligible"
+  ]
+ }
+]

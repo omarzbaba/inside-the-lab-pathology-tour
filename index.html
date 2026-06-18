@@ -1,136 +1,2306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Inside the Lab — A Student's Tour of Pathology | Henry Ford Pathology &amp; Lab Medicine</title>
-  <meta name="description" content="An interactive, student-friendly walkthrough of a hospital pathology laboratory — follow a real sample on its journey and learn what happens at every station." />
-  <meta name="color-scheme" content="light" />
+<meta charset="UTF-8" />
+<title>Inside the Lab · 3D Tour for Students</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-900: #050d22;
+    --navy-800: #091438;
+    --navy-700: #0f1f4d;
+    --navy-600: #142a66;
+    --navy-500: #1c3a85;
+    --navy-300: #4a6bb0;
+    --cream:    #f5f1e8;
+    --text:     #f5f1e8;
+    --text-dim: #9aa6c2;
+    --accent:   #6aa3ff;
+    --accent-warm: #d4a574;
+    --border:   rgba(255,255,255,0.08);
+  }
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Inside the Lab — A Student's Tour of Pathology" />
-  <meta property="og:description" content="Walk through a real hospital pathology lab, station by station." />
-  <meta property="og:type" content="website" />
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: 'Inter Tight', sans-serif;
+    background: var(--navy-900);
+    color: var(--text);
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+  }
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  /* ---------- SIDEBAR ---------- */
+  #sidebar {
+    width: 320px;
+    flex-shrink: 0;
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(9,20,56,0.96) 0%, rgba(5,13,34,0.98) 100%);
+    backdrop-filter: blur(14px);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    z-index: 5;
+  }
+  .sidebar-header {
+    padding: 26px 24px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .sidebar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+  .sidebar-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .sidebar-subtitle {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 10px;
+    line-height: 1.45;
+    font-weight: 300;
+  }
 
-  <link rel="stylesheet" href="css/styles.css" />
+  .mode-bar {
+    display: flex;
+    padding: 12px 18px;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .mode-btn {
+    flex: 1;
+    padding: 9px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+  }
+  .mode-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+  .mode-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--navy-900);
+    font-weight: 600;
+  }
+
+  .room-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 0 24px;
+  }
+  .room-list::-webkit-scrollbar { width: 6px; }
+  .room-list::-webkit-scrollbar-track { background: transparent; }
+  .room-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+  /* ============== TOUR STOP SIDEBAR ============== */
+  .tour-intro {
+    padding: 16px 24px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .tour-stop {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 24px 12px 18px;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: background 0.12s, border-left-color 0.12s;
+    position: relative;
+  }
+  .tour-stop:hover {
+    background: rgba(255,255,255,0.035);
+    border-left-color: rgba(106,163,255,0.35);
+  }
+  .tour-stop.active {
+    background: rgba(106,163,255,0.10);
+    border-left-color: var(--accent);
+  }
+  .tour-stop-num {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 2px;
+    transition: all 0.15s;
+  }
+  .tour-stop.active .tour-stop-num,
+  .tour-stop.visited .tour-stop-num {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--navy-900);
+  }
+  .tour-stop-body { flex: 1; min-width: 0; }
+  .tour-stop-title {
+    font-size: 13.5px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+  .tour-stop.active .tour-stop-title { font-weight: 600; }
+  .tour-stop-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+  /* Connector line between stops */
+  .tour-stop:not(:last-of-type)::after {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 41px;
+    bottom: -8px;
+    width: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+  .tour-stop.visited:not(:last-of-type)::after {
+    background: rgba(106,163,255,0.4);
+  }
+
+  .tour-controls {
+    border-top: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    gap: 8px;
+  }
+  .tour-ctrl-btn {
+    flex: 1;
+    padding: 9px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .tour-ctrl-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.18); }
+
+  /* ============== EDUCATIONAL SIDE PANEL (right) ============== */
+  #tour-panel {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 420px;
+    max-width: 100%;
+    background: linear-gradient(180deg, rgba(245,241,232,0.99) 0%, rgba(255,255,255,0.99) 100%);
+    color: #1a2235;
+    transform: translateX(105%);
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.30);
+    border-left: 1px solid rgba(0,0,0,0.10);
+  }
+  #tour-panel.show { transform: translateX(0); }
+  @media (max-width: 720px) {
+    #tour-panel { width: 100%; }
+  }
+
+  .tp-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #050d22 0%, #091438 100%);
+    color: #f5f1e8;
+    position: relative;
+  }
+  .tp-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    color: rgba(245,241,232,0.6);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .tp-eyebrow strong { color: var(--accent); font-weight: 600; }
+  .tp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 1.1;
+    letter-spacing: -0.012em;
+    color: #f5f1e8;
+  }
+  .tp-title em { font-style: italic; color: var(--accent); }
+  .tp-subtitle {
+    font-size: 13px;
+    color: rgba(245,241,232,0.7);
+    margin-top: 6px;
+    line-height: 1.4;
+    font-weight: 300;
+    font-style: italic;
+  }
+  .tp-close {
+    position: absolute;
+    top: 18px; right: 22px;
+    background: rgba(255,255,255,0.10);
+    border: none;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+  }
+  .tp-close:hover { background: rgba(255,255,255,0.20); }
+
+  .tp-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px 8px;
+  }
+  .tp-overview {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #2a3245;
+    margin-bottom: 22px;
+  }
+
+  .tp-section {
+    margin-bottom: 20px;
+  }
+  .tp-section-h {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6a7188;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .tp-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .tp-list li {
+    padding: 6px 0 6px 18px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: #36405a;
+    position: relative;
+  }
+  .tp-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 14px;
+    width: 8px; height: 1px;
+    background: var(--accent);
+  }
+
+  .tp-footer {
+    padding: 14px 22px;
+    border-top: 1px solid rgba(0,0,0,0.10);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: rgba(245,241,232,0.5);
+  }
+  .tp-nav-btn {
+    flex: 1;
+    padding: 11px 10px;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.15);
+    color: #2a3245;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s;
+  }
+  .tp-nav-btn:hover:not(:disabled) {
+    background: var(--navy-900);
+    color: white;
+    border-color: var(--navy-900);
+  }
+  .tp-nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .tp-nav-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--navy-900);
+    font-weight: 600;
+  }
+  .tp-nav-btn.primary:hover:not(:disabled) {
+    background: white;
+    color: var(--navy-900);
+  }
+  .tp-progress {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #6a7188;
+    letter-spacing: 0.10em;
+    flex-shrink: 0;
+    text-align: center;
+    min-width: 60px;
+  }
+  .tp-progress strong { color: var(--navy-900); font-weight: 600; }
+
+  .section { margin-bottom: 14px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px 6px;
+  }
+  .section-color {
+    width: 12px; height: 12px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+  .room-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 24px 9px 36px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text);
+    border-left: 2px solid transparent;
+    transition: all 0.12s ease;
+    font-weight: 400;
+  }
+  .room-card:hover {
+    background: rgba(255,255,255,0.035);
+    border-left-color: rgba(106,163,255,0.4);
+  }
+  .room-card.active {
+    background: rgba(106,163,255,0.10);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+  .room-card .dim {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ---------- CANVAS HOST ---------- */
+  #canvas-host {
+    flex: 1;
+    position: relative;
+    background: var(--navy-900);
+    overflow: hidden;
+  }
+  #c { display: block; width: 100%; height: 100%; }
+
+  .hud { position: absolute; pointer-events: none; }
+  #hud-room {
+    top: 28px;
+    left: 32px;
+    max-width: 480px;
+  }
+  .hud-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .hud-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+  .hud-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hud-info {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    max-width: 380px;
+    font-weight: 300;
+  }
+
+  #compass {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(9,20,56,0.78);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .compass-needle {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 22px solid var(--accent);
+    transform-origin: 50% 100%;
+    margin-bottom: 10px;
+    transition: transform 0.12s linear;
+  }
+  .compass-label {
+    position: absolute;
+    top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+  }
+
+  #action-bar {
+    position: absolute;
+    bottom: 28px;
+    right: 32px;
+    display: flex;
+    gap: 8px;
+  }
+  .action-btn {
+    pointer-events: auto;
+    padding: 10px 16px;
+    background: rgba(9,20,56,0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: all 0.15s ease;
+  }
+  .action-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .action-btn.active {
+    background: var(--accent);
+    color: var(--navy-900);
+    border-color: var(--accent);
+  }
+
+  #walk-help {
+    position: absolute;
+    bottom: 28px;
+    left: 32px;
+    padding: 12px 18px;
+    background: rgba(9,20,56,0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.85;
+    pointer-events: none;
+    display: none;
+    max-width: 360px;
+  }
+  body.walk-mode #walk-help { display: block; }
+  #walk-help kbd {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 10px;
+    margin: 0 1px;
+  }
+
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: var(--navy-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--text-dim);
+    transition: opacity 0.6s ease;
+  }
+  #loading.hidden { opacity: 0; pointer-events: none; }
+/* === LIVE PRESENTATION MODE (passive viewers) === */
+body.passive .tour-stop {
+  cursor: default;
+}
+body.passive .tour-stop:hover {
+  /* Subtle dim feedback so users know clicks aren't doing anything */
+  filter: brightness(0.97);
+}
+.live-banner {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 24, 50, 0.92);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 28px -8px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}
+.live-banner .live-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #ff4444;
+  box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
+  animation: live-pulse 1.6s infinite;
+}
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+  60%  { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}
+.live-banner .live-text strong { color: #ffd5a8; font-weight: 600; }
+.passive-hint {
+  position: fixed;
+  bottom: 70px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 9001;
+  background: rgba(15, 24, 50, 0.92);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: 'Inter Tight', -apple-system, sans-serif;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s, transform 0.18s;
+}
+.passive-hint.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+</style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="#top">
-        <span class="dot" aria-hidden="true"></span>
-        <span>Inside the Lab<small>Pathology &amp; Lab Medicine · for students</small></span>
-      </a>
-      <nav class="nav-links" aria-label="Sections">
-        <a href="#map">Lab map</a>
-        <a href="#tour">Walkthrough</a>
-        <a href="#stations">Stations</a>
-        <a href="#survey">Feedback</a>
-      </nav>
+
+<div id="loading">Constructing the floor plan…</div>
+
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-eyebrow">Henry Ford Health · Detroit</div>
+    <h1 class="sidebar-title">Pathology <em>Lab Tour</em></h1>
+    <div class="sidebar-subtitle">Follow a real sample on its journey through the lab — tap a stop or use the arrows. Each room shows what happens there in plain language.</div>
+  </div>
+  <div style="padding: 14px 24px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); font-weight: 500; border-bottom: 1px solid var(--border);">
+    Guided tour · 16 stops
+  </div>
+  <div class="room-list" id="room-list"></div>
+  <div class="tour-controls">
+    <button class="tour-ctrl-btn" id="tour-overview-btn">Overview</button>
+    <button class="tour-ctrl-btn" id="tour-restart-btn">Restart tour</button>
+  </div>
+</aside>
+
+<main id="canvas-host">
+  <canvas id="c"></canvas>
+
+  <!-- Educational side panel (slides in from right when a stop is selected) -->
+  <aside id="tour-panel" aria-hidden="true">
+    <div class="tp-header">
+      <button class="tp-close" id="tp-close" aria-label="Close panel">×</button>
+      <div class="tp-eyebrow"><span id="tp-eyebrow">Stop <strong>1</strong> of 16</span></div>
+      <div class="tp-title" id="tp-title">—</div>
+      <div class="tp-subtitle" id="tp-subtitle">—</div>
     </div>
-  </header>
-
-  <main id="top">
-    <!-- Hero -->
-    <section class="hero">
-      <div class="wrap hero-grid">
-        <div>
-          <span class="eyebrow">Henry Ford Pathology &amp; Laboratory Medicine</span>
-          <h1 id="hero-title">What really happens <span class="grad">inside a hospital lab?</span></h1>
-          <p class="lead" id="hero-lead">Follow a real sample on its journey through one of the largest hospital labs in the country — and meet the science at every stop.</p>
-          <div class="hero-cta">
-            <a class="btn btn-primary" href="#tour">▶ Start the walkthrough</a>
-            <a class="btn btn-ghost" href="#map">Explore the lab map</a>
-          </div>
-        </div>
-        <div class="hero-visual" id="hero-visual" aria-hidden="true"></div>
-      </div>
-
-      <div class="wrap facts">
-        <div class="facts-track" id="facts" role="list" aria-label="Quick facts about the department"></div>
-      </div>
-    </section>
-
-    <!-- Map -->
-    <section class="section" id="map">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">The big picture</span>
-          <h2>The lab, all on one map</h2>
-          <p>Tap any room to jump straight to it. Each color is a different part of the lab.</p>
-        </div>
-        <div class="map-shell" id="map-shell"></div>
-        <p class="map-hint">Tip: tap a room, then press play to take the guided walk.</p>
-      </div>
-    </section>
-
-    <!-- Walkthrough stage -->
-    <section class="section" id="tour" style="padding-top:0">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">Take the walk</span>
-          <h2>Walk the lab, station by station</h2>
-          <p>Press play for a guided tour, or use the arrows to move at your own pace.</p>
-        </div>
-        <div class="stage-shell">
-          <div class="stage-grid">
-            <div class="stage-view" id="stage-view">
-              <div class="stage-badge"><span class="ring" id="stage-ring"></span><span id="stage-badge-text">Station</span></div>
-              <!-- images / placeholders injected here -->
-              <img class="walk-figure" id="walk-figure" alt="" src="assets/icons/guide.svg" />
-            </div>
-            <div class="stage-info" id="stage-info"><!-- injected --></div>
-          </div>
-          <div class="stage-controls">
-            <button class="nav-btn" id="prev" aria-label="Previous station">&#8592;</button>
-            <button class="nav-btn" id="next" aria-label="Next station">&#8594;</button>
-            <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
-            <span class="counter" id="counter">1 / 12</span>
-            <button class="btn btn-ghost play-btn" id="play" aria-pressed="false">▶ Auto‑walk</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Station grid -->
-    <section class="section" id="stations" style="padding-top:0">
-      <div class="wrap">
-        <div class="section-head">
-          <span class="eyebrow">Jump anywhere</span>
-          <h2>All the stations</h2>
-          <p>Curious about one in particular? Tap a card to open it in the walkthrough.</p>
-        </div>
-        <div class="station-grid" id="station-grid"><!-- injected --></div>
-      </div>
-    </section>
-
-    <!-- Survey -->
-    <section class="section" id="survey" style="padding-top:0">
-      <div class="wrap">
-        <div class="survey-card">
-          <span class="eyebrow" style="color:#bcd2ff">Your turn</span>
-          <h2 id="survey-heading">Tell us what you think</h2>
-          <p id="survey-body"></p>
-          <div id="survey-mount"></div>
-          <p class="survey-note">No login needed. Your answers go straight to the workshop team.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrap">
-      <strong>Inside the Lab</strong> · A student orientation to Pathology &amp; Laboratory Medicine.
-      <p class="disclaimer" id="disclaimer"></p>
+    <div class="tp-body" id="tp-body"></div>
+    <div class="tp-footer">
+      <button class="tp-nav-btn" id="tp-prev">← Prev</button>
+      <div class="tp-progress" id="tp-progress"><strong>1</strong> / 16</div>
+      <button class="tp-nav-btn primary" id="tp-next">Next →</button>
     </div>
-  </footer>
+  </aside>
 
-  <script src="js/app.js" defer></script>
+  <div class="hud" id="hud-room">
+    <div class="hud-eyebrow" id="hud-eyebrow">Lab Tour · Overview</div>
+    <h2 class="hud-title" id="hud-title">A guided <em>tour</em> through the department.</h2>
+    <div class="hud-info" id="hud-info">Tap any stop in the sidebar to fly to that section. The 16-stop sequence follows a specimen from intake to result.</div>
+  </div>
+
+  <div id="compass">
+    <div class="compass-label">N</div>
+    <div class="compass-needle" id="compass-needle"></div>
+  </div>
+
+  <div id="walk-help">
+    <kbd>W A S D</kbd> walk · <kbd>↑</kbd><kbd>↓</kbd> walk · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>Q</kbd><kbd>E</kbd> turn · <kbd>Mouse</kbd> look · <kbd>Shift</kbd> run
+  </div>
+
+  <div id="action-bar">
+    <button class="action-btn" id="btn-overview">Overview</button>
+    <button class="action-btn" id="btn-orbit">Orbit</button>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+'use strict';
+
+// ============================================================================
+//  ROOM DATA — corner coordinates so adjacent rooms share edges exactly
+// ============================================================================
+const ROOMS = [
+  // ============================================================================
+  //  NORTH BUILDING (Main Hospital · Pathology Wing)
+  //  Footprint: x=-36 to 24, z=-36 to 4 (60m × 40m)
+  // ============================================================================
+  // Top tower — Blood Bank
+  { id:'bb',           name:'Blood Bank',                       dept:'bb',          x1:  2, z1:-36, x2: 22, z2:-24 },
+  { id:'coag',         name:'Coagulation',                      dept:'coag',        x1: 16, z1:-36, x2: 22, z2:-28, nested:true },
+
+  // North corridor connecting tower to main floor
+  { id:'n_corr',       name:'North Corridor',                   dept:'corridor',    x1:-36, z1:-24, x2: 24, z2:-22 },
+
+  // Main floor — left column (Lab CS + the BIG tall narrow Core Lab)
+  { id:'lab_cs',       name:'Lab Customer Service',             dept:'lab_cs',      x1:-36, z1:-22, x2:-28, z2:-18 },
+  { id:'core_lab',     name:'Core Laboratory',                  dept:'core_lab',    x1:-36, z1:-18, x2:-28, z2:  2 },
+
+  // K elevators column
+  { id:'k_elev',       name:'K Elevators',                      dept:'corridor',    x1:-28, z1:-22, x2:-26, z2:  2 },
+
+  // SP Sign-Out Offices · 16 individual offices in a 2-column × 8-row grid
+  { id:'sp_off_01', name:'SP Sign-Out · Office 1',         dept:'sp_office',   x1:-26, z1:-22.0, x2:-22, z2:-19.5 },
+  { id:'sp_off_02', name:'SP Sign-Out · Office 2',         dept:'sp_office',   x1:-22, z1:-22.0, x2:-18, z2:-19.5 },
+  { id:'sp_off_03', name:'SP Sign-Out · Office 3',         dept:'sp_office',   x1:-26, z1:-19.5, x2:-22, z2:-17.0 },
+  { id:'sp_off_04', name:'SP Sign-Out · Office 4',         dept:'sp_office',   x1:-22, z1:-19.5, x2:-18, z2:-17.0 },
+  { id:'sp_off_05', name:'SP Sign-Out · Office 5',         dept:'sp_office',   x1:-26, z1:-17.0, x2:-22, z2:-14.5 },
+  { id:'sp_off_06', name:'SP Sign-Out · Office 6',         dept:'sp_office',   x1:-22, z1:-17.0, x2:-18, z2:-14.5 },
+  { id:'sp_off_07', name:'SP Sign-Out · Office 7',         dept:'sp_office',   x1:-26, z1:-14.5, x2:-22, z2:-12.0 },
+  { id:'sp_off_08', name:'SP Sign-Out · Office 8',         dept:'sp_office',   x1:-22, z1:-14.5, x2:-18, z2:-12.0 },
+  { id:'sp_off_09', name:'SP Sign-Out · Office 9',         dept:'sp_office',   x1:-26, z1:-12.0, x2:-22, z2: -9.5 },
+  { id:'sp_off_10', name:'SP Sign-Out · Office 10',         dept:'sp_office',   x1:-22, z1:-12.0, x2:-18, z2: -9.5 },
+  { id:'sp_off_11', name:'SP Sign-Out · Office 11',         dept:'sp_office',   x1:-26, z1: -9.5, x2:-22, z2: -7.0 },
+  { id:'sp_off_12', name:'SP Sign-Out · Office 12',         dept:'sp_office',   x1:-22, z1: -9.5, x2:-18, z2: -7.0 },
+  { id:'sp_off_13', name:'SP Sign-Out · Office 13',         dept:'sp_office',   x1:-26, z1: -7.0, x2:-22, z2: -4.5 },
+  { id:'sp_off_14', name:'SP Sign-Out · Office 14',         dept:'sp_office',   x1:-22, z1: -7.0, x2:-18, z2: -4.5 },
+  { id:'sp_off_15', name:'SP Sign-Out · Office 15',         dept:'sp_office',   x1:-26, z1: -4.5, x2:-22, z2: -2.0 },
+  { id:'sp_off_16', name:'SP Sign-Out · Office 16',         dept:'sp_office',   x1:-22, z1: -4.5, x2:-18, z2: -2.0 },
+
+  // Chair / Vice Chair office below the SP offices grid
+  { id:'chair',        name:'Office of the Chair · Vice Chair', dept:'chair',       x1:-26, z1: -2, x2:-18, z2:  2 },
+
+  // Right column — Blood Bank floor · Cytopathology · Autopsy Suite
+  { id:'bb_floor',     name:'Blood Bank · Floor',               dept:'bb',          x1:-18, z1:-22, x2:-10, z2:  2 },
+  { id:'cytopath',     name:'Cytopathology',                    dept:'cytopath',    x1:-10, z1:-22, x2:  2, z2:  2 },
+  { id:'autopsy',      name:'Autopsy Suite',                    dept:'autopsy',     x1:  2, z1:-22, x2: 24, z2:  2 },
+
+  // ============================================================================
+  //  SKY BRIDGE — 16 m gap between the two buildings
+  // ============================================================================
+  { id:'bridge',       name:'2nd-Floor Sky Bridge',             dept:'corridor',    x1: -2, z1:  2, x2:  2, z2: 18 },
+
+  // ============================================================================
+  //  SOUTH BUILDING (Education / Research wing)
+  //  Footprint: x=-36 to 28, z=18 to 42 (64m × 24m)
+  // ============================================================================
+  { id:'entry_corr',   name:'Entry Corridor',                   dept:'corridor',    x1:-36, z1: 18, x2: 28, z2: 20 },
+
+  // Top band — molecular · grossing · accessioning · quality · micro · HLA · spec heme
+  { id:'molec1',       name:'Molecular Lab',                    dept:'molec',       x1:-36, z1: 20, x2:-28, z2: 32 },
+  { id:'gross',        name:'Grossing Area',                    dept:'gross',       x1:-28, z1: 20, x2:-16, z2: 32 },
+  { id:'accession',    name:'Accessioning Area',                dept:'gross',       x1:-16, z1: 20, x2: -8, z2: 24 },
+  { id:'quality',      name:'Quality Room',                     dept:'quality',     x1:-16, z1: 24, x2: -8, z2: 32 },
+  { id:'micro1',       name:'Microbiology Lab',                 dept:'micro',       x1: -8, z1: 20, x2: 16, z2: 32 },
+  { id:'hla1',         name:'HLA Lab',                          dept:'hla',         x1: 16, z1: 20, x2: 28, z2: 26 },
+  { id:'special',      name:'Special Heme',                     dept:'special',     x1: 16, z1: 26, x2: 28, z2: 32 },
+
+  // Mid corridor
+  { id:'mid_corr',     name:'Mid Corridor',                     dept:'corridor',    x1:-36, z1: 32, x2: 28, z2: 34 },
+
+  // Bottom band — histology pipeline · scanning · second molec/micro/HLA · IHC
+  { id:'microtomy',    name:'Microtomy',                        dept:'histology',   x1:-36, z1: 34, x2:-28, z2: 42 },
+  { id:'processing',   name:'Histology · Processing',           dept:'histology',   x1:-28, z1: 34, x2:-20, z2: 38 },
+  { id:'collation',    name:'Histology · Collation',            dept:'histology',   x1:-28, z1: 38, x2:-20, z2: 42 },
+  { id:'scanning',     name:'Scanning Room',                    dept:'histology',   x1:-20, z1: 34, x2:-12, z2: 42 },
+  { id:'molec2',       name:'Molecular Lab',                    dept:'molec',       x1:-12, z1: 34, x2: -4, z2: 42 },
+  { id:'micro2',       name:'Microbiology Lab',                 dept:'micro',       x1: -4, z1: 34, x2:  8, z2: 42 },
+  { id:'hla2',         name:'HLA Lab',                          dept:'hla',         x1:  8, z1: 34, x2: 18, z2: 42 },
+  { id:'ihc_lab',      name:'IHC Lab',                          dept:'ihc',         x1: 18, z1: 34, x2: 28, z2: 42 },
+];
+
+// ============================================================================
+//  DEPARTMENT PALETTE — distinct color per section
+// ============================================================================
+const DEPT_COLORS = {
+  bb:        { floor: 0xff4628, label: 'Blood Bank' },
+  coag:      { floor: 0xb845e0, label: 'Coagulation' },
+  lab_cs:    { floor: 0xea8b1e, label: 'Lab Customer Service' },
+  core_lab:  { floor: 0x5cc6ee, label: 'Core Laboratory' },
+  sp_office: { floor: 0xea8b1e, label: 'SP Sign-Out Office' },
+  chair:     { floor: 0xea8b1e, label: 'Chair · Vice Chair' },
+  cytopath:  { floor: 0x6b3acc, label: 'Cytopathology' },
+  autopsy:   { floor: 0x4dba6c, label: 'Autopsy Suite' },
+  molec:     { floor: 0xe84b8e, label: 'Molecular Lab' },
+  gross:     { floor: 0xefcc4c, label: 'Grossing · Accessioning' },
+  quality:   { floor: 0xd28218, label: 'Quality Room' },
+  micro:     { floor: 0xfbcc88, label: 'Microbiology' },
+  hla:       { floor: 0xe04a8e, label: 'HLA Lab' },
+  special:   { floor: 0xb840f0, label: 'Special Heme' },
+  histology: { floor: 0xefcc4c, label: 'Histology' },
+  ihc:       { floor: 0xefcc4c, label: 'IHC Lab' },
+  corridor:  { floor: 0x6c7388, label: 'Circulation' },
+};
+
+const SECTION_ORDER = ['core_lab','bb','autopsy','cytopath','gross','histology','ihc','molec','micro','hla','special','quality','sp_office','chair','lab_cs','coag','corridor'];
+
+// ============================================================================
+//  GUIDED TOUR — 16 stops following specimen flow through the department.
+//  Each stop maps to a room (some sub-stops share a room with focusPoint
+//  pinning the camera to a different sub-zone). Educational content is
+//  written for medical students at a 10,000-foot level.
+// ============================================================================
+const TOUR_STOPS = [
+  // ============ SOUTH BUILDING (Education / Research wing) ============
+  { id:'accessioning',   title:'Accessioning', subtitle:'Where every sample checks in', roomId:'accession',
+    overview:"This is the front door for every tissue sample. When a doctor removes tissue during surgery, it comes here first. Each sample is scanned and given its own barcode, like a boarding pass, so it can never be mixed up with anyone else.",
+    tests:['Logging in every sample','Giving each one a barcode ID','Double-checking the patient','Sending it next door to grossing'],
+    methods:['Barcode scanners','A computer tracking system','Tubes that shoot samples in','Careful chain-of-custody records'] },
+
+  { id:'grossing',       title:'Grossing', subtitle:'Looking at tissue with the naked eye', roomId:'gross',
+    overview:"Right next door, scientists examine the tissue without a microscope. They measure it, describe it, take photos, and cut tiny pieces to turn into slides. Their notes become part of the diagnosis.",
+    tests:['Examining tumors removed in surgery','Checking the edges to see if a cancer was fully removed','Sampling lymph nodes','Photographing each specimen'],
+    methods:['Stainless-steel cutting stations','Special inks to mark the edges','Tiny cassettes to hold the pieces','Voice dictation into the computer'] },
+
+  { id:'molecular',      title:'Molecular Diagnostics', subtitle:'Reading the DNA', roomId:'molec1',
+    overview:"Here, DNA and RNA do the talking. Machines read the genetic code inside cells to find the exact change that is driving a disease, which helps doctors pick a medicine aimed right at it.",
+    tests:['Finding the gene changes behind a cancer','Matching patients to targeted medicines','Checking for inherited risks','Reading a tumor\'s genetic fingerprint'],
+    methods:['DNA sequencing machines','PCR machines that copy DNA','FISH (glowing DNA markers)','Powerful analysis computers'] },
+
+  { id:'hist-process',   title:'Histology · Processing', subtitle:'Turning tissue into wax blocks', roomId:'processing',
+    overview:"Tissue is too soft and wet to slice thin, so overnight machines soak it in wax. By morning, each piece is a solid wax block, ready to be sliced paper-thin.",
+    tests:['Preparing almost every surgery sample','Fast runs for tiny biopsies'],
+    methods:['Automated tissue processors','Wax (paraffin) embedding','Overnight processing'] },
+
+  { id:'hist-microtomy', title:'Histology · Microtomy', subtitle:'Wax blocks into glass slides', roomId:'microtomy',
+    overview:"A machine called a microtome shaves the wax block into ribbons thinner than a hair. The slices float on warm water and are lifted onto glass slides.",
+    tests:['Making the standard pink-and-purple slides','Extra-deep slices to find tiny clues','Re-cuts for special tests'],
+    methods:['A microtome (super-precise slicer)','Warm water baths','Specially coated glass slides'] },
+
+  { id:'hist-collation', title:'Histology · Collation', subtitle:'Coloring and finishing the slides', roomId:'collation',
+    overview:"The last step in the slide lab. Slides are dipped in dyes so the cells show up, sealed with a thin glass cover, matched to their paperwork, and sent to the pathologist.",
+    tests:['The classic pink-and-purple (H&E) stain','Special stains that reveal germs or fibers','Matching every slide to the right case'],
+    methods:['Automated staining machines','Coverslipping machines','Careful sorting by case'] },
+
+  { id:'scanning',       title:'Slide Scanning', subtitle:'Turning glass slides into digital images', roomId:'scanning',
+    overview:"Scanners photograph entire slides at very high zoom, making huge digital images. Pathologists can then read them on a computer, share them with experts anywhere, and even get help from AI.",
+    tests:['Getting expert second opinions from far away','Sharing cases between hospitals','AI helping to count cells','Building teaching libraries'],
+    methods:['Whole-slide scanners','Giant digital image files','Telepathology (pathology over the internet)'] },
+
+  { id:'ihc',            title:'IHC Staining', subtitle:'Using antibodies to reveal clues', roomId:'ihc_lab',
+    overview:"Some cells look alike under a regular stain. Antibody stains attach to one specific protein and add color only where it is, helping identify exactly what kind of cell or cancer it is.",
+    tests:['Figuring out the exact type of a cancer','Finding where a cancer started','Guiding which targeted medicine to use','Telling apart kinds of lymphoma'],
+    methods:['Antibodies that find one protein','Automated staining robots','Color tags you can see under the microscope'] },
+
+  { id:'micro',          title:'Microbiology · Walk-through', subtitle:'Hunting germs', roomId:'micro1',
+    overview:"On the way to the core lab we pass Microbiology, where the team grows and identifies the bacteria, viruses, and fungi that make people sick, and tests which medicine will beat them.",
+    tests:['Blood and urine cultures','Strep and stomach-bug tests','Tests for viruses like HIV and hepatitis','Respiratory virus panels'],
+    methods:['Biosafety cabinets (safe work hoods)','Incubators that grow microbes','A machine that IDs germs (MALDI-TOF)','Automated culture systems'] },
+
+  // ============ NORTH BUILDING (Main Hospital · across the bridge) ============
+  { id:'core-overview',  title:'Core Laboratory · Overview', subtitle:'The 24/7 high-speed lab', roomId:'core_lab',
+    overview:"This is the biggest room in the department, and it never closes. A conveyor belt, like an airport baggage system, carries thousands of blood tubes to machines that run most of the hospital's everyday tests.",
+    tests:['Everyday blood chemistry','Blood cell counts','Heart-attack markers','Thyroid, pregnancy, and more'],
+    methods:['A robotic conveyor track','Rows of automated analyzers','Open day and night'] },
+
+  { id:'core-inlet',     title:'Core Lab · Sample Inlet & Pre-analytics', subtitle:'Where blood tubes arrive and get prepped', roomId:'core_lab',
+    focusPoint:{ x:-32, z:-13 }, focusZoom:4,
+    overview:"Tubes drop in here and get scanned, spun very fast to separate the liquid from the cells, uncapped, and split into smaller portions so several machines can test them at once.",
+    tests:['Checking in and scanning each tube','Spinning to separate the blood','Removing caps for the machines','Splitting samples for many tests'],
+    methods:['High-speed centrifuges (spinners)','An automatic decapper','A robot that splits samples'] },
+
+  { id:'core-heme-coag', title:'Core Lab · Hematology & Coagulation', subtitle:'Blood counts and clotting tests', roomId:'core_lab',
+    focusPoint:{ x:-32, z:-7 }, focusZoom:4,
+    overview:"Machines here count your red cells, white cells, and platelets, and measure how fast your blood clots, which is important for people on blood thinners.",
+    tests:['Complete blood count (CBC)','Clotting-time tests','Young red blood cell counts','Flagging unusual cells for a human to check'],
+    methods:['Cell-counting analyzers','Clot-detection machines','Expert manual review'] },
+
+  { id:'core-imm-chem',  title:'Core Lab · Immunoassay & Chemistry', subtitle:'Hormones, heart markers, and chemistry', roomId:'core_lab',
+    focusPoint:{ x:-32, z:-3 }, focusZoom:4,
+    overview:"These analyzers measure hormones, heart-attack markers, tumor markers, and the basic chemicals in your blood like sodium, sugar, and cholesterol.",
+    tests:['Thyroid and other hormones','Heart-attack markers','Blood sugar, salts, and cholesterol','Liver tests'],
+    methods:['Immunoassay analyzers','Chemistry analyzers','Light-based measurements'] },
+
+  { id:'core-outlet',    title:'Core Lab · Outlet & Stockyards', subtitle:'Capping and storing samples', roomId:'core_lab',
+    focusPoint:{ x:-32, z:0.5 }, focusZoom:4,
+    overview:"After testing, tubes get re-capped to stay clean and are stored cold in case a doctor needs an extra test later, like a giant, well-organized refrigerator.",
+    tests:['Adding extra tests later','Re-running important results','Finding samples to send out','Quality checks'],
+    methods:['An automatic recapper','Refrigerated storage','Barcode retrieval'] },
+
+  { id:'surgpath',       title:'Surgical Pathology · Sign-Out', subtitle:'Where the diagnosis is made', roomId:'sp_off_08',
+    overview:"This is the answer at the end of the journey. In their offices, pathologists study the glass slides under a microscope (or on a big screen) and write the report that tells your doctor exactly what is going on.",
+    tests:['Reading biopsies','Working up surgery samples','Sizing up (staging) cancers','Getting expert second opinions'],
+    methods:['Microscopes','Digital pathology screens','16 individual sign-out offices'] },
+
+  { id:'transfusion',    title:'Transfusion · Blood Bank', subtitle:'Keeping blood transfusions safe', roomId:'bb',
+    overview:"The blood bank types and matches donated blood so it is safe to give to patients, and double-checks every unit before a transfusion.",
+    tests:['Finding your blood type','Checking for antibodies','Matching donor blood to the patient','Working up transfusion reactions'],
+    methods:['Blood-typing tests','Crossmatching','Refrigerated blood storage'] },
+];
+
+// ============================================================================
+//  GEOMETRY CONSTANTS
+// ============================================================================
+const WALL_HEIGHT    = 3.2;
+const WALL_THICKNESS = 0.18;
+const DOOR_WIDTH     = 1.8;
+const DOOR_HEIGHT    = 2.2;
+const PLAYER_HEIGHT  = 1.65;
+const PLAYER_RADIUS  = 0.32;
+
+// ============================================================================
+//  EDGE CLASSIFICATION
+// ============================================================================
+function isNestedIn(inner, outer) {
+  return inner !== outer
+      && inner.x1 >= outer.x1 && inner.x2 <= outer.x2
+      && inner.z1 >= outer.z1 && inner.z2 <= outer.z2;
+}
+
+function findContainer(rooms, idx) {
+  const r = rooms[idx];
+  if (!r.nested) return -1;
+  for (let j = 0; j < rooms.length; j++) {
+    if (j === idx) continue;
+    if (rooms[j].nested) continue;
+    if (isNestedIn(r, rooms[j])) return j;
+  }
+  return -1;
+}
+
+function sliceIntervals(intervals, start, end, newType, neighbor) {
+  const result = [];
+  for (const iv of intervals) {
+    if (iv.end <= start + 1e-6 || iv.start >= end - 1e-6) {
+      result.push(iv);
+    } else {
+      if (iv.start < start - 1e-6) {
+        result.push({ start: iv.start, end: start, type: iv.type, neighbor: iv.neighbor });
+      }
+      result.push({
+        start: Math.max(iv.start, start),
+        end:   Math.min(iv.end,   end),
+        type:  newType,
+        neighbor
+      });
+      if (iv.end > end + 1e-6) {
+        result.push({ start: end, end: iv.end, type: iv.type, neighbor: iv.neighbor });
+      }
+    }
+  }
+  return result;
+}
+
+function classifyEdges(rooms) {
+  const result = rooms.map(() => ({ N:[], S:[], E:[], W:[] }));
+
+  rooms.forEach((room, i) => {
+    if (room.nested) {
+      const parent = findContainer(rooms, i);
+      if (parent !== -1) {
+        result[i].N.push({ start: room.x1, end: room.x2, type: 'int', neighbor: parent });
+        result[i].S.push({ start: room.x1, end: room.x2, type: 'int', neighbor: parent });
+        result[i].W.push({ start: room.z1, end: room.z2, type: 'int', neighbor: parent });
+        result[i].E.push({ start: room.z1, end: room.z2, type: 'int', neighbor: parent });
+      }
+      return;
+    }
+
+    const sides = {
+      N: { axis: 'h', value: room.z1, vs: room.x1, ve: room.x2 },
+      S: { axis: 'h', value: room.z2, vs: room.x1, ve: room.x2 },
+      W: { axis: 'v', value: room.x1, vs: room.z1, ve: room.z2 },
+      E: { axis: 'v', value: room.x2, vs: room.z1, ve: room.z2 },
+    };
+
+    for (const sideName of ['N','S','E','W']) {
+      const s = sides[sideName];
+      let intervals = [{ start: s.vs, end: s.ve, type: 'ext' }];
+
+      rooms.forEach((other, j) => {
+        if (i === j || other.nested) return;
+        let opp = null;
+        if      (sideName === 'N' && Math.abs(other.z2 - room.z1) < 1e-6) opp = { vs: other.x1, ve: other.x2 };
+        else if (sideName === 'S' && Math.abs(other.z1 - room.z2) < 1e-6) opp = { vs: other.x1, ve: other.x2 };
+        else if (sideName === 'W' && Math.abs(other.x2 - room.x1) < 1e-6) opp = { vs: other.z1, ve: other.z2 };
+        else if (sideName === 'E' && Math.abs(other.x1 - room.x2) < 1e-6) opp = { vs: other.z1, ve: other.z2 };
+        if (!opp) return;
+
+        const ovStart = Math.max(s.vs, opp.vs);
+        const ovEnd   = Math.min(s.ve, opp.ve);
+        if (ovEnd - ovStart < 0.1) return;
+
+        intervals = sliceIntervals(intervals, ovStart, ovEnd, 'int', j);
+      });
+
+      result[i][sideName] = intervals;
+    }
+  });
+
+  return result;
+}
+
+// ============================================================================
+//  WALL BUILDER
+// ============================================================================
+function addBox(group, mat, x, y, z, w, h, d) {
+  if (w < 0.05 || h < 0.05 || d < 0.05) return;
+  const geom = new THREE.BoxGeometry(w, h, d);
+  const mesh = new THREE.Mesh(geom, mat);
+  mesh.position.set(x, y, z);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  group.add(mesh);
+  return mesh;
+}
+
+function buildWallSeg(group, mat, axis, fixed, start, end, hasDoor) {
+  const length = end - start;
+  if (length < 0.1) return;
+
+  if (!hasDoor || length < DOOR_WIDTH + 1.2) {
+    const x = (axis === 'h') ? (start + end) / 2 : fixed;
+    const z = (axis === 'h') ? fixed : (start + end) / 2;
+    const w = (axis === 'h') ? length : WALL_THICKNESS;
+    const d = (axis === 'h') ? WALL_THICKNESS : length;
+    addBox(group, mat, x, WALL_HEIGHT/2, z, w, WALL_HEIGHT, d);
+    return;
+  }
+
+  const center  = (start + end) / 2;
+  const dStart  = center - DOOR_WIDTH/2;
+  const dEnd    = center + DOOR_WIDTH/2;
+
+  if (dStart > start + 0.05) {
+    const segLen = dStart - start;
+    const x = (axis === 'h') ? (start + dStart)/2 : fixed;
+    const z = (axis === 'h') ? fixed : (start + dStart)/2;
+    const w = (axis === 'h') ? segLen : WALL_THICKNESS;
+    const d = (axis === 'h') ? WALL_THICKNESS : segLen;
+    addBox(group, mat, x, WALL_HEIGHT/2, z, w, WALL_HEIGHT, d);
+  }
+  if (dEnd < end - 0.05) {
+    const segLen = end - dEnd;
+    const x = (axis === 'h') ? (dEnd + end)/2 : fixed;
+    const z = (axis === 'h') ? fixed : (dEnd + end)/2;
+    const w = (axis === 'h') ? segLen : WALL_THICKNESS;
+    const d = (axis === 'h') ? WALL_THICKNESS : segLen;
+    addBox(group, mat, x, WALL_HEIGHT/2, z, w, WALL_HEIGHT, d);
+  }
+  const lintelH = WALL_HEIGHT - DOOR_HEIGHT;
+  if (lintelH > 0.1) {
+    const x = (axis === 'h') ? center : fixed;
+    const z = (axis === 'h') ? fixed : center;
+    const w = (axis === 'h') ? DOOR_WIDTH : WALL_THICKNESS;
+    const d = (axis === 'h') ? WALL_THICKNESS : DOOR_WIDTH;
+    addBox(group, mat, x, DOOR_HEIGHT + lintelH/2, z, w, lintelH, d);
+  }
+}
+
+const WALL_MATERIAL = new THREE.MeshStandardMaterial({
+  color: 0xeeeae0,
+  roughness: 0.92,
+  metalness: 0.02,
+});
+const EXT_WALL_MATERIAL = new THREE.MeshStandardMaterial({
+  color: 0xe2dccb,
+  roughness: 0.95,
+  metalness: 0.02,
+});
+
+const wallColliders = [];
+
+function buildAllWalls(rooms) {
+  const group = new THREE.Group();
+  const edges = classifyEdges(rooms);
+  const drawnInt = new Set();
+
+  rooms.forEach((room, i) => {
+    for (const sideName of ['N','S','E','W']) {
+      const intervals = edges[i][sideName];
+      const isHoriz   = (sideName === 'N' || sideName === 'S');
+      const fixed     = (sideName === 'N') ? room.z1
+                      : (sideName === 'S') ? room.z2
+                      : (sideName === 'W') ? room.x1
+                      : room.x2;
+
+      for (const iv of intervals) {
+        if (iv.end - iv.start < 0.05) continue;
+
+        if (iv.type === 'int') {
+          if (i > iv.neighbor) continue;
+          const key = `${isHoriz?'h':'v'}|${fixed.toFixed(2)}|${iv.start.toFixed(2)}|${iv.end.toFixed(2)}`;
+          if (drawnInt.has(key)) continue;
+          drawnInt.add(key);
+          buildWallSeg(group, WALL_MATERIAL, isHoriz?'h':'v', fixed, iv.start, iv.end, true);
+        } else {
+          buildWallSeg(group, EXT_WALL_MATERIAL, isHoriz?'h':'v', fixed, iv.start, iv.end, false);
+        }
+
+        const hasGap = (iv.type === 'int' && (iv.end - iv.start) >= DOOR_WIDTH + 1.2);
+        const doorCenter = hasGap ? (iv.start + iv.end) / 2 : null;
+        if (isHoriz) {
+          wallColliders.push({
+            x1: iv.start, x2: iv.end,
+            z1: fixed - WALL_THICKNESS/2, z2: fixed + WALL_THICKNESS/2,
+            doorCenter, horizontal: true,
+          });
+        } else {
+          wallColliders.push({
+            x1: fixed - WALL_THICKNESS/2, x2: fixed + WALL_THICKNESS/2,
+            z1: iv.start, z2: iv.end,
+            doorCenter, horizontal: false,
+          });
+        }
+      }
+    }
+  });
+
+  return group;
+}
+
+// ============================================================================
+//  FLOOR PADS
+// ============================================================================
+function buildFloors(rooms) {
+  const group = new THREE.Group();
+
+  // Main floor pads (exact blueprint colors, slightly emissive so they read in shadow)
+  rooms.forEach(room => {
+    if (room.nested) return;
+    const palette = DEPT_COLORS[room.dept] || DEPT_COLORS.corridor;
+    const w = room.x2 - room.x1;
+    const d = room.z2 - room.z1;
+    const cx = (room.x1 + room.x2) / 2;
+    const cz = (room.z1 + room.z2) / 2;
+
+    const geom = new THREE.PlaneGeometry(w - 0.12, d - 0.12);
+    const mat  = new THREE.MeshStandardMaterial({
+      color: palette.floor,
+      roughness: 0.55,
+      metalness: 0.05,
+      emissive: palette.floor,
+      emissiveIntensity: 0.18,
+    });
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.set(cx, 0.02, cz);
+    mesh.receiveShadow = true;
+    mesh.userData = { roomId: room.id, dept: room.dept };
+    group.add(mesh);
+
+    // Thin dark perimeter line at the floor edge — gives each room a crisp boundary
+    // without needing 3D walls. Built as 4 thin boxes around the rectangle.
+    if (room.dept !== 'corridor') {
+      const edgeMat = new THREE.MeshStandardMaterial({
+        color: 0x0a1228, roughness: 0.7, metalness: 0.2,
+      });
+      const t = 0.06;  // edge thickness
+      const h = 0.12;  // edge height (very low)
+      // North edge
+      const nE = new THREE.Mesh(new THREE.BoxGeometry(w, h, t), edgeMat);
+      nE.position.set(cx, h/2, room.z1);
+      group.add(nE);
+      // South edge
+      const sE = new THREE.Mesh(new THREE.BoxGeometry(w, h, t), edgeMat);
+      sE.position.set(cx, h/2, room.z2);
+      group.add(sE);
+      // West edge
+      const wE = new THREE.Mesh(new THREE.BoxGeometry(t, h, d), edgeMat);
+      wE.position.set(room.x1, h/2, cz);
+      group.add(wE);
+      // East edge
+      const eE = new THREE.Mesh(new THREE.BoxGeometry(t, h, d), edgeMat);
+      eE.position.set(room.x2, h/2, cz);
+      group.add(eE);
+    }
+  });
+
+  // Nested rooms (e.g. Coagulation inside Blood Bank) — drawn slightly higher
+  rooms.forEach(room => {
+    if (!room.nested) return;
+    const palette = DEPT_COLORS[room.dept] || DEPT_COLORS.corridor;
+    const w = room.x2 - room.x1;
+    const d = room.z2 - room.z1;
+    const cx = (room.x1 + room.x2) / 2;
+    const cz = (room.z1 + room.z2) / 2;
+    const mat = new THREE.MeshStandardMaterial({
+      color: palette.floor, roughness: 0.5, metalness: 0.05,
+      emissive: palette.floor, emissiveIntensity: 0.22,
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.12, d - 0.12), mat);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.set(cx, 0.05, cz);
+    mesh.receiveShadow = true;
+    mesh.userData = { roomId: room.id, dept: room.dept };
+    group.add(mesh);
+  });
+
+  return group;
+}
+
+// ============================================================================
+//  FURNITURE
+// ============================================================================
+function addFurniture(group, rooms) {
+  // ---- Material library ----
+  const M = {
+    bench:    new THREE.MeshStandardMaterial({ color: 0x2a3656, roughness: 0.65 }),
+    desk:     new THREE.MeshStandardMaterial({ color: 0x4a3526, roughness: 0.55 }),
+    chair:    new THREE.MeshStandardMaterial({ color: 0x1a1a22, roughness: 0.6 }),
+    chairBack:new THREE.MeshStandardMaterial({ color: 0x252530, roughness: 0.6 }),
+    equip:    new THREE.MeshStandardMaterial({ color: 0xc8c4b8, roughness: 0.4 }),
+    monitor:  new THREE.MeshStandardMaterial({ color: 0x0a0e1c, roughness: 0.3, emissive: 0x4a6fff, emissiveIntensity: 0.25 }),
+    scope:    new THREE.MeshStandardMaterial({ color: 0xeaeae5, roughness: 0.35, metalness: 0.4 }),
+    scopeBlk: new THREE.MeshStandardMaterial({ color: 0x1a1a22, roughness: 0.55, metalness: 0.3 }),
+    fridge:   new THREE.MeshStandardMaterial({ color: 0xe8e4d8, roughness: 0.4 }),
+    fridgeRd: new THREE.MeshStandardMaterial({ color: 0xb83030, roughness: 0.5 }),
+    steel:    new THREE.MeshStandardMaterial({ color: 0xa8aab0, roughness: 0.3, metalness: 0.55 }),
+    sink:     new THREE.MeshStandardMaterial({ color: 0xc0c4cc, roughness: 0.25, metalness: 0.65 }),
+    drape:    new THREE.MeshStandardMaterial({ color: 0xf2eee0, roughness: 0.7 }),
+    hood:     new THREE.MeshStandardMaterial({ color: 0xd0d4dc, roughness: 0.4, metalness: 0.3 }),
+    hoodGlass:new THREE.MeshStandardMaterial({ color: 0x2a4a78, roughness: 0.15, metalness: 0.6, transparent:true, opacity:0.55 }),
+    incub:    new THREE.MeshStandardMaterial({ color: 0xe2dcc8, roughness: 0.55 }),
+    redCap:   new THREE.MeshStandardMaterial({ color: 0x8a3030, roughness: 0.5 }),
+    table:    new THREE.MeshStandardMaterial({ color: 0xb0a890, roughness: 0.5 }),
+  };
+
+  function box(x, y, z, w, h, d, mat) {
+    if (w < 0.05 || h < 0.05 || d < 0.05) return null;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    group.add(m);
+    return m;
+  }
+
+  function cyl(x, y, z, r, h, mat) {
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 14), mat);
+    m.position.set(x, y, z);
+    m.castShadow = true;
+    group.add(m);
+    return m;
+  }
+
+  // ---- Sub-builders for each kind of room ----
+
+  function deskWithChair(cx, cz, facing) {
+    // facing: 1 = chair to north (smaller z), -1 = chair to south
+    const dy = (facing === 1) ? -0.8 : 0.8;
+    box(cx, 0.40, cz, 1.4, 0.78, 0.7, M.desk);                  // desk top
+    box(cx - 0.55, 0.50, cz - 0.20, 0.35, 0.30, 0.05, M.monitor); // monitor
+    box(cx, 0.45, cz + dy, 0.5, 0.45, 0.5, M.chair);            // chair seat
+    box(cx, 0.85, cz + dy, 0.5, 0.65, 0.08, M.chairBack);       // chair back
+  }
+
+  function microscope(cx, y, cz) {
+    box(cx, y + 0.10, cz, 0.20, 0.20, 0.30, M.scopeBlk);  // base
+    cyl(cx, y + 0.32, cz, 0.05, 0.30, M.scope);            // body column
+    box(cx + 0.05, y + 0.42, cz, 0.18, 0.10, 0.18, M.scopeBlk); // head
+    cyl(cx, y + 0.55, cz, 0.04, 0.10, M.scope);            // ocular
+  }
+
+  function grossingStation(cx, cz) {
+    // Big stainless-steel grossing station with sink, downdraft hood, dictation mic
+    box(cx, 0.45, cz, 1.6, 0.90, 1.0, M.steel);  // main bench
+    // Sink (recessed dark area)
+    box(cx - 0.45, 0.91, cz, 0.50, 0.04, 0.40, M.sink);
+    // Downdraft hood/cover (rises behind)
+    box(cx, 1.45, cz - 0.42, 1.6, 0.75, 0.20, M.hood);
+    box(cx, 1.85, cz - 0.30, 1.6, 0.05, 0.50, M.hood); // top shelf
+    // Dictation mic (small)
+    cyl(cx + 0.55, 1.10, cz - 0.30, 0.025, 0.30, M.scopeBlk);
+  }
+
+  function tissueProcessor(cx, cz) {
+    // Big rectangular tissue processor (Leica/Sakura)
+    box(cx, 0.65, cz, 1.4, 1.30, 1.0, M.equip);
+    box(cx, 1.32, cz, 1.2, 0.04, 0.85, M.scopeBlk);   // top control panel area
+    box(cx - 0.30, 1.22, cz - 0.30, 0.40, 0.08, 0.12, M.monitor); // screen
+  }
+
+  function microtomeStation(cx, cz) {
+    box(cx, 0.40, cz, 1.0, 0.78, 0.7, M.bench);     // bench
+    box(cx, 0.85, cz - 0.10, 0.50, 0.20, 0.30, M.scopeBlk); // microtome body
+    cyl(cx + 0.30, 0.90, cz - 0.10, 0.06, 0.15, M.steel);  // wheel
+  }
+
+  function autoStainer(cx, cz) {
+    // Auto-stainer (Ventana / Bond / Leica Autostainer XL)
+    box(cx, 0.55, cz, 1.4, 1.10, 1.0, M.equip);
+    box(cx, 1.16, cz, 1.2, 0.06, 0.85, M.monitor);
+  }
+
+  function scanner(cx, cz) {
+    // Whole-slide scanner (Aperio etc.)
+    box(cx, 0.50, cz, 0.90, 1.0, 0.85, M.equip);
+    box(cx + 0.10, 1.05, cz - 0.20, 0.40, 0.07, 0.30, M.monitor);
+  }
+
+  function biosafetyHood(cx, cz) {
+    box(cx, 0.45, cz, 1.6, 0.90, 0.9, M.hood);            // base
+    box(cx, 1.40, cz - 0.35, 1.6, 1.10, 0.05, M.hoodGlass); // sash
+    box(cx, 2.00, cz, 1.6, 0.20, 0.9, M.hood);            // top
+  }
+
+  function pcrMachine(cx, cz) {
+    box(cx, 0.45, cz, 0.7, 0.55, 0.6, M.equip);
+    box(cx, 0.74, cz + 0.10, 0.55, 0.06, 0.30, M.monitor);
+  }
+
+  function bloodFridge(cx, cz) {
+    // Stand-up blood-bank fridge with red door (color-flagged)
+    box(cx, 1.05, cz, 0.85, 2.10, 0.80, M.fridge);
+    box(cx + 0.43, 1.05, cz, 0.04, 1.90, 0.70, M.fridgeRd);
+  }
+
+  function autopsyTable(cx, cz) {
+    // Stainless table with drainage groove
+    box(cx, 0.55, cz, 2.4, 0.10, 1.0, M.steel);
+    box(cx, 0.30, cz, 0.20, 0.55, 0.20, M.steel);
+    box(cx + 1.0, 0.30, cz, 0.20, 0.55, 0.20, M.steel);
+    box(cx - 1.0, 0.30, cz, 0.20, 0.55, 0.20, M.steel);
+    // Hanging organ scale
+    box(cx + 0.50, 1.25, cz + 0.45, 0.20, 0.20, 0.15, M.steel);
+  }
+
+  function incubator(cx, cz) {
+    box(cx, 0.85, cz, 0.7, 1.70, 0.8, M.incub);
+    box(cx + 0.36, 0.85, cz, 0.04, 1.50, 0.65, M.scopeBlk);
+  }
+
+  // ---- Now place equipment per room ----
+  rooms.forEach(room => {
+    if (room.dept === 'corridor' || room.nested) return;
+    const w  = room.x2 - room.x1;
+    const d  = room.z2 - room.z1;
+    const cx = (room.x1 + room.x2) / 2;
+    const cz = (room.z1 + room.z2) / 2;
+
+    if (room.id === 'gross') {
+      // Multiple grossing stations along the long axis
+      const nStations = 4;
+      for (let i = 0; i < nStations; i++) {
+        const px = room.x1 + 1.5 + (i * (w - 3) / (nStations - 1));
+        grossingStation(px, cz);
+      }
+    }
+    else if (room.id === 'accession') {
+      // Front desk + intake counter
+      box(cx, 0.45, room.z1 + 0.8, 3.5, 0.95, 0.9, M.desk);   // long counter
+      box(cx - 1.4, 0.50, room.z1 + 0.6, 0.35, 0.30, 0.05, M.monitor);
+      box(cx + 1.4, 0.50, room.z1 + 0.6, 0.35, 0.30, 0.05, M.monitor);
+      // Specimen receiving bins
+      box(room.x1 + 1.0, 0.30, cz + 0.5, 0.6, 0.50, 0.5, M.bench);
+      box(room.x1 + 2.0, 0.30, cz + 0.5, 0.6, 0.50, 0.5, M.bench);
+      // Pneumatic-tube terminal
+      box(room.x2 - 0.6, 1.10, cz + 0.6, 0.4, 1.20, 0.4, M.equip);
+    }
+    else if (room.id === 'processing') {
+      tissueProcessor(cx, cz);
+      // Embedding station bench against the wall
+      box(cx + 1.0, 0.45, room.z1 + 0.7, 1.5, 0.90, 0.6, M.bench);
+    }
+    else if (room.id === 'microtomy') {
+      // 3 microtome benches
+      microtomeStation(cx, room.z1 + 1.5);
+      microtomeStation(cx, cz);
+      microtomeStation(cx, room.z2 - 1.5);
+    }
+    else if (room.id === 'collation') {
+      // Auto-stainer + coverslipper
+      autoStainer(cx - 1.5, cz);
+      autoStainer(cx + 1.5, cz);
+      // Slide drying rack
+      box(room.x2 - 1.0, 0.85, cz, 0.6, 1.50, 0.5, M.bench);
+    }
+    else if (room.id === 'scanning') {
+      // Multiple scanners + workstations
+      scanner(room.x1 + 1.5, room.z1 + 1.5);
+      scanner(room.x1 + 1.5, room.z2 - 1.5);
+      scanner(room.x2 - 1.5, room.z1 + 1.5);
+      scanner(room.x2 - 1.5, room.z2 - 1.5);
+    }
+    else if (room.id === 'ihc_lab') {
+      // Big auto-stainers (Ventana BenchMark, Leica Bond)
+      autoStainer(cx - 1.8, room.z1 + 2.0);
+      autoStainer(cx + 1.8, room.z1 + 2.0);
+      autoStainer(cx - 1.8, room.z2 - 2.0);
+      autoStainer(cx + 1.8, room.z2 - 2.0);
+      // Reagent fridge
+      bloodFridge(room.x1 + 0.7, cz);
+    }
+    else if (room.id === 'molec1' || room.id === 'molec2') {
+      // PCR machines + biosafety hood
+      biosafetyHood(cx, room.z1 + 1.0);
+      pcrMachine(cx - 1.5, cz);
+      pcrMachine(cx, cz);
+      pcrMachine(cx + 1.5, cz);
+      // Workbench
+      box(cx, 0.45, room.z2 - 1.0, w * 0.7, 0.90, 0.7, M.bench);
+    }
+    else if (room.id === 'micro1' || room.id === 'micro2') {
+      // Multiple biosafety hoods
+      const nHoods = 3;
+      for (let i = 0; i < nHoods; i++) {
+        const hx = room.x1 + 2.0 + (i * (w - 4) / (nHoods - 1));
+        biosafetyHood(hx, room.z1 + 1.0);
+      }
+      // Incubators
+      incubator(room.x1 + 1.0, room.z2 - 1.2);
+      incubator(room.x1 + 2.5, room.z2 - 1.2);
+      // MALDI-TOF
+      box(cx, 0.60, room.z2 - 1.5, 1.2, 1.20, 1.0, M.equip);
+      // Workbenches
+      box(cx + 2, 0.45, cz, 2.0, 0.90, 0.7, M.bench);
+    }
+    else if (room.id === 'hla1' || room.id === 'hla2') {
+      pcrMachine(cx - 1.5, cz);
+      pcrMachine(cx + 1.5, cz);
+      box(cx, 0.45, room.z1 + 0.8, w * 0.7, 0.90, 0.6, M.bench);
+    }
+    else if (room.id === 'special') {
+      // Special heme — flow cytometer + workbench
+      box(cx, 0.55, cz, 1.4, 1.10, 1.0, M.equip);    // flow cytometer
+      box(cx + 0.10, 1.16, cz - 0.20, 0.50, 0.06, 0.30, M.monitor);
+      box(cx, 0.45, room.z2 - 0.7, w * 0.7, 0.90, 0.6, M.bench);
+    }
+    else if (room.id === 'quality') {
+      // Conference-style table + chairs
+      box(cx, 0.40, cz, 2.2, 0.78, 1.2, M.table);
+      [-0.9, 0, 0.9].forEach(dx => {
+        box(cx + dx, 0.45, cz - 0.95, 0.45, 0.85, 0.45, M.chair);
+        box(cx + dx, 0.45, cz + 0.95, 0.45, 0.85, 0.45, M.chair);
+      });
+    }
+    else if (room.id === 'cytopath') {
+      // Cytology preparation stations + microscope review desks
+      box(room.x1 + 1.5, 0.45, cz, 1.4, 0.78, 0.7, M.bench); // ThinPrep prep
+      box(room.x1 + 1.5, 0.85, cz, 0.5, 0.30, 0.5, M.equip);
+      // 4 sign-out review desks with microscopes
+      [[3, -7], [3, 0], [3, 7], [9, 0]].forEach(([dx, dz]) => {
+        const x = room.x1 + dx;
+        const z = cz + dz;
+        deskWithChair(x, z, 1);
+        microscope(x, 0.78, z - 0.15);
+      });
+    }
+    else if (room.id === 'autopsy') {
+      // Two autopsy tables + cabinet/sink wall
+      autopsyTable(cx - 5, cz);
+      autopsyTable(cx + 5, cz);
+      // Counter along far wall
+      box(cx, 0.45, room.z1 + 0.7, w * 0.6, 0.90, 0.7, M.steel);
+      // Sink
+      box(cx + 4, 0.91, room.z1 + 0.7, 0.6, 0.04, 0.4, M.sink);
+    }
+    else if (room.id === 'bb' || room.id === 'bb_floor') {
+      // Multiple stand-up blood fridges
+      const nFridges = Math.max(3, Math.floor(w / 1.4));
+      for (let i = 0; i < nFridges; i++) {
+        const fx = room.x1 + 0.7 + i * 1.4;
+        if (fx < room.x2 - 0.7) bloodFridge(fx, room.z1 + 0.6);
+      }
+      // Centrifuges + workbench in the middle
+      box(cx, 0.45, cz, w * 0.5, 0.90, 0.7, M.bench);
+      cyl(cx - 1.5, 1.05, cz, 0.30, 0.40, M.equip);
+      cyl(cx + 1.5, 1.05, cz, 0.30, 0.40, M.equip);
+    }
+    else if (room.id === 'coag') {
+      // Coag analyzers (Stago)
+      box(cx, 0.55, cz, 1.0, 1.10, 0.8, M.equip);
+      box(cx, 1.16, cz, 0.85, 0.06, 0.65, M.monitor);
+    }
+    else if (room.id === 'lab_cs') {
+      // Reception desk
+      box(cx, 0.50, cz, w * 0.7, 1.00, 0.6, M.desk);
+      box(cx - 0.7, 0.55, cz, 0.30, 0.25, 0.05, M.monitor);
+      box(cx + 0.7, 0.55, cz, 0.30, 0.25, 0.05, M.monitor);
+    }
+    else if (room.id === 'chair') {
+      // Single big desk + bookshelf
+      box(cx - 1.5, 0.40, cz, 1.6, 0.78, 0.8, M.desk);
+      box(cx - 1.5, 0.50, cz - 0.20, 0.40, 0.30, 0.05, M.monitor);
+      box(cx - 1.5, 0.45, cz + 0.7, 0.5, 0.85, 0.5, M.chair);
+      box(cx + 2.0, 1.00, cz, 0.40, 1.80, 1.5, M.bench);  // bookshelf
+    }
+    else if (room.dept === 'sp_office') {
+      // Each SP cubicle: small desk + chair + microscope + monitor
+      box(cx, 0.40, room.z1 + 0.55, 2.6, 0.78, 0.5, M.desk);  // narrow desk
+      box(cx, 0.45, room.z2 - 0.55, 0.45, 0.85, 0.45, M.chair); // chair behind
+      box(cx + 0.7, 0.50, room.z1 + 0.45, 0.30, 0.25, 0.05, M.monitor); // monitor
+      microscope(cx - 0.6, 0.78, room.z1 + 0.55); // microscope on desk
+    }
+  });
+}
+
+// ============================================================================
+//  BECKMAN COULTER AUTOMATION LINE — built inside the Core Lab room
+//  17 modules + conveyor track, color-coded by analyzer family.
+// ============================================================================
+function buildCoreLabInstruments(parent) {
+  const group = new THREE.Group();
+  group.name = 'core_lab_line';
+
+  // Core Lab footprint: x=-36 to -28 (8m wide), z=-18 to 2 (20m tall)
+  // Conveyor runs along the long z-axis at the room centerline (x=-32)
+  const xC = -32;
+  const conveyorZ1 = -16;
+  const conveyorZ2 =  1;
+
+  // Conveyor track
+  const conveyorMat = new THREE.MeshStandardMaterial({
+    color: 0x6a7488, roughness: 0.55, metalness: 0.55,
+    emissive: 0x1a1f30, emissiveIntensity: 0.3
+  });
+  const conveyor = new THREE.Mesh(
+    new THREE.BoxGeometry(0.45, 0.18, conveyorZ2 - conveyorZ1),
+    conveyorMat
+  );
+  conveyor.position.set(xC, 0.20, (conveyorZ1 + conveyorZ2) / 2);
+  conveyor.castShadow = true;
+  conveyor.receiveShadow = true;
+  group.add(conveyor);
+
+  const railMat = new THREE.MeshStandardMaterial({
+    color: 0x4a5570, roughness: 0.4, metalness: 0.85
+  });
+  [-0.28, 0.28].forEach(dx => {
+    const rail = new THREE.Mesh(
+      new THREE.BoxGeometry(0.06, 0.08, conveyorZ2 - conveyorZ1),
+      railMat
+    );
+    rail.position.set(xC + dx, 0.33, (conveyorZ1 + conveyorZ2) / 2);
+    group.add(rail);
+  });
+
+  function instrument(x, z, w, h, d, color, label) {
+    const mat = new THREE.MeshStandardMaterial({
+      color: color, roughness: 0.42, metalness: 0.32,
+      emissive: color, emissiveIntensity: 0.07
+    });
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    mesh.position.set(x, h / 2 + 0.12, z);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    mesh.userData = { label: label, type: 'beckman_module' };
+    group.add(mesh);
+
+    const accentMat = new THREE.MeshStandardMaterial({
+      color: 0x101828, roughness: 0.3, metalness: 0.6,
+      emissive: 0x4a6fff, emissiveIntensity: 0.4
+    });
+    const accent = new THREE.Mesh(
+      new THREE.BoxGeometry(w * 0.85, 0.05, d * 0.55),
+      accentMat
+    );
+    accent.position.set(x, h + 0.14, z);
+    group.add(accent);
+    return mesh;
+  }
+
+  const COL = {
+    inlet:    0x3a9b6c,
+    centri:   0xc99a3d,
+    handler:  0x4d77c4,
+    coag:     0xc0455d,
+    heme:     0x9466cc,
+    immuno:   0xe08a3a,
+    chem:     0x2fa9b8,
+    storage:  0x4a5366,
+  };
+
+  // Layout — spread across the now-taller Core Lab.
+  // sides: 'L' = lower x, 'R' = higher x (room is x=-36 to -28, conveyor at x=-32)
+  const layout = [
+    // Pre-analytics (north end)
+    [-15.5, 'R', 1.4, 1.0, 1.2, COL.inlet,   'Dynamic Inlet (1)'],
+    [-14.0, 'L', 0.9, 1.1, 0.9, COL.centri,  'Centrifuge 5.1'],
+    [-14.0, 'R', 0.9, 1.1, 0.9, COL.centri,  'Centrifuge 5.2'],
+    [-12.5, 'L', 0.9, 1.1, 0.9, COL.centri,  'Centrifuge 5.3'],
+    [-12.5, 'R', 0.9, 1.1, 0.9, COL.centri,  'Centrifuge 5.4'],
+    [-10.8, 'L', 1.1, 1.1, 1.1, COL.handler, 'Decapper (3)'],
+    [ -9.5, 'R', 1.4, 1.1, 1.2, COL.handler, 'Aliquoter'],
+    // Coagulation
+    [ -8.0, 'L', 1.3, 1.3, 1.3, COL.coag,    'Stago 7.1'],
+    [ -6.6, 'L', 1.3, 1.3, 1.3, COL.coag,    'Stago 7.2'],
+    // Hematology
+    [ -7.0, 'R', 1.7, 1.5, 1.5, COL.heme,    'DxH3s · 7.3'],
+    [ -5.0, 'R', 1.7, 1.5, 1.5, COL.heme,    'DxH2s · 7.4'],
+    // Immunoassay
+    [ -5.0, 'L', 1.5, 1.4, 1.4, COL.immuno,  'DxI 1 · 7.6'],
+    [ -3.4, 'L', 1.5, 1.4, 1.4, COL.immuno,  'DxI 2 · 7.7'],
+    [ -1.8, 'L', 1.5, 1.4, 1.4, COL.immuno,  'DxI 3 · 7.5'],
+    // Chemistry
+    [ -3.2, 'R', 1.8, 1.6, 1.5, COL.chem,    'AU 1 · 7.8'],
+    [ -1.4, 'R', 1.8, 1.6, 1.5, COL.chem,    'AU 2 · 7.9'],
+    [  0.2, 'R', 1.6, 1.6, 1.4, COL.chem,    'Cobas · 7.10'],
+    // Post-analytics
+    [ -0.2, 'L', 1.0, 1.1, 1.1, COL.handler, 'Recapper (15)'],
+    [  1.0, 'L', 1.5, 1.5, 1.4, COL.storage, 'Stockyards'],
+  ];
+
+  layout.forEach(([z, side, w, h, d, color, label]) => {
+    const offset = 0.4 + w / 2;
+    const x = side === 'L' ? xC - offset : xC + offset;
+    instrument(x, z, w, h, d, color, label);
+  });
+
+  // Sample tubes riding the conveyor
+  const tubeMat = new THREE.MeshStandardMaterial({
+    color: 0xffd5a8, roughness: 0.3, metalness: 0.0,
+    transparent: true, opacity: 0.85
+  });
+  const capMat = new THREE.MeshStandardMaterial({
+    color: 0x8a3030, roughness: 0.4, metalness: 0.0
+  });
+  [-15.0, -13.5, -11.5, -9.0, -7.5, -5.5, -3.0, -0.5, 0.6].forEach(z => {
+    const tube = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.07, 0.07, 0.55, 12),
+      tubeMat
+    );
+    tube.position.set(xC, 0.59, z);
+    group.add(tube);
+    const cap = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.075, 0.075, 0.07, 12),
+      capMat
+    );
+    cap.position.set(xC, 0.90, z);
+    group.add(cap);
+  });
+
+  parent.add(group);
+}
+
+// ============================================================================
+//  THREE.JS SCENE SETUP
+// ============================================================================
+const canvasHost = document.getElementById('canvas-host');
+const canvas     = document.getElementById('c');
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050d22);
+scene.fog = new THREE.Fog(0x050d22, 70, 240);
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(canvasHost.clientWidth, canvasHost.clientHeight, false);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+
+const camera = new THREE.PerspectiveCamera(55, canvasHost.clientWidth / canvasHost.clientHeight, 0.1, 600);
+camera.rotation.order = 'YXZ';
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const hemi = new THREE.HemisphereLight(0xc8d8ff, 0x1a1a2c, 0.55);
+scene.add(hemi);
+
+const sun = new THREE.DirectionalLight(0xfff0d8, 0.85);
+sun.position.set(28, 55, -22);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.near = 1;
+sun.shadow.camera.far = 240;
+sun.shadow.camera.left = -80;
+sun.shadow.camera.right = 80;
+sun.shadow.camera.top = 80;
+sun.shadow.camera.bottom = -80;
+scene.add(sun);
+
+const groundGeo = new THREE.PlaneGeometry(500, 500);
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x080f1f, roughness: 0.96 });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.05;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const grid = new THREE.GridHelper(500, 100, 0x142244, 0x0c1530);
+grid.position.y = 0;
+scene.add(grid);
+
+const building = new THREE.Group();
+scene.add(building);
+// Walls/doors removed per design: just colored floor pads with equipment on top.
+// (buildAllWalls is still defined in case needed later, just not called.)
+// building.add(buildAllWalls(ROOMS));
+building.add(buildFloors(ROOMS));
+addFurniture(building, ROOMS);
+buildCoreLabInstruments(building);
+
+// ============================================================================
+//  CAMERA STATE & TRANSITIONS
+// ============================================================================
+let mode = 'aerial';
+let focusedRoomId = null;
+let orbitMode = false;
+let orbitT = 0;
+let cameraTransition = null;
+
+// Tour orbit — slow 360° rotation around the focus point of the current tour stop.
+// Activates automatically after focusOnRoom's fly-in transition completes.
+let tourOrbit        = false;
+let tourOrbitPending = false;
+let tourOrbitCenter  = null;
+let tourOrbitRadius  = 0;
+let tourOrbitHeight  = 0;
+let tourOrbitT       = 0;
+
+let yaw = 0, pitch = 0;
+let pointerLocked = false;
+const keys = {};
+
+const BUILDING_CENTER = new THREE.Vector3(-4, 0, 3);
+const OVERVIEW_POS    = new THREE.Vector3(42, 130, 90);
+
+camera.position.copy(OVERVIEW_POS);
+camera.lookAt(BUILDING_CENTER);
+
+function startCameraTransition(toPos, toLook, duration) {
+  duration = duration || 1.4;
+  const dir = new THREE.Vector3();
+  camera.getWorldDirection(dir);
+  const fromLook = camera.position.clone().add(dir.multiplyScalar(20));
+  cameraTransition = {
+    fromPos:  camera.position.clone(),
+    toPos:    toPos.clone(),
+    fromLook: fromLook,
+    toLook:   toLook.clone(),
+    t: 0,
+    duration,
+  };
+}
+
+function aerialOverview() {
+  focusedRoomId = null;
+  currentStopIdx = -1;
+  tourOrbit = false;
+  tourOrbitPending = false;
+  document.querySelectorAll('.tour-stop').forEach(c => c.classList.remove('active'));
+  document.getElementById('hud-eyebrow').textContent = 'Lab Tour · Overview';
+  document.getElementById('hud-title').innerHTML = 'A guided <em>tour</em> through the department.';
+  document.getElementById('hud-info').textContent = 'Tap any stop in the sidebar to fly to that section. The 16-stop sequence follows a specimen from intake to result.';
+  startCameraTransition(OVERVIEW_POS, BUILDING_CENTER, 1.5);
+  orbitMode = false;
+  document.getElementById('btn-orbit').classList.remove('active');
+  closeTourPanel();
+}
+
+function focusOnRoom(room, focusPoint, focusZoom) {
+  // focusPoint is optional {x, z} to override the default room-center focus.
+  // focusZoom is optional — directly sets `dim` (smaller = tighter zoom).
+  const cx = (focusPoint && typeof focusPoint.x === 'number') ? focusPoint.x : (room.x1 + room.x2) / 2;
+  const cz = (focusPoint && typeof focusPoint.z === 'number') ? focusPoint.z : (room.z1 + room.z2) / 2;
+  const w  = room.x2 - room.x1;
+  const d  = room.z2 - room.z1;
+  let dim;
+  if (typeof focusZoom === 'number') {
+    dim = focusZoom;
+  } else if (focusPoint) {
+    dim = Math.max(w, d) * 0.35;
+  } else {
+    // Tighter default zoom — was Math.max(w, d), now ~60% of room's max dim.
+    dim = Math.max(w, d) * 0.65;
+  }
+
+  // Closer camera, lower height — more cinematic and easier to recognize the room.
+  const distance = dim * 1.25 + 6;
+  const height   = dim * 0.55 + 5;
+
+  const targetPos  = new THREE.Vector3(cx + distance * 0.4, height, cz + distance);
+  const targetLook = new THREE.Vector3(cx, 1.0, cz);
+
+  startCameraTransition(targetPos, targetLook, 1.6);
+
+  // Set up the slow 360° orbit that begins after the transition lands.
+  tourOrbitPending = true;
+  tourOrbitCenter  = targetLook.clone();
+  tourOrbitRadius  = distance;
+  tourOrbitHeight  = height;
+  tourOrbitT       = Math.atan2(distance, distance * 0.4); // continuous angle from final pos
+}
+
+function selectRoom(roomId) {
+  const room = ROOMS.find(r => r.id === roomId);
+  if (!room) return;
+  focusedRoomId = roomId;
+
+  document.querySelectorAll('.room-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.roomId === roomId);
+  });
+
+  const palette = DEPT_COLORS[room.dept];
+  document.getElementById('hud-eyebrow').textContent = palette.label;
+  document.getElementById('hud-title').innerHTML = formatRoomName(room.name);
+  const w = room.x2 - room.x1, d = room.z2 - room.z1;
+  document.getElementById('hud-info').textContent = `${w} × ${d} m  ·  ${(w*d).toFixed(0)} m²`;
+
+  if (mode === 'aerial') {
+    orbitMode = false;
+    document.getElementById('btn-orbit').classList.remove('active');
+    focusOnRoom(room);
+  } else if (mode === 'walk') {
+    camera.position.set((room.x1+room.x2)/2, PLAYER_HEIGHT, (room.z1+room.z2)/2);
+  }
+}
+
+function formatRoomName(name) {
+  const parts = name.split(' ');
+  if (parts.length < 2) return name;
+  const half = Math.ceil(parts.length / 2);
+  return parts.slice(0, half).join(' ') + ' <em>' + parts.slice(half).join(' ') + '</em>';
+}
+
+// ============================================================================
+//  MODE SWITCHING
+// ============================================================================
+function setMode(newMode) {
+  if (newMode === mode) return;
+  mode = newMode;
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+
+  if (mode === 'walk') {
+    document.body.classList.add('walk-mode');
+    orbitMode = false;
+    tourOrbit = false;
+    tourOrbitPending = false;
+    document.getElementById('btn-orbit').classList.remove('active');
+    cameraTransition = null;
+    camera.position.set(-4, PLAYER_HEIGHT, 0);
+    yaw = 0; pitch = 0;
+    camera.rotation.set(0, 0, 0);
+    canvas.requestPointerLock && canvas.requestPointerLock();
+  } else {
+    document.body.classList.remove('walk-mode');
+    document.exitPointerLock && document.exitPointerLock();
+    if (focusedRoomId) {
+      const r = ROOMS.find(rr => rr.id === focusedRoomId);
+      if (r) focusOnRoom(r);
+      else aerialOverview();
+    } else {
+      aerialOverview();
+    }
+  }
+}
+
+function toggleOrbit() {
+  if (mode !== 'aerial') return;
+  orbitMode = !orbitMode;
+  document.getElementById('btn-orbit').classList.toggle('active', orbitMode);
+  if (orbitMode) {
+    tourOrbit = false;
+    tourOrbitPending = false;
+    cameraTransition = null;
+    focusedRoomId = null;
+    currentStopIdx = -1;
+    document.querySelectorAll('.tour-stop').forEach(c => c.classList.remove('active'));
+    closeTourPanel();
+    document.getElementById('hud-eyebrow').textContent = 'Lab Tour · Orbit';
+    document.getElementById('hud-title').innerHTML = 'A slow pass around the <em>building</em>.';
+    document.getElementById('hud-info').textContent = 'Tap any stop in the sidebar to break out of orbit.';
+    orbitT = 0;
+  }
+}
+
+// ============================================================================
+//  WALK COLLISION
+// ============================================================================
+function collidesAt(x, z) {
+  for (const w of wallColliders) {
+    const inX = x > w.x1 - PLAYER_RADIUS && x < w.x2 + PLAYER_RADIUS;
+    const inZ = z > w.z1 - PLAYER_RADIUS && z < w.z2 + PLAYER_RADIUS;
+    if (!(inX && inZ)) continue;
+    if (w.doorCenter !== null) {
+      const along = w.horizontal ? x : z;
+      if (Math.abs(along - w.doorCenter) < DOOR_WIDTH/2 - 0.05) continue;
+    }
+    return true;
+  }
+  return false;
+}
+
+// ============================================================================
+//  SIDEBAR
+// ============================================================================
+function buildSidebar() {
+  // Build the ordered tour stop list (replaces the old room-by-department list).
+  const list = document.getElementById('room-list');
+  list.innerHTML = '';
+  TOUR_STOPS.forEach((stop, idx) => {
+    const card = document.createElement('div');
+    card.className = 'tour-stop';
+    card.dataset.stopIdx = idx;
+    card.innerHTML =
+      '<div class="tour-stop-num">' + (idx + 1) + '</div>' +
+      '<div class="tour-stop-body">' +
+        '<div class="tour-stop-title">' + stop.title + '</div>' +
+        '<div class="tour-stop-sub">' + stop.subtitle + '</div>' +
+      '</div>';
+    card.addEventListener('click', () => {
+      // In passive mode (attendees, hosts, facilitators other than presenter),
+      // sidebar clicks are blocked — only the presenter advances the tour.
+      if (window.__tourPassive) {
+        flashPassiveLockHint();
+        return;
+      }
+      selectTourStop(idx);
+      // Notify the parent dashboard so it can broadcast to other viewers via Firestore.
+      try {
+        window.parent && window.parent.postMessage({
+          type: 'labtour:stopChanged',
+          stopIndex: idx
+        }, '*');
+      } catch (e) {}
+    });
+    list.appendChild(card);
+  });
+}
+
+// ============================================================================
+//  PASSIVE-MODE / LIVE-PRESENTATION BRIDGE
+//  When the parent dashboard puts this tour into passive mode, the user can no
+//  longer click stops directly. The parent sends `goto` postMessages whenever
+//  the presenter (Dr. Baba) advances, and we follow along.
+// ============================================================================
+window.__tourPassive    = false;
+window.__tourPresenter  = '';
+
+function setPassiveMode(active, presenterName) {
+  window.__tourPassive   = !!active;
+  window.__tourPresenter = presenterName || '';
+  document.body.classList.toggle('passive', !!active);
+  let banner = document.getElementById('live-banner');
+  if (active) {
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'live-banner';
+      banner.className = 'live-banner';
+      banner.innerHTML =
+        '<span class="live-dot"></span>' +
+        '<span class="live-text">LIVE &middot; <strong id="live-presenter">' +
+          (window.__tourPresenter || 'Presenter') + '</strong> is presenting</span>';
+      document.body.appendChild(banner);
+    } else {
+      const pe = document.getElementById('live-presenter');
+      if (pe) pe.textContent = window.__tourPresenter || 'Presenter';
+    }
+  } else if (banner) {
+    banner.remove();
+  }
+}
+
+function flashPassiveLockHint() {
+  let hint = document.getElementById('passive-hint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'passive-hint';
+    hint.className = 'passive-hint';
+    hint.textContent = (window.__tourPresenter || 'The presenter') + ' is guiding the tour — sit back and follow along';
+    document.body.appendChild(hint);
+  }
+  hint.classList.add('show');
+  clearTimeout(hint.__t);
+  hint.__t = setTimeout(() => hint.classList.remove('show'), 2400);
+}
+
+// Listen for commands from the parent dashboard
+window.addEventListener('message', (e) => {
+  const msg = e.data;
+  if (!msg || typeof msg !== 'object') return;
+  if (msg.type === 'labtour:setMode') {
+    setPassiveMode(msg.passive === true, msg.presenterName || '');
+  } else if (msg.type === 'labtour:goto') {
+    if (typeof msg.stopIndex === 'number') {
+      selectTourStop(msg.stopIndex);
+    }
+  }
+});
+
+// ============================================================================
+//  TOUR PANEL — slide-in educational content from the right
+// ============================================================================
+let currentStopIdx = -1;
+const visitedStops = new Set();
+
+function selectTourStop(idx) {
+  if (idx < 0 || idx >= TOUR_STOPS.length) return;
+  currentStopIdx = idx;
+  visitedStops.add(idx);
+  const stop = TOUR_STOPS[idx];
+
+  // Update sidebar visual state
+  document.querySelectorAll('.tour-stop').forEach(card => {
+    const i = parseInt(card.dataset.stopIdx, 10);
+    card.classList.toggle('active', i === idx);
+    card.classList.toggle('visited', visitedStops.has(i) && i !== idx);
+  });
+
+  // Camera flyover. Use focusPoint if provided, otherwise room center.
+  if (mode !== 'aerial') setMode('aerial');
+  const room = ROOMS.find(r => r.id === stop.roomId);
+  if (room) focusOnRoom(room, stop.focusPoint, stop.focusZoom);
+
+  // Update HUD overlay (the existing top-left overlay)
+  document.getElementById('hud-eyebrow').textContent = 'Stop ' + (idx + 1) + ' of ' + TOUR_STOPS.length;
+  document.getElementById('hud-title').innerHTML = formatStopTitle(stop.title);
+  document.getElementById('hud-info').textContent = stop.subtitle;
+
+  // Open the side panel with content
+  openTourPanel(stop, idx);
+
+  focusedRoomId = stop.roomId;
+  orbitMode = false;
+  document.getElementById('btn-orbit').classList.remove('active');
+
+  // Scroll the active card into view in the sidebar
+  const activeCard = document.querySelector('.tour-stop.active');
+  if (activeCard) activeCard.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function formatStopTitle(title) {
+  // Italicize the part after the first space or middle dot for editorial flair
+  if (title.includes(' · ')) {
+    const [a, b] = title.split(' · ');
+    return a + ' <em>· ' + b + '</em>';
+  }
+  const words = title.split(' ');
+  if (words.length >= 2) {
+    const half = Math.ceil(words.length / 2);
+    return words.slice(0, half).join(' ') + ' <em>' + words.slice(half).join(' ') + '</em>';
+  }
+  return title;
+}
+
+function openTourPanel(stop, idx) {
+  document.getElementById('tp-eyebrow').innerHTML = 'Stop <strong>' + (idx + 1) + '</strong> of ' + TOUR_STOPS.length;
+  document.getElementById('tp-title').innerHTML = formatStopTitle(stop.title);
+  document.getElementById('tp-subtitle').textContent = stop.subtitle;
+
+  const body = document.getElementById('tp-body');
+  let html = '<p class="tp-overview">' + stop.overview + '</p>';
+
+  if (stop.tests && stop.tests.length) {
+    html += '<div class="tp-section">' +
+      '<div class="tp-section-h">What they do here</div>' +
+      '<ul class="tp-list">' + stop.tests.map(t => '<li>' + t + '</li>').join('') + '</ul>' +
+    '</div>';
+  }
+  if (stop.methods && stop.methods.length) {
+    html += '<div class="tp-section">' +
+      '<div class="tp-section-h">Tools they use</div>' +
+      '<ul class="tp-list">' + stop.methods.map(m => '<li>' + m + '</li>').join('') + '</ul>' +
+    '</div>';
+  }
+  body.innerHTML = html;
+  body.scrollTop = 0;
+
+  // Footer nav state
+  document.getElementById('tp-prev').disabled = (idx === 0);
+  const nextBtn = document.getElementById('tp-next');
+  nextBtn.disabled = false;
+  nextBtn.textContent = (idx === TOUR_STOPS.length - 1) ? 'Finish ✓' : 'Next →';
+  document.getElementById('tp-progress').innerHTML = '<strong>' + (idx + 1) + '</strong> / ' + TOUR_STOPS.length;
+
+  document.getElementById('tour-panel').classList.add('show');
+  document.getElementById('tour-panel').setAttribute('aria-hidden', 'false');
+}
+
+function closeTourPanel() {
+  document.getElementById('tour-panel').classList.remove('show');
+  document.getElementById('tour-panel').setAttribute('aria-hidden', 'true');
+  // Don't change camera or selection — user can return to overview separately
+}
+
+function nextStop() {
+  if (window.__tourPassive) { flashPassiveLockHint(); return; }
+  if (currentStopIdx < TOUR_STOPS.length - 1) {
+    selectTourStop(currentStopIdx + 1);
+    broadcastPresenterStop(currentStopIdx);
+  } else {
+    // Last stop: close panel and return to overview
+    closeTourPanel();
+    aerialOverview();
+  }
+}
+function prevStop() {
+  if (window.__tourPassive) { flashPassiveLockHint(); return; }
+  if (currentStopIdx > 0) {
+    selectTourStop(currentStopIdx - 1);
+    broadcastPresenterStop(currentStopIdx);
+  }
+}
+
+function broadcastPresenterStop(idx) {
+  // Only the parent dashboard knows whether this viewer is the actual presenter;
+  // we always emit, and the parent decides whether to write to Firestore.
+  try {
+    window.parent && window.parent.postMessage({
+      type: 'labtour:stopChanged',
+      stopIndex: idx
+    }, '*');
+  } catch (e) {}
+}
+
+// ============================================================================
+//  INPUT
+// ============================================================================
+document.addEventListener('keydown', (e) => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code)) {
+    e.preventDefault();
+  }
+  keys[e.code] = true;
+  if (e.code === 'Escape') {
+    document.exitPointerLock && document.exitPointerLock();
+  }
+  if (e.code === 'KeyV' && mode === 'aerial') aerialOverview();
+  if (e.code === 'KeyO' && mode === 'aerial') toggleOrbit();
+});
+document.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+document.addEventListener('pointerlockchange', () => {
+  pointerLocked = (document.pointerLockElement === canvas);
+});
+
+canvas.addEventListener('click', () => {
+  if (mode === 'walk' && !pointerLocked && canvas.requestPointerLock) {
+    canvas.requestPointerLock();
+  }
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!pointerLocked || mode !== 'walk') return;
+  const sens = 0.0022;
+  yaw   -= e.movementX * sens;
+  pitch -= e.movementY * sens;
+  pitch = Math.max(-Math.PI/2 + 0.1, Math.min(Math.PI/2 - 0.1, pitch));
+});
+
+window.addEventListener('resize', () => {
+  const w = canvasHost.clientWidth, h = canvasHost.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+});
+
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => setMode(btn.dataset.mode));
+});
+document.getElementById('btn-overview').addEventListener('click', aerialOverview);
+document.getElementById('btn-orbit').addEventListener('click', toggleOrbit);
+
+// Tour panel buttons
+document.getElementById('tp-close').addEventListener('click', closeTourPanel);
+document.getElementById('tp-next').addEventListener('click', nextStop);
+document.getElementById('tp-prev').addEventListener('click', prevStop);
+
+// Sidebar tour controls
+document.getElementById('tour-overview-btn').addEventListener('click', aerialOverview);
+document.getElementById('tour-restart-btn').addEventListener('click', () => {
+  visitedStops.clear();
+  selectTourStop(0);
+});
+
+// ============================================================================
+//  ANIMATION LOOP
+// ============================================================================
+function updateCompass() {
+  const needle = document.getElementById('compass-needle');
+  let heading;
+  if (mode === 'walk') {
+    heading = yaw;
+  } else {
+    const dir = new THREE.Vector3();
+    camera.getWorldDirection(dir);
+    heading = Math.atan2(-dir.x, -dir.z);
+  }
+  needle.style.transform = 'rotate(' + (-heading * 180/Math.PI) + 'deg)';
+}
+
+function updateOrbit(dt) {
+  orbitT += dt * 0.07;
+  const cx = BUILDING_CENTER.x;
+  const cz = BUILDING_CENTER.z;
+  const r = 70;
+  const h = 62;
+  const tx = cx + Math.sin(orbitT) * r;
+  const tz = cz + Math.cos(orbitT) * r * 0.85;
+  camera.position.set(tx, h, tz);
+  camera.lookAt(cx, 0, cz);
+}
+
+function updateWalk(dt) {
+  const speed = (keys['ShiftLeft'] || keys['ShiftRight']) ? 9 : 4.5;
+  const turnSpeed = 1.85;
+
+  if (keys['KeyQ'] || keys['ArrowLeft'])  yaw += turnSpeed * dt;
+  if (keys['KeyE'] || keys['ArrowRight']) yaw -= turnSpeed * dt;
+
+  const dir = new THREE.Vector3();
+  if (keys['KeyW'] || keys['ArrowUp'])   dir.z -= 1;
+  if (keys['KeyS'] || keys['ArrowDown']) dir.z += 1;
+  if (keys['KeyA']) dir.x -= 1;
+  if (keys['KeyD']) dir.x += 1;
+
+  if (dir.lengthSq() > 0) {
+    dir.normalize();
+    const sin = Math.sin(yaw), cos = Math.cos(yaw);
+    const mx = (dir.x * cos - dir.z * sin) * speed * dt;
+    const mz = (dir.x * sin + dir.z * cos) * speed * dt;
+
+    if (!collidesAt(camera.position.x + mx, camera.position.z)) {
+      camera.position.x += mx;
+    }
+    if (!collidesAt(camera.position.x, camera.position.z + mz)) {
+      camera.position.z += mz;
+    }
+  }
+
+  camera.position.y = PLAYER_HEIGHT;
+  camera.rotation.set(pitch, yaw, 0);
+}
+
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  if (cameraTransition) {
+    cameraTransition.t += dt;
+    const tt = Math.min(cameraTransition.t / cameraTransition.duration, 1);
+    const ease = tt < 0.5 ? 2*tt*tt : 1 - Math.pow(-2*tt + 2, 2) / 2;
+    camera.position.lerpVectors(cameraTransition.fromPos, cameraTransition.toPos, ease);
+    const lookAt = new THREE.Vector3().lerpVectors(cameraTransition.fromLook, cameraTransition.toLook, ease);
+    camera.lookAt(lookAt);
+    if (tt >= 1) {
+      cameraTransition = null;
+      // Fly-in finished — start the slow 360° tour orbit if one was queued.
+      if (tourOrbitPending) {
+        tourOrbit = true;
+        tourOrbitPending = false;
+      }
+    }
+  } else if (mode === 'walk') {
+    updateWalk(dt);
+  } else if (orbitMode) {
+    updateOrbit(dt);
+  } else if (tourOrbit && tourOrbitCenter) {
+    // Slow continuous orbit around the focused area — gives a sense of the
+    // station's full layout without the user touching anything.
+    tourOrbitT += dt * 0.18;  // ~35 sec per full revolution
+    const cx = tourOrbitCenter.x;
+    const cz = tourOrbitCenter.z;
+    const tx = cx + Math.sin(tourOrbitT) * tourOrbitRadius * 0.55;
+    const tz = cz + Math.cos(tourOrbitT) * tourOrbitRadius * 0.55;
+    camera.position.set(tx, tourOrbitHeight, tz);
+    camera.lookAt(tourOrbitCenter);
+  }
+
+  renderer.render(scene, camera);
+  updateCompass();
+}
+
+buildSidebar();
+animate();
+setTimeout(() => document.getElementById('loading').classList.add('hidden'), 350);
+// Auto-launch Stop 1 after a brief delay so the user lands directly in the
+// guided tour experience — camera flies to Accessioning, side panel opens with
+// educational content. Without this, the page just shows an aerial floor plan
+// and the tour stays hidden behind interaction.
+setTimeout(() => { selectTourStop(0); }, 1100);
+
+</script>
+
+<style>
+#hs-credit{position:fixed;left:50%;transform:translateX(-50%);bottom:8px;z-index:99999;font:11px/1.4 system-ui,-apple-system,sans-serif;color:rgba(255,255,255,.4);max-width:60ch;text-align:center;pointer-events:none}
+#hs-fb{position:fixed;right:14px;bottom:12px;z-index:99999;font:600 13px system-ui,sans-serif;background:#2f6fed;color:#fff;padding:9px 15px;border-radius:999px;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .15s ease}
+#hs-fb:hover{transform:translateY(-2px)}
+@media(max-width:720px){#hs-credit{display:none}#hs-fb{bottom:10px;right:10px;padding:8px 13px}}
+</style>
+<div id="hs-credit">Unofficial educational orientation for high‑school students · facts from public Henry Ford Health information · not an official Henry Ford Health publication.</div>
+<a id="hs-fb" href="#">💬 Feedback</a>
 </body>
 </html>
