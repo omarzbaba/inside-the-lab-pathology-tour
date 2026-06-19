@@ -714,6 +714,7 @@ body.passive .tour-stop:hover {
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script>
 'use strict';
 
@@ -1681,6 +1682,35 @@ function addAnimatedProps(rooms){
   return group;
 }
 building.add(addAnimatedProps(ROOMS));
+
+// ---- Optional REAL 3D models: drop .glb/.gltf files in assets/models/ and list
+//      them in assets/models/manifest.json. Each entry drops a model into a room.
+//      Harmless no-op when the manifest is empty or missing.
+function loadCustomModels(){
+  if (typeof THREE.GLTFLoader === 'undefined') return;
+  fetch('assets/models/manifest.json', { cache: 'no-cache' })
+    .then(r => r.ok ? r.json() : [])
+    .then(list => {
+      if (!Array.isArray(list) || !list.length) return;
+      const loader = new THREE.GLTFLoader();
+      list.forEach(item => {
+        const room = ROOMS.find(r => r.id === item.roomId);
+        if (!room) return;
+        const cx = (room.x1 + room.x2) / 2, cz = (room.z1 + room.z2) / 2;
+        loader.load('assets/models/' + item.file, gltf => {
+          const obj = gltf.scene;
+          const s = item.scale || 1;
+          obj.scale.set(s, s, s);
+          obj.position.set(cx + (item.dx || 0), (item.y || 0), cz + (item.dz || 0));
+          obj.rotation.y = (item.ry || 0) * Math.PI / 180;
+          obj.traverse(n => { if (n.isMesh) { n.castShadow = true; n.receiveShadow = true; } });
+          building.add(obj);
+        }, undefined, err => console.warn('[models] failed to load', item.file, err));
+      });
+    })
+    .catch(() => {});
+}
+loadCustomModels();
 
 // ============================================================================
 //  CAMERA STATE & TRANSITIONS
