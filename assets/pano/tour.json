@@ -1,16 +1,77 @@
 {
-  "_README": "Add equirectangular 360 photos to assets/pano/ and put each filename in the matching scene's \"panorama\". Scenes with an empty panorama are skipped. The viewer auto-links scenes in 'order' (next/previous). To add custom links or info bubbles, see hotSpots examples in docs/PANO.md. No patients or identifiable faces — this site is public.",
-  "order": ["lss", "lcs", "surgpath", "cyto", "microsero", "molec", "core", "bloodbank", "quality", "informatics"],
-  "scenes": {
-    "lss":         { "title": "Lab Support Services",      "blurb": "Where every sample arrives",            "panorama": "", "hotSpots": [] },
-    "lcs":         { "title": "Lab Customer Service",       "blurb": "The voice of the lab",                   "panorama": "", "hotSpots": [] },
-    "surgpath":    { "title": "Surgical Pathology",         "blurb": "Diagnosing disease in tissue",           "panorama": "", "hotSpots": [] },
-    "cyto":        { "title": "Cytology",                   "blurb": "Diagnosis from single cells",            "panorama": "", "hotSpots": [] },
-    "microsero":   { "title": "Microbiology & Serology",    "blurb": "Hunting germs",                           "panorama": "", "hotSpots": [] },
-    "molec":       { "title": "Molecular Diagnostics",      "blurb": "Reading the DNA",                        "panorama": "", "hotSpots": [] },
-    "core":        { "title": "Core Lab",                   "blurb": "Chemistry, Hematology, Coagulation, Urinalysis", "panorama": "", "hotSpots": [] },
-    "bloodbank":   { "title": "Blood Bank & Transfusion",   "blurb": "Keeping transfusions safe",              "panorama": "", "hotSpots": [] },
-    "quality":     { "title": "Quality",                    "blurb": "Making sure every result is right",      "panorama": "", "hotSpots": [] },
-    "informatics": { "title": "Pathology Informatics",      "blurb": "The technology behind the lab",          "panorama": "", "hotSpots": [] }
+ "_README": "Add equirectangular 360 photos to assets/pano/ and put each filename in the matching scene's \"panorama\". Scenes with an empty panorama are skipped. The viewer auto-links scenes in 'order' (next/previous). To add custom links or info bubbles, see hotSpots examples in docs/PANO.md. No patients or identifiable faces — this site is public.",
+ "order": [
+  "lss",
+  "lcs",
+  "surgpath",
+  "cyto",
+  "microsero",
+  "molec",
+  "core",
+  "bloodbank",
+  "quality",
+  "informatics"
+ ],
+ "scenes": {
+  "lss": {
+   "title": "Lab Support Services",
+   "blurb": "Where every sample arrives",
+   "panorama": "lss.jpg",
+   "hotSpots": []
+  },
+  "lcs": {
+   "title": "Lab Customer Service",
+   "blurb": "The voice of the lab",
+   "panorama": "lcs.jpg",
+   "hotSpots": []
+  },
+  "surgpath": {
+   "title": "Surgical Pathology",
+   "blurb": "Diagnosing disease in tissue",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "cyto": {
+   "title": "Cytology",
+   "blurb": "Diagnosis from single cells",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "microsero": {
+   "title": "Microbiology & Serology",
+   "blurb": "Hunting germs",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "molec": {
+   "title": "Molecular Diagnostics",
+   "blurb": "Reading the DNA",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "core": {
+   "title": "Core Lab",
+   "blurb": "Chemistry, Hematology, Coagulation, Urinalysis",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "bloodbank": {
+   "title": "Blood Bank & Transfusion",
+   "blurb": "Keeping transfusions safe",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "quality": {
+   "title": "Quality",
+   "blurb": "Making sure every result is right",
+   "panorama": "",
+   "hotSpots": []
+  },
+  "informatics": {
+   "title": "Pathology Informatics",
+   "blurb": "The technology behind the lab",
+   "panorama": "",
+   "hotSpots": []
   }
+ }
 }
