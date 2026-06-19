@@ -840,7 +840,7 @@ const TOUR_STOPS = [
     cards:[{ icon:"📞", text:"Picture a nurse who isn't sure which test to order, or where a sample went. Who do they call? This team." },{ icon:"🗣️", text:"They're the voice of the lab, answering doctors, nurses, and clinics all day long." },{ icon:"🔎", text:"They track down missing or urgent samples and help get the right test ordered." },{ icon:"🤝", text:"Basically, they keep the whole hospital and the lab on the same page." }] },
 
   { id:"surgpath", title:"Surgical Pathology", subtitle:"Diagnosing disease in tissue", roomId:"gross",
-    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out — and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist — a doctor who reads slides — looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop — one even watched a whole amputated leg get examined." }] },
+    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out — and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist — a doctor who reads slides — looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop — one even watched a whole amputated leg get examined." },{ icon:"📷", photo:"assets/photos/real-signout-scope.jpg", text:"And here is the real thing — a pathologist at Henry Ford reading slides under the microscope, with the tissue magnified on the screen beside them." },{ icon:"📷", photo:"assets/photos/real-signout-room.jpg", text:"The sign-out room itself: rows of microscopes where pathologists make the diagnosis. A real photo from inside the lab you will visit." }] },
 
   { id:"cyto", title:"Cytology", subtitle:"Diagnosis from single cells", roomId:"cytopath",
     cards:[{ icon:"🧫", text:"Ever heard of a Pap smear? That's cytology — studying just a few loose cells instead of a whole piece of tissue." },{ icon:"🪄", text:"A tiny, gentle sample (a quick swab or a thin needle) is all it takes." },{ icon:"🔬", text:"Under the microscope, those few cells can reveal cancer super early — when it's easiest to treat." }] },
@@ -2127,7 +2127,9 @@ function renderCard(){
   const dots = __cards.map((_, i) => '<span class="tp-dot' + (i === __ci ? ' on' : '') + '" data-i="' + i + '"></span>').join('');
   body.innerHTML =
     '<div class="tp-dots">' + dots + '</div>' +
-    '<div class="tp-card"><div class="tp-card-ico">' + (c.icon || '🔬') + '</div>' +
+    '<div class="tp-card">' +
+    (c.photo ? '<img class="tp-card-photo" src="' + c.photo + '" alt="" loading="lazy">'
+             : '<div class="tp-card-ico">' + (c.icon || '🔬') + '</div>') +
     '<div class="tp-card-text">' + c.text + '</div></div>' +
     '<div class="tp-card-actions">' +
       (__ci > 0 ? '<button class="tp-card-back" id="tp-card-back">← Back</button>' : '<span></span>') +
@@ -2526,6 +2528,7 @@ body{background:#eef3fa!important;color:#13233d!important}
 .tp-card.in{opacity:1;transform:none}
 .tp-card-ico{font-size:56px;line-height:1;margin-bottom:18px}
 .tp-card-text{font-size:18px;line-height:1.55;color:#27364f;max-width:36ch;margin:0 auto}
+.tp-card-photo{width:100%;max-width:460px;border-radius:14px;margin:0 auto 16px;display:block;box-shadow:0 10px 28px rgba(20,40,80,.18)}
 .tp-card-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}
 .tp-card-back{background:none;border:0;color:#5a6b88;cursor:pointer;font:600 14px system-ui}
 .tp-card-btn{margin-left:auto;background:#0067a0;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 15px system-ui;cursor:pointer;transition:transform .15s ease}

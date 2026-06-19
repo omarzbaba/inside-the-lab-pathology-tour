@@ -285,6 +285,7 @@ body{background:#eef3fa!important;color:#13233d!important}
 .tp-card.in{opacity:1;transform:none}
 .tp-card-ico{font-size:56px;line-height:1;margin-bottom:18px}
 .tp-card-text{font-size:18px;line-height:1.55;color:#27364f;max-width:36ch;margin:0 auto}
+.tp-card-photo{width:100%;max-width:460px;border-radius:14px;margin:0 auto 16px;display:block;box-shadow:0 10px 28px rgba(20,40,80,.18)}
 .tp-card-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}
 .tp-card-back{background:none;border:0;color:#5a6b88;cursor:pointer;font:600 14px system-ui}
 .tp-card-btn{margin-left:auto;background:#0067a0;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 15px system-ui;cursor:pointer;transition:transform .15s ease}
