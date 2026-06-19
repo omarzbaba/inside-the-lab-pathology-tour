@@ -277,6 +277,19 @@ body{background:#eef3fa!important;color:#13233d!important}
 .tp-nav-btn{background:#eef4fb!important;color:#13233d!important;border:1px solid var(--border)!important}
 .tp-nav-btn.primary{background:#0067a0!important;color:#fff!important;border-color:#0067a0!important}
 #hud-info,#hud-info *{color:#13233d!important;text-shadow:0 1px 3px rgba(255,255,255,.7)!important}
+/* animated step-cards in the info panel */
+.tp-dots{display:flex;gap:7px;justify-content:center;margin:6px 0 20px}
+.tp-dot{width:8px;height:8px;border-radius:50%;background:#cfd8e8;cursor:pointer;transition:all .25s ease;border:0;padding:0}
+.tp-dot.on{background:#0067a0;width:22px;border-radius:5px}
+.tp-card{opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease;text-align:center;padding:10px 6px 4px}
+.tp-card.in{opacity:1;transform:none}
+.tp-card-ico{font-size:56px;line-height:1;margin-bottom:18px}
+.tp-card-text{font-size:18px;line-height:1.55;color:#27364f;max-width:36ch;margin:0 auto}
+.tp-card-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:28px}
+.tp-card-back{background:none;border:0;color:#5a6b88;cursor:pointer;font:600 14px system-ui}
+.tp-card-btn{margin-left:auto;background:#0067a0;color:#fff;border:0;border-radius:999px;padding:11px 22px;font:600 15px system-ui;cursor:pointer;transition:transform .15s ease}
+.tp-card-btn:hover{transform:translateY(-2px)}
+@media(max-width:768px){.tp-card-ico{font-size:48px}.tp-card-text{font-size:17px}}
 #loading{background:#eef3fa!important;color:#13233d!important}
 /* a small Henry Ford lockup at the very top of the sidebar */
 .hs-brandbar{display:flex;align-items:center;gap:10px;padding:14px 22px 0}
