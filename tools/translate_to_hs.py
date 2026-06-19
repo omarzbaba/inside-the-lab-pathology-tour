@@ -114,11 +114,11 @@ head, body, tail = html[:arr0+1], html[arr0+1:arr1], html[arr1:]
 # split body into per-stop blocks by id position
 ids = [(m.start(), m.group(1)) for m in re.finditer(r"id:'([\w-]+)'", body)]
 pieces = []
-pieces.append(body[:ids[0][0]])
+pieces.append(body[:ids[0][0]] if ids else body)
 for k, (pos, sid) in enumerate(ids):
     end = ids[k+1][0] if k+1 < len(ids) else len(body)
     block = body[pos:end]
-    hs = HS.get(sid)
+    hs = None  # stop content is now authored directly in src/tour-base.html
     if hs:
         block = re.sub(r"subtitle:'(?:[^'\\]|\\.)*'", "subtitle:'%s'" % esc_sq(hs["subtitle"]), block, count=1)
         block = re.sub(r'overview:"(?:[^"\\]|\\.)*"', 'overview:"%s"' % esc_dq(hs["overview"]), block, count=1, flags=re.S)
@@ -134,10 +134,10 @@ html = html.replace(">Common tests<", ">What they do here<")
 html = html.replace(">Methods &amp; instruments<", ">Tools they use<")
 html = html.replace(
   "A guided sequence through the department, following the journey of a specimen from intake to final diagnosis.",
-  "Follow a real sample on its journey through the lab — tap a stop or use the arrows. Each room shows what happens there in plain language.")
+  "The sections you'll rotate through this week — tap a stop or use the arrows to see what each one does before you walk in.")
 # friendly page title
 html = html.replace("<title>Henry Ford Pathology · 3D Floor Plan</title>",
-                    "<title>Inside the Lab · 3D Tour for Students</title>")
+                    "<title>Lab Tour · Summer Immersion · Henry Ford Pathology</title>")
 
 # CRITICAL for mobile: the original has no viewport meta, so phones render it at
 # ~980px (desktop) and zoom out. Add it so device-width + the media query apply.
@@ -314,13 +314,13 @@ body{background:#eef3fa!important;color:#13233d!important}
 <div id="hs-welcome">
   <div class="hw-card">
     <div class="hw-brand"><img class="hw-logo" src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences"><div class="hw-dept">Pathology &amp; Laboratory Medicine</div></div>
-    <h1>Welcome inside the <em>Pathology Lab</em></h1>
-    <p>Step into one of the largest hospital labs in the country. Follow a real sample on its journey — from the moment it arrives to the final diagnosis — and meet the science at every stop.</p>
+    <h1>Welcome to your <em>week in the lab</em></h1>
+    <p>You're here for the Medical Laboratory Science Summer Immersion — a week shadowing the scientists who run one of the largest hospital labs in the country. This quick tour previews each section you'll rotate through, so you know what you're looking at before you walk in.</p>
     <div class="hw-actions">
       <button class="hw-btn primary" id="hw-start">▶ Start the guided walkthrough</button>
       <button class="hw-btn ghost" id="hw-explore">Explore on my own</button>
     </div>
-    <div class="hw-note">An unofficial educational orientation for high‑school students · built with public Henry Ford Health information.</div>
+    <div class="hw-note">Phase 2 Hospital Shadowing · Henry Ford Detroit · June 22–26, 2026 · with JVHL &amp; Michigan Works.<br>An unofficial educational orientation built with public Henry Ford Health information.</div>
   </div>
 </div>
 <script>

@@ -664,7 +664,7 @@ body.passive .tour-stop:hover {
     <div class="sidebar-subtitle">A guided sequence through the department, following the journey of a specimen from intake to final diagnosis.</div>
   </div>
   <div style="padding: 14px 24px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); font-weight: 500; border-bottom: 1px solid var(--border);">
-    Guided tour · 16 stops
+    Guided tour · <span id="hs-stopcount">10</span> stops
   </div>
   <div class="room-list" id="room-list"></div>
   <div class="tour-controls">
@@ -831,91 +831,55 @@ const SECTION_ORDER = ['core_lab','bb','autopsy','cytopath','gross','histology',
 //  written for medical students at a 10,000-foot level.
 // ============================================================================
 const TOUR_STOPS = [
-  // ============ SOUTH BUILDING (Education / Research wing) ============
-  { id:'accessioning',   title:'Accessioning', subtitle:'The intake door for surgical specimens', roomId:'accession',
-    overview:"The intake desk for the entire surgical pathology service. Specimens arrive from operating rooms, clinics, and outside hospitals; each gets logged into the LIS, given a unique case number, and routed next door to grossing. Chain-of-custody starts here.",
-    tests:['Specimen log-in and labeling','Case numbering (e.g. S26-12345)','Requisition reconciliation','Routing to grossing (next door)'],
-    methods:['Barcode scanning','LIS data entry (Beaker, CoPath)','Pneumatic tube intake','Chain-of-custody documentation'] },
+  { id:"lss", title:"Lab Support Services", subtitle:"Where every sample arrives", roomId:"accession",
+    overview:"Almost every test starts here. Tubes and specimens arrive from operating rooms, clinics, the ER, and other hospitals — thousands a day. The support team logs each one in, gives it a barcode, and routes it to the right lab. Get this step right and everything downstream works.",
+    tests:["Receiving and sorting thousands of samples a day","Logging each sample and giving it a barcode","Routing specimens to the right department","Keeping a careful chain of custody"],
+    methods:["Barcode scanners","Pneumatic tube system","Lab computer system (LIS)","Tracking dashboards"] },
 
-  { id:'grossing',       title:'Grossing', subtitle:'Multiple stations · description and dissection', roomId:'gross',
-    overview:"Right next door to accessioning. Pathologists' assistants and residents work at four grossing stations, each with its own downdraft hood and sink. Specimens are measured, photographed, inked at margins, and submitted as small tissue cassettes. How a specimen is grossed often determines whether the diagnosis can be made downstream.",
-    tests:['Colon resection (margins, lymph nodes)','Breast lumpectomy with localization','Prostate radical prostatectomy','Lymph node staging for cancer'],
-    methods:['4 grossing stations with downdraft hoods','Multi-color ink margin marking','Breadloaf sectioning, cassette templates','Dictation directly into the LIS'] },
+  { id:"lcs", title:"Lab Customer Service", subtitle:"The voice of the lab", roomId:"lab_cs",
+    overview:"When a nurse or doctor has a question — where is a test, how to collect it, what a result means — they call this team. Customer service keeps the whole hospital and the lab talking to each other, so patients get the right test at the right time.",
+    tests:["Answering calls from doctors, nurses, and clinics","Helping order the right test","Tracking down missing or urgent samples","Sharing results safely"],
+    methods:["Phones and headsets","Lab computer system (LIS)","Test catalogs and guides","A lot of teamwork"] },
 
-  { id:'molecular',      title:'Molecular Diagnostics', subtitle:'DNA · RNA · the molecular signature', roomId:'molec1',
-    overview:"Where DNA and RNA do the talking. PCR, sequencing, FISH, and microarray-based assays detect mutations, fusions, and copy-number changes — most of which directly drive cancer treatment decisions today. Targeted therapy in oncology starts with a result from this lab.",
-    tests:['KRAS / BRAF / EGFR mutation testing','ALK / ROS1 fusion in NSCLC','BCR-ABL monitoring in CML','HER2 FISH for breast cancer','Microsatellite instability (MSI) for Lynch'],
-    methods:['Real-time PCR machines','Sanger sequencing','NGS panels (Illumina, Ion Torrent)','FISH on FFPE slides'] },
+  { id:"surgpath", title:"Surgical Pathology", subtitle:"Diagnosing disease in tissue", roomId:"gross",
+    overview:"When a surgeon removes tissue — a tumor, an appendix, even a whole limb — it comes here. Scientists describe and photograph it, then cut tiny pieces that become glass slides for a pathologist to read under the microscope. This is where many cancer diagnoses are actually made — and it was last year's students' favorite stop.",
+    tests:["Examining tissue removed in surgery","Checking the edges to see if a tumor was fully removed","Turning tissue into glass slides (histology)","The pathologist makes the final diagnosis"],
+    methods:["Grossing stations with downdraft hoods","Microtomes that slice tissue thinner than a hair","H&E stains (the classic pink and purple)","Microscopes and digital slide scanners"] },
 
-  { id:'hist-process',   title:'Histology · Processing', subtitle:'Tissue cassettes → paraffin blocks', roomId:'processing',
-    overview:"Cassettes go in here at the end of the day and emerge as paraffin-embedded blocks the next morning. Overnight, automated tissue processors run them through graded alcohols, xylene, and molten paraffin so they can be sectioned for microscopy.",
-    tests:['Routine processing for nearly every surgical specimen','Rapid runs for small biopsies and frozens'],
-    methods:['Tissue processors (Leica, Sakura)','Graded alcohol dehydration','Xylene clearing','Paraffin infiltration at 60 °C'] },
+  { id:"cyto", title:"Cytology", subtitle:"Diagnosis from single cells", roomId:"cytopath",
+    overview:"Instead of a whole piece of tissue, cytology studies individual cells — like the cells in a Pap test or a small needle sample. It can catch cancer very early using a tiny, gentle sample.",
+    tests:["Pap tests that screen for cervical cancer","Checking lumps with a thin needle","Looking at cells from body fluids","Catching disease early"],
+    methods:["Microscopes","Liquid-based slide prep","Special cell stains"] },
 
-  { id:'hist-microtomy', title:'Histology · Microtomy', subtitle:'Blocks → glass slides', roomId:'microtomy',
-    overview:"Where blocks become slides. Microtome stations shave 4-µm ribbons off the embedded paraffin block; ribbons get floated on warm water and lifted onto charged glass slides. The slides you've stared at all year were made here.",
-    tests:['Routine H&E sections','Levels for elusive lesions','Recuts for IHC and special stains'],
-    methods:['Rotary microtome at 4 µm','Warm water bath (~40 °C) for ribbon flotation','Charged slides for tissue adherence','3-level cuts on small biopsies'] },
+  { id:"microsero", title:"Microbiology & Serology", subtitle:"Hunting germs", roomId:"micro1",
+    overview:"This lab grows and identifies the bacteria, viruses, and fungi that make people sick, then finds which medicine will beat them. Serology looks for the antibodies your immune system makes when it fights an infection. Last year, students loved watching cultures get tested.",
+    tests:["Growing bacteria from blood and urine","Finding out which antibiotic works","Testing for viruses like flu, COVID, HIV, and hepatitis","Antibody (serology) testing"],
+    methods:["Petri dishes and incubators","Biosafety cabinets (safe work hoods)","A machine that IDs germs (MALDI-TOF)","Automated analyzers"] },
 
-  { id:'hist-collation', title:'Histology · Collation', subtitle:'Stain · coverslip · deliver', roomId:'collation',
-    overview:"The last stop in histology. Slides are stained with H&E, coverslipped, paired with paperwork, sorted by case, and delivered to the pathologist's queue. If a slide is missing at sign-out, this is where the search begins.",
-    tests:['H&E staining','Special stains (PAS, GMS, trichrome, iron)','Slide-paperwork reconciliation'],
-    methods:['Automated stainer (Leica Autostainer XL)','Automated coverslipper','Slide barcoding tied to case accession','QC review pre-delivery'] },
+  { id:"molec", title:"Molecular Diagnostics", subtitle:"Reading the DNA", roomId:"molec1",
+    overview:"Here, DNA and RNA do the talking. Machines read the genetic code inside cells to find the exact change driving a disease — which helps doctors pick a medicine aimed right at it. It is some of the newest, fastest-growing science in the whole hospital.",
+    tests:["Finding gene changes behind a cancer","Matching patients to targeted medicines","Detecting viruses by their DNA or RNA","Checking for inherited risks"],
+    methods:["PCR machines that copy DNA","Next-generation DNA sequencers","FISH (glowing DNA markers)","Powerful analysis computers"] },
 
-  { id:'scanning',       title:'Slide Scanning', subtitle:'Glass → digital images', roomId:'scanning',
-    overview:"Whole-slide scanners image entire slides at 20× or 40× and produce gigabyte-scale digital files. Telepathology, AI-assisted screening, and educational archives all start here. Increasingly, this is also where the day starts for pathologists who sign out fully digitally.",
-    tests:['Telepathology consults','Second-opinion referrals across sites','AI-assisted Ki67 / HER2 scoring','Education and research archives'],
-    methods:['WSI scanners (Leica Aperio, 3DHistech, Hamamatsu)','20× and 40× scanning','Pyramid-tile file formats (SVS, MIRAX)','PACS-style digital pathology platforms'] },
+  { id:"core", title:"Core Lab", subtitle:"Chemistry, Hematology, Coagulation, Urinalysis", roomId:"core_lab",
+    overview:"The biggest, busiest room in the lab — and it never closes. A conveyor belt carries thousands of blood tubes to machines that run most of the hospital's everyday tests: blood chemistry, blood counts, clotting times, and urine tests. Results from here guide care minute by minute.",
+    tests:["Chemistry: blood sugar, salts, cholesterol, organ health","Hematology: counting red cells, white cells, platelets","Coagulation: how fast blood clots","Urinalysis: checking urine for clues"],
+    methods:["A robotic conveyor track","Rows of automated analyzers","Microscopes for manual review","Runs 24 hours a day"] },
 
-  { id:'ihc',            title:'IHC Staining', subtitle:'Antibody-based protein detection', roomId:'ihc_lab',
-    overview:"Immunohistochemistry uses antibodies to detect specific proteins in tissue. IHC is the workhorse of modern surgical pathology — it's how pathologists distinguish melanoma from carcinoma, find an unknown primary, classify lymphomas, and quantify HER2 to guide breast cancer therapy.",
-    tests:['ER / PR / HER2 panel (breast cancer)','CK7 / CK20 panel (origin of adenocarcinoma)','S100 / SOX10 / HMB45 (melanoma)','CD20 / CD3 / CD30 (lymphoma typing)'],
-    methods:['Automated platforms (Ventana BenchMark, Leica Bond)','HRP / DAB chromogen detection','Heat-induced antigen retrieval','Dual-color stains (e.g. PIN-4 for prostate)'] },
+  { id:"bloodbank", title:"Blood Bank & Transfusion", subtitle:"Keeping transfusions safe", roomId:"bb",
+    overview:"The blood bank types and matches donated blood so it is safe to give to patients, and double-checks every unit before a transfusion. Last year, students got to find out their own blood type here — a favorite moment.",
+    tests:["Finding your blood type (ABO and Rh)","Matching donor blood to a patient (crossmatch)","Checking for antibodies","Releasing blood safely for transfusion"],
+    methods:["Blood typing tests","Refrigerated blood storage","Crossmatch testing","Careful double-checks"] },
 
-  { id:'micro',          title:'Microbiology · Walk-through', subtitle:'Then cross the bridge to the Core Lab', roomId:'micro1',
-    overview:"On our way back from IHC we pass through Microbiology — biosafety cabinets for working with cultures, MALDI-TOF for organism ID from colonies, automated culture instruments, and serology platforms. Most ID consults start with results from this floor. From here, the sky bridge takes us across to the Core Lab in the main hospital.",
-    tests:['Blood and urine cultures','Rapid strep, GI panels','HIV / HBV / HCV serology','Syphilis screening','Respiratory viral panel'],
-    methods:['Automated culture instruments (BD BACTEC)','MALDI-TOF for organism ID from colonies','MIC susceptibility plates','ELISA · lateral flow · chemiluminescence'] },
+  { id:"quality", title:"Quality", subtitle:"Making sure every result is right", roomId:"quality",
+    overview:"Every result the lab releases has to be correct — a wrong number could change someone's treatment. The quality team checks the machines, runs control samples, follows safety rules, and keeps the lab accredited. It is the lab's promise that you can trust the result.",
+    tests:["Running daily quality-control samples","Checking that machines stay accurate","Following safety and accreditation rules","Investigating and fixing problems"],
+    methods:["Control samples and statistics","Checklists and audits","Accreditation standards (CAP, CLIA)","Continuous improvement"] },
 
-  // ============ NORTH BUILDING (Main Hospital · across the bridge) ============
-  { id:'core-overview',  title:'Core Laboratory · Overview', subtitle:'The 24/7 STAT lab · ~80% of clinical tests', roomId:'core_lab',
-    overview:"This is the 24/7 STAT lab — the largest single room in the department. The conveyor track running down the room is a Beckman Coulter automation line: tubes arrive by pneumatic tube, get centrifuged, decapped, sampled by analyzers in series, then recapped and stored. One sample feeds hematology, coagulation, immunoassay and chemistry analyzers in parallel. Volume and turnaround are the metrics: chemistry ~30 min, troponin under an hour, CBC under 30 min.",
-    tests:['BMP, CMP, CBC with diff','Troponin, BNP, D-dimer','Lipid panel, HbA1c, glucose','Coag panel (PT/PTT/INR)','TSH, free T4, βHCG, PSA, drug levels'],
-    methods:['Total laboratory automation (Beckman Coulter line)','Beckman DxH (heme), DxI (immunoassay), AU 5800 (chem)','Roche cobas (chemistry) · Stago STA (coag)','Sample tracking via barcoded tubes on conveyor'] },
-
-  { id:'core-inlet',     title:'Core Lab · Sample Inlet & Pre-analytics', subtitle:'Dynamic Inlet · Centrifuges · Decapper · Aliquoter', roomId:'core_lab',
-    focusPoint:{ x:-32, z:-13 }, focusZoom:4,
-    overview:"Tubes drop in at the Dynamic Inlet, get scanned, then pass through four high-speed centrifuges that spin plasma/serum off the cells. Next is the Decapper — the cap pops off so analyzer probes can sip directly from the tube — then the Aliquoter splits each sample into daughter tubes when the panel needs to run on multiple analyzers in parallel. This pre-analytical phase is invisible to clinicians but is where roughly 70% of all lab errors actually originate (mislabel, hemolysis, clotted tubes, wrong tube type).",
-    tests:['Sample receipt, barcode verification','Plasma / serum separation','Cap removal for analyzer access','Aliquoting for multi-platform panels'],
-    methods:['Dynamic Inlet (1) — pneumatic tube interface','Centrifuges 5.1–5.4 — high-speed serum sep','Decapper (3) — robotic cap removal','Aliquoter — daughter-tube splitter'] },
-
-  { id:'core-heme-coag', title:'Core Lab · Hematology & Coagulation', subtitle:'Beckman DxH · Stago STA · CBC · clot times', roomId:'core_lab',
-    focusPoint:{ x:-32, z:-7 }, focusZoom:4,
-    overview:"Two Stago STA-series analyzers do the coag panel — PT, PTT, INR, fibrinogen, D-dimer — using clot detection (mechanical or photometric). PTs are critical for warfarin monitoring and pre-op clearance; D-dimers are first-line for ruling out PE. Just downstream, the Beckman DxH3s and DxH2s run the CBC with differential at 150–500 samples/hour. Their VCS technology (Volume, Conductivity, light Scatter) measures every cell's size, internal complexity, and granularity simultaneously — that's how the analyzer distinguishes neutrophils from lymphocytes from blasts and flags acute leukemia for human review.",
-    tests:['PT, PTT, INR · fibrinogen · D-dimer','CBC with 5-part differential','Reticulocyte count, NRBC count','Manual review flagging for blasts and dysplasia'],
-    methods:['Stago STA Compact / Max — clot-based assays','Beckman DxH 800/900 — VCS flow cytometry','Reflex slide review on flagged samples','Command Central middleware'] },
-
-  { id:'core-imm-chem',  title:'Core Lab · Immunoassay & Chemistry', subtitle:'Beckman DxI · AU 5800 · Roche cobas', roomId:'core_lab',
-    focusPoint:{ x:-32, z:-3 }, focusZoom:4,
-    overview:"Three Beckman DxI 800 chemiluminescent immunoassay analyzers handle hormones (TSH, free T4, cortisol, βHCG), cardiac markers (troponin, BNP), tumor markers (PSA, CEA, AFP, CA-125, CA 19-9), drug levels (digoxin, valproate), and viral serologies. Paramagnetic-bead capture chemistry: antibody on bead, sample binds, wash, light reader. Right after them, the Beckman AU 5800 (modules 7.8 and 7.9) and Roche cobas (7.10) handle the workhorse chemistries — BMP, CMP, lipid, liver, HbA1c — at ~2,000 tests/hour. Methods include photometric (most enzymatic assays), ion-selective electrodes (Na, K, Cl, ionized Ca), and turbidimetric (CRP, IgG).",
-    tests:['Hormones · cardiac · tumor markers · drug levels','BMP / CMP — Na, K, Cl, BUN, Cr, glucose, Ca','Liver panel · lipid panel · HbA1c','CRP, IgG, complement (turbidimetric)'],
-    methods:['Beckman DxI 800 — chemiluminescent immunoassay','Beckman AU 5800 — photometric / ISE chemistry','Roche cobas — backup / specialty chemistry','Command Central middleware for autoverification'] },
-
-  { id:'core-outlet',    title:'Core Lab · Outlet & Stockyards', subtitle:'Recapper · refrigerated retention storage', roomId:'core_lab',
-    focusPoint:{ x:-32, z:0.5 }, focusZoom:4,
-    overview:"After every analyzer that needs to has sampled, tubes pass through the Recapper (which puts the cap back on for sterility) and head to the refrigerated Stockyards — robotic carousels that store samples at 4 °C for ~7 days. That window covers add-on test orders, dilution reruns on critical values, and troubleshooting unexpected results.",
-    tests:['Add-on test orders within retention window','Critical-value reruns and dilutions','Send-out specimen retrieval','QA / troubleshooting investigations'],
-    methods:['Secondary Decapper (14) and Recapper (15)','Refrigerated robotic Stockyards (4 °C)','~7-day default retention','Manual Outlet 2 access for staff retrieval'] },
-
-  { id:'surgpath',       title:'Surgical Pathology · Sign-Out', subtitle:'16 individual sign-out offices · where the diagnosis lives', roomId:'sp_off_08',
-    overview:"This is the answer at the end of every surgical specimen's journey. Pathologists examine glass slides under the microscope at one of 16 individual sign-out offices and put their name on the diagnosis. Almost every cancer diagnosis you've read in a chart was signed out from a desk like one of these — slides, microscope, monitor for the digital queue, dictation system into the LIS.",
-    tests:['Routine biopsy review','Surgical resection workup','Complex tumor staging','Second-opinion consults'],
-    methods:['Light microscopy on H&E and special stains','Digital sign-out queues in the LIS','Multi-headed teaching scopes for tumor boards','Dictation directly into the LIS'] },
-
-  { id:'transfusion',    title:'Transfusion · Blood Bank', subtitle:'If we have time — last stop on the tour', roomId:'bb',
-    overview:"Where blood is typed, screened, crossmatched, and dispensed for transfusion. This is also where transfusion reactions get worked up and apheresis (e.g. plasma exchange for TTP) is coordinated. The clock here matters: trauma cases are measured in minutes. If we have time at the end of the tour, we'll come up here.",
-    tests:['ABO / Rh typing','Antibody screen and identification','Crossmatch (immediate spin, electronic, AHG)','Direct antiglobulin test (DAT)','Apheresis order coordination'],
-    methods:['Gel column technology','Tube agglutination','Automated immunohematology analyzers (Ortho Vision)','Electronic crossmatch when eligible'] },
+  { id:"informatics", title:"Pathology Informatics", subtitle:"The technology behind the lab", roomId:"chair",
+    overview:"Modern labs run on data. Informatics builds and manages the computer systems that move every order, result, and image around the hospital safely. If you like science and technology, this is where they meet — and you do not have to be a coder to work in a lab, though tech skills are a real plus.",
+    tests:["Connecting lab machines to hospital computers","Keeping results accurate and secure","Building digital pathology and dashboards","Helping new tests go live"],
+    methods:["The Lab Information System (LIS)","Interfaces and databases","Digital pathology systems","Data privacy and security"] }
 ];
 
 // ============================================================================
@@ -2343,6 +2307,7 @@ window.__stopWalkthrough   = __stopWalkthrough;
 window.__toggleWalkthrough = () => (__wtTimer ? __stopWalkthrough() : __startWalkthrough());
 
 buildSidebar();
+{ const __sc = document.getElementById('hs-stopcount'); if (__sc) __sc.textContent = TOUR_STOPS.length; }
 animate();
 setTimeout(() => document.getElementById('loading').classList.add('hidden'), 350);
 // Auto-launch Stop 1 after a brief delay so the user lands directly in the
