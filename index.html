@@ -840,7 +840,7 @@ const TOUR_STOPS = [
     cards:[{ icon:"📞", text:"Picture a nurse who isn't sure which test to order, or where a sample went. Who do they call? This team." },{ icon:"🗣️", text:"They're the voice of the lab, answering doctors, nurses, and clinics all day long." },{ icon:"🔎", text:"They track down missing or urgent samples and help get the right test ordered." },{ icon:"🤝", text:"Basically, they keep the whole hospital and the lab on the same page." }] },
 
   { id:"surgpath", title:"Surgical Pathology", subtitle:"Diagnosing disease in tissue", roomId:"gross",
-    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out — and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist — a doctor who reads slides — looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop — one even watched a whole amputated leg get examined." },{ icon:"📷", photo:"assets/photos/real-signout-scope.jpg", text:"And here is the real thing — a pathologist at Henry Ford reading slides under the microscope, with the tissue magnified on the screen beside them." },{ icon:"📷", photo:"assets/photos/real-signout-room.jpg", text:"The sign-out room itself: rows of microscopes where pathologists make the diagnosis. A real photo from inside the lab you will visit." }] },
+    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out — and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist — a doctor who reads slides — looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop — one even watched a whole amputated leg get examined." }] },
 
   { id:"cyto", title:"Cytology", subtitle:"Diagnosis from single cells", roomId:"cytopath",
     cards:[{ icon:"🧫", text:"Ever heard of a Pap smear? That's cytology — studying just a few loose cells instead of a whole piece of tissue." },{ icon:"🪄", text:"A tiny, gentle sample (a quick swab or a thin needle) is all it takes." },{ icon:"🔬", text:"Under the microscope, those few cells can reveal cancer super early — when it's easiest to treat." }] },
@@ -1671,9 +1671,11 @@ function addDetailedInstruments(rooms){
     accent: new THREE.MeshStandardMaterial({ color:0x0067a0, roughness:0.4 }),
     red:    new THREE.MeshStandardMaterial({ color:0xc0392b, roughness:0.5 }),
     tan:    new THREE.MeshStandardMaterial({ color:0xcdbf9a, roughness:0.7 }),
+    slide:  new THREE.MeshStandardMaterial({ color:0x6a3a8a, emissive:0x7a3fae, emissiveIntensity:0.7, roughness:0.4 }),
     ledG:   new THREE.MeshStandardMaterial({ color:0x2ee06a, emissive:0x2ee06a, emissiveIntensity:1.3 }),
     ledA:   new THREE.MeshStandardMaterial({ color:0xffb020, emissive:0xffb020, emissiveIntensity:1.3 }),
   };
+  __screenMats = [M.screen, M.slide];
   const box=(x,y,z,w,h,d,m)=>{ const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m); o.position.set(x,y,z); o.castShadow=true; o.receiveShadow=true; g.add(o); return o; };
   const cyl=(x,y,z,rt,rb,h,m,s)=>{ const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,s||18),m); o.position.set(x,y,z); o.castShadow=true; g.add(o); return o; };
 
@@ -1692,6 +1694,30 @@ function addDetailedInstruments(rooms){
   function workstation(x,z,n){ box(x,0.37,z,1.6,0.74,0.7,M.white); box(x,0.78,z,1.7,0.04,0.75,M.counter); n=n||1;
     for(let i=0;i<n;i++){ const ox=x-(n-1)*0.45+i*0.9; box(ox,1.12,z+0.1,0.62,0.36,0.03,M.dark); box(ox,1.12,z+0.085,0.56,0.3,0.01,M.screen); cyl(ox,0.92,z+0.18,0.04,0.04,0.16,M.dark,8); } }
   function petriStack(x,z){ for(let i=0;i<4;i++) cyl(x-0.2+i*0.13,0.97+i*0.015,z,0.07,0.07,0.02,[M.red,M.ledA,M.light,M.ledG][i],16); }
+  // red biohazard bin (seen all over the real lab footage)
+  function redBin(x,z){ cyl(x,0.26,z,0.16,0.18,0.52,M.red,16); cyl(x,0.54,z,0.17,0.17,0.04,M.red,16); }
+  // multi-head TEACHING microscope: a horizontal bridge with several binocular heads (real signature piece)
+  function multihead(x,z,n){ n=n||5; const t=0.92;
+    box(x,t/2,z,3.0,t,0.7,M.white); box(x,t+0.03,z,3.06,0.06,0.76,M.counter);   // bench
+    box(x,t+0.34,z-0.05,2.7,0.08,0.08,M.steel);                                  // bridge bar
+    for(let i=0;i<n;i++){ const hx=x-1.25+i*(2.5/(n-1));
+      box(hx,t+0.2,z,0.22,0.34,0.26,M.white);                                    // head body
+      cyl(hx,t+0.06,z,0.05,0.05,0.16,M.steel,10);                               // objective
+      const e1=cyl(hx-0.05,t+0.5,z-0.22,0.03,0.03,0.18,M.dark,10); e1.rotation.x=Math.PI/3;
+      const e2=cyl(hx+0.05,t+0.5,z-0.22,0.03,0.03,0.18,M.dark,10); e2.rotation.x=Math.PI/3;
+      cyl(hx,0.55,z-0.45,0.16,0.18,0.55,M.dark,12);                              // stool
+    }
+    box(x+1.95,t+0.42,z+0.2,0.74,0.46,0.04,M.dark); box(x+1.95,t+0.42,z+0.18,0.66,0.38,0.01,M.slide); // slide monitor
+  }
+  // stainless grossing station: table + downdraft hood arm + red bins (matches the footage)
+  function grossStation(x,z){
+    box(x,0.46,z,1.3,0.92,0.8,M.steel); box(x,0.95,z,1.36,0.06,0.86,M.steel);   // table
+    box(x,1.55,z+0.42,1.4,1.2,0.06,M.steel);                                     // backsplash
+    cyl(x-0.45,1.85,z,0.05,0.05,1.8,M.steel,10); box(x-0.1,2.7,z,0.8,0.1,0.5,M.steel); cyl(x+0.2,2.5,z,0.09,0.09,0.4,M.steel,10); // hood arm
+    box(x,0.99,z-0.12,0.6,0.05,0.42,M.tan);                                      // cutting board
+    redBin(x+0.85,z+0.2); redBin(x-0.85,z+0.25);
+    box(x-1.7,1.1,z,0.62,0.36,0.03,M.dark); box(x-1.7,1.1,z-0.015,0.56,0.3,0.01,M.slide); // monitor
+  }
   function serverRack(x,z){ box(x,0.9,z,0.6,1.8,0.7,M.dark); for(let i=0;i<6;i++) box(x,0.35+i*0.24,z-0.36,0.5,0.05,0.02,[M.ledG,M.accent][i%2]); }
   function dnaHelix(x,z){ for(let i=0;i<14;i++){ const t=i*0.5,y=0.7+i*0.12,r=0.2;
     cyl(x+Math.cos(t)*r,y,z+Math.sin(t)*r,0.05,0.05,0.05,M.accent,8); cyl(x-Math.cos(t)*r,y,z-Math.sin(t)*r,0.05,0.05,0.05,M.red,8); } }
@@ -1700,9 +1726,9 @@ function addDetailedInstruments(rooms){
   rooms.forEach(r=>{ const [cx,cz]=C(r), id=r.id;
     if(id==='accession'){ bench(cx,cz+0.5,3); workstation(cx-1.5,cz-0.7,1); analyzer(cx+1.6,cz+0.4,0.5,0.4,0.4); }
     else if(id==='lab_cs'){ workstation(cx,cz,2); }
-    else if(id==='gross'){ bench(cx,cz+0.5,3.2); box(cx,1.5,cz+0.85,3.2,1.1,0.05,M.steel); box(cx,0.99,cz+0.1,0.9,0.05,0.5,M.tan); microscope(cx-1.2,cz-0.4); }
+    else if(id==='gross'){ grossStation(cx-1.7,cz+0.5); multihead(cx+1.5,cz-0.3,5); }
     else if(id==='cytopath'){ bench(cx,cz+0.5,2.6); microscope(cx-0.7,cz-0.3); petriStack(cx+0.7,cz+0.4); }
-    else if(id==='micro1'){ biosafety(cx-1.2,cz+0.4); fridge(cx-2.4,cz+0.4); petriStack(cx+0.6,cz); analyzer(cx+1.6,cz+0.4,0.8,0.6,0.5); }
+    else if(id==='micro1'){ biosafety(cx-1.2,cz+0.4); fridge(cx-2.4,cz+0.4); petriStack(cx+0.6,cz); analyzer(cx+1.6,cz+0.4,0.8,0.6,0.5); redBin(cx+0.2,cz-0.6); }
     else if(id==='molec1'){ sequencer(cx-1.4,cz+0.4); analyzer(cx+0.2,cz+0.4,0.8,0.6,0.5); dnaHelix(cx+1.9,cz); }
     else if(id==='core_lab'){ for(let i=-2;i<=2;i++) analyzer(cx+i*1.3,cz+0.5,1.0,0.8,0.7); box(cx,1.3,cz+0.5,6.2,0.1,0.3,M.steel); }
     else if(id==='bb'){ fridge(cx-1.2,cz+0.4,M.red); fridge(cx-0.1,cz+0.4,M.red); bench(cx+1.5,cz+0.5,2.2); }
@@ -1711,6 +1737,7 @@ function addDetailedInstruments(rooms){
   });
   return g;
 }
+let __screenMats = [];   // instrument screens that gently pulse (set in addDetailedInstruments)
 building.add(addDetailedInstruments(ROOMS));
 
 // ---- Animated per-room accents: a spinning ring + pulsing core in each room's
@@ -2364,6 +2391,13 @@ function animate() {
       a.core.scale.setScalar(1 + p * 0.22);
       a.coreMat.emissiveIntensity = 0.6 + (p * 0.5 + 0.5) * 0.7;
     }
+  }
+
+  // gentle pulse on instrument screens/slides (the 'alive' touch)
+  if (__screenMats.length){
+    const g = 0.6 + (Math.sin(clock.elapsedTime * 1.6) * 0.5 + 0.5) * 0.5;
+    __screenMats[0].emissiveIntensity = g;
+    if (__screenMats[1]) __screenMats[1].emissiveIntensity = 0.45 + g * 0.4;
   }
 
   renderer.render(scene, camera);
