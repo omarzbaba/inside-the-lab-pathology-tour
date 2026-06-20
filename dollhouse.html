@@ -22,10 +22,13 @@
   /* main cutaway room */
   #stage{flex:1;position:relative;min-height:0;background:radial-gradient(120% 120% at 70% 10%,#ffffff,#dfe9f6)}
   #room{position:absolute;inset:0;width:100%;height:100%}
-  #room-head{position:absolute;left:20px;top:16px;z-index:3}
+  #room-head{position:absolute;left:20px;top:16px;z-index:3;background:rgba(255,255,255,.74);backdrop-filter:blur(7px);padding:11px 15px;border-radius:14px;max-width:min(82%,430px);box-shadow:0 8px 22px rgba(10,24,52,.14)}
   #room-head .ey{font:600 11px system-ui;letter-spacing:.16em;text-transform:uppercase;color:var(--hf)}
   #room-head h1{font:600 30px Georgia,serif;color:var(--ink);line-height:1.05;margin:2px 0}
   #room-head .sub{font-size:14px;color:var(--dim)}
+  #room-head .badge{display:inline-block;margin-top:8px;font:600 11px system-ui;color:#fff;background:var(--hf);padding:4px 11px;border-radius:999px}
+  #pano-load{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#0b1426;color:#9fb4d6;font:600 13px system-ui;z-index:2}
+  #pano-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;color:#fff;font:600 12px system-ui;text-shadow:0 2px 10px rgba(0,0,0,.55);opacity:0;transition:opacity .4s;pointer-events:none}
   /* bottom card + nav */
   #dock{flex-shrink:0;background:#fff;border-top:1px solid var(--line);padding:14px 18px 16px}
   #card{display:flex;align-items:center;gap:14px;min-height:54px}
@@ -44,7 +47,7 @@
 <body>
 <header>
   <img src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences" />
-  <div class="t"><b>Lab Tour — Room View</b><span>Pathology &amp; Laboratory Medicine</span></div>
+  <div class="t"><b>Guided Auto-Tour</b><span>Pathology &amp; Laboratory Medicine</span></div>
   <a class="back" href="index.html">← Full map tour</a>
 </header>
 <div id="mini-wrap">
@@ -54,11 +57,14 @@
 </div>
 <div id="stage">
   <canvas id="room"></canvas>
-  <div id="room-head"><div class="ey">Stop <span id="rh-n">1</span> of 10</div><h1 id="rh-title"></h1><div class="sub" id="rh-sub"></div></div>
+  <div id="room-head"><div class="ey">Stop <span id="rh-n">1</span> of 10</div><h1 id="rh-title"></h1><div class="sub" id="rh-sub"></div><div class="badge" id="mode-badge"></div></div>
+  <div id="pano-hint">The room turns around you</div>
+  <div id="pano-load">Wrapping the photo onto the 3D room…</div>
 </div>
 <div id="dock">
   <div id="card"><div class="ico" id="card-ico">🔬</div><div class="tx" id="card-tx"></div></div>
   <div id="nav">
+    <button class="nbtn" id="play" aria-label="Play or pause the tour">⏸</button>
     <button class="nbtn" id="prev" aria-label="Previous">←</button>
     <div id="dots"></div>
     <button class="nbtn" id="next" aria-label="Next">→</button>
@@ -68,9 +74,9 @@
 <script>
 // ===================== section data =====================
 const SECTIONS = [
-  { id:'lss', room:'accession', title:'Lab Support Services', sub:'Where every sample arrives', kit:'lss',
+  { id:'lss', room:'accession', title:'Lab Support Services', sub:'Where every sample arrives', kit:'lss', pano:'lss.jpg',
     cards:[{i:'🩸',t:"Ever had blood drawn at a checkup? That tube starts its journey right here."},{i:'🏷️',t:"Every sample is scanned and barcoded so it's never mixed up."},{i:'➡️',t:"Then it's routed to exactly the right lab."}]},
-  { id:'lcs', room:'lab_cs', title:'Lab Customer Service', sub:'The voice of the lab', kit:'lcs',
+  { id:'lcs', room:'lab_cs', title:'Lab Customer Service', sub:'The voice of the lab', kit:'lcs', pano:'lcs.jpg',
     cards:[{i:'📞',t:"When a nurse or doctor has a question, they call this team."},{i:'🔎',t:"They track down urgent samples and help order the right test."}]},
   { id:'surgpath', room:'gross', title:'Surgical Pathology', sub:'Diagnosing disease in tissue', kit:'surgpath',
     cards:[{i:'👪',t:"A family member's colonoscopy polyp? It comes to a lab like this."},{i:'🔬',t:"Tissue is sliced razor-thin into glass slides."},{i:'🩺',t:"A pathologist reads them under the microscope — harmless, or cancer?"}]},
@@ -147,6 +153,21 @@ sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.near=1; sun.shadow.camera.f
 sun.shadow.camera.left=-8; sun.shadow.camera.right=8; sun.shadow.camera.top=8; sun.shadow.camera.bottom=-8;
 sun.shadow.bias=-0.0004; roomScene.add(sun);
 let roomGroup=new THREE.Group(); roomScene.add(roomGroup);
+
+// ---- photo-sphere overlay: a real 360 photo wrapped on the inside of a sphere ----
+const panoTexLoader=new THREE.TextureLoader();
+const panoGeo=new THREE.SphereGeometry(80,48,32); panoGeo.scale(-1,1,1);
+const panoMat=new THREE.MeshBasicMaterial();
+const panoSphere=new THREE.Mesh(panoGeo,panoMat); panoSphere.visible=false; roomScene.add(panoSphere);
+const panoCache={};
+let mode='room', panoLon=0, panoLat=0;
+function loadPano(file){
+  const ld=document.getElementById('pano-load'); ld.style.display='flex';
+  const done=tex=>{ panoMat.map=tex; panoMat.needsUpdate=true; ld.style.display='none';
+    const h=document.getElementById('pano-hint'); h.style.opacity=.9; setTimeout(()=>h.style.opacity=0,2600); };
+  if(panoCache[file]) return done(panoCache[file]);
+  panoTexLoader.load('assets/pano/'+file, tex=>{ tex.encoding=THREE.sRGBEncoding; panoCache[file]=tex; done(tex); });
+}
 
 const W=9, D=6.5, H=3.2;
 const M={
@@ -230,10 +251,18 @@ function animate(){
   requestAnimationFrame(animate);
   const dt=Math.min(clock.getDelta(),0.05); resize();
   miniPlan.rotation.y += dt*0.35;                    // blueprint spins
-  // gentle room orbit for life — lower & closer so it reads as looking INTO the room
-  roomT += dt*0.08;
-  roomCam.position.set(Math.sin(roomT)*1.4, 3.7, 4.4);
-  roomCam.lookAt(0,0.95,-1.5);
+  if(mode==='pano'){
+    // stand in the center of the real photo and turn slowly
+    panoLon += dt*6;
+    const phi=THREE.MathUtils.degToRad(90-panoLat), th=THREE.MathUtils.degToRad(panoLon);
+    roomCam.position.set(0,0,0);
+    roomCam.lookAt(Math.sin(phi)*Math.cos(th), Math.cos(phi), Math.sin(phi)*Math.sin(th));
+  } else {
+    // gentle room orbit for life — lower & closer so it reads as looking INTO the room
+    roomT += dt*0.08;
+    roomCam.position.set(Math.sin(roomT)*1.4, 3.7, 4.4);
+    roomCam.lookAt(0,0.95,-1.5);
+  }
   const g=0.6+(Math.sin(clock.elapsedTime*1.6)*0.5+0.5)*0.5;
   M.screen.emissiveIntensity=g; M.slide.emissiveIntensity=0.45+g*0.4;
   miniRenderer.render(miniScene,miniCam);
@@ -251,13 +280,43 @@ function show(){
   document.getElementById('secname').textContent=s.title;
   document.getElementById('mini-label').textContent=s.title;
   cardI=0; showCard();
-  renderDots(); highlightRoom(); buildRoom();
+  renderDots(); highlightRoom(); setMode(s); scheduleNext();
+}
+function setMode(s){
+  const badge=document.getElementById('mode-badge');
+  if(s.pano){
+    mode='pano'; panoLon=0; panoLat=0;
+    roomGroup.visible=false; panoSphere.visible=true;
+    roomCam.fov=72; roomCam.updateProjectionMatrix();
+    badge.textContent='📷 Real 360° photo';
+    loadPano(s.pano);
+  } else {
+    mode='room'; panoSphere.visible=false;
+    roomCam.fov=42; roomCam.updateProjectionMatrix();
+    document.getElementById('pano-load').style.display='none';
+    badge.textContent='🧊 3D model preview';
+    buildRoom(); roomGroup.visible=true;
+  }
 }
 function showCard(){const s=SECTIONS[idx];const c=s.cards[cardI%s.cards.length];document.getElementById('card-ico').textContent=c.i;document.getElementById('card-tx').textContent=c.t;}
 function go(i){idx=(i+SECTIONS.length)%SECTIONS.length;show();}
-document.getElementById('next').onclick=()=>{const s=SECTIONS[idx];if(cardI<s.cards.length-1){cardI++;showCard();}else go(idx+1);};
-document.getElementById('prev').onclick=()=>{if(cardI>0){cardI--;showCard();}else go(idx-1);};
-document.getElementById('card').onclick=()=>{const s=SECTIONS[idx];if(cardI<s.cards.length-1){cardI++;showCard();}};
+
+// ---- autoplay: walk through every card, then on to the next section ----
+let autoplay=true, timer=null;
+const DWELL=4800;
+function scheduleNext(){ clearTimeout(timer); if(autoplay) timer=setTimeout(stepAuto, DWELL); }
+function stepAuto(){
+  const s=SECTIONS[idx];
+  if(cardI<s.cards.length-1){ cardI++; showCard(); scheduleNext(); }
+  else go(idx+1);   // go -> show -> scheduleNext
+}
+const playBtn=document.getElementById('play');
+function setPlay(on){ autoplay=on; playBtn.textContent=on?'⏸':'▶'; if(on) scheduleNext(); else clearTimeout(timer); }
+playBtn.onclick=()=>setPlay(!autoplay);
+
+document.getElementById('next').onclick=()=>{const s=SECTIONS[idx];if(cardI<s.cards.length-1){cardI++;showCard();scheduleNext();}else go(idx+1);};
+document.getElementById('prev').onclick=()=>{if(cardI>0){cardI--;showCard();scheduleNext();}else go(idx-1);};
+document.getElementById('card').onclick=()=>{const s=SECTIONS[idx];if(cardI<s.cards.length-1){cardI++;showCard();scheduleNext();}};
 
 show(); animate();
 </script>
