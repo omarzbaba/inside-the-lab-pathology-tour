@@ -160,7 +160,7 @@ const panoGeo=new THREE.SphereGeometry(80,48,32); panoGeo.scale(-1,1,1);
 const panoMat=new THREE.MeshBasicMaterial();
 const panoSphere=new THREE.Mesh(panoGeo,panoMat); panoSphere.visible=false; roomScene.add(panoSphere);
 const panoCache={};
-let mode='room', panoLon=0, panoLat=0;
+let mode='room', panoLon=0, panoLat=0, panoWalk=0;
 function loadPano(file){
   const ld=document.getElementById('pano-load'); ld.style.display='flex';
   const done=tex=>{ panoMat.map=tex; panoMat.needsUpdate=true; ld.style.display='none';
@@ -252,11 +252,13 @@ function animate(){
   const dt=Math.min(clock.getDelta(),0.05); resize();
   miniPlan.rotation.y += dt*0.35;                    // blueprint spins
   if(mode==='pano'){
-    // stand in the center of the real photo and turn slowly
-    panoLon += dt*6;
+    // turn slowly AND drift forward so it feels like walking into the room
+    panoLon += dt*6; panoWalk += dt;
     const phi=THREE.MathUtils.degToRad(90-panoLat), th=THREE.MathUtils.degToRad(panoLon);
-    roomCam.position.set(0,0,0);
-    roomCam.lookAt(Math.sin(phi)*Math.cos(th), Math.cos(phi), Math.sin(phi)*Math.sin(th));
+    const dx=Math.sin(phi)*Math.cos(th), dy=Math.cos(phi), dz=Math.sin(phi)*Math.sin(th);
+    const push=(1-Math.cos(panoWalk*0.28))*9;          // 0 -> ~18 -> 0, slow ease in then back
+    roomCam.position.set(dx*push, dy*push, dz*push);
+    roomCam.lookAt(dx*(push+1), dy*(push+1), dz*(push+1));
   } else {
     // gentle room orbit for life — lower & closer so it reads as looking INTO the room
     roomT += dt*0.08;
@@ -285,7 +287,7 @@ function show(){
 function setMode(s){
   const badge=document.getElementById('mode-badge');
   if(s.pano){
-    mode='pano'; panoLon=0; panoLat=0;
+    mode='pano'; panoLon=0; panoLat=0; panoWalk=0;
     roomGroup.visible=false; panoSphere.visible=true;
     roomCam.fov=72; roomCam.updateProjectionMatrix();
     badge.textContent='📷 Real 360° photo';
