@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Auto-Rotating 3D Lab Tour · Henry Ford Pathology</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{ --hf:#0067a0; --ink:#13233d; --dim:#5a6b88; --line:rgba(14,34,66,.12); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:#0b1426}
+  header{position:fixed;inset:0 0 auto 0;display:flex;align-items:center;gap:14px;padding:10px 18px;
+    background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.0));z-index:5;pointer-events:none}
+  header img{height:34px;width:auto}
+  header .t b{display:block;font:600 14px system-ui;color:var(--hf)}
+  header .t span{font-size:11.5px;color:var(--dim)}
+  header .back{margin-left:auto;pointer-events:auto;font:600 13px system-ui;color:var(--hf);text-decoration:none;
+    background:#fff;border:1px solid var(--line);padding:8px 14px;border-radius:999px}
+  #canvas{position:fixed;inset:0;display:block}
+  #label{position:fixed;left:18px;bottom:18px;z-index:4;background:rgba(255,255,255,.92);border-radius:12px;
+    padding:10px 16px;box-shadow:0 8px 24px rgba(8,18,40,.35)}
+  #label b{font:600 16px system-ui;color:var(--ink)}
+  #label span{display:block;font-size:12.5px;color:var(--dim);margin-top:2px}
+  .ctrls{position:fixed;right:18px;bottom:18px;z-index:4;display:flex;gap:8px}
+  .ctrls button{font:600 13px system-ui;cursor:pointer;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(6px);padding:9px 14px;border-radius:999px}
+  .ctrls button.on{background:var(--hf);border-color:var(--hf)}
+  #hint{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;color:#fff;
+    font:600 14px system-ui;opacity:.0;transition:opacity .4s;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  #loading{position:fixed;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;
+    background:#0b1426;color:#9fb4d6;font:600 14px system-ui;transition:opacity .5s}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<header>
+  <img src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences" />
+  <div class="t"><b>Auto-Rotating 3D Lab Tour</b><span>Pathology &amp; Laboratory Medicine</span></div>
+  <a class="back" href="pano.html">Manual 360° viewer →</a>
+</header>
+<div id="label"><b>Lab Support Services</b><span>Where every sample arrives — the room turns around you</span></div>
+<div class="ctrls">
+  <button id="spin" class="on">⟳ Auto-rotate: on</button>
+</div>
+<div id="hint">Drag to look · release to resume the spin</div>
+<div id="loading">Wrapping the photo onto the 3D room…</div>
+<script>
+(function(){
+  const canvas = document.getElementById('canvas');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(72, innerWidth/innerHeight, 0.1, 1100);
+
+  // Sphere with the panorama mapped onto the INSIDE (flip on X to face inward).
+  const geo = new THREE.SphereGeometry(500, 64, 48);
+  geo.scale(-1, 1, 1);
+  const tex = new THREE.TextureLoader().load('assets/pano/lss.jpg', () => {
+    const l = document.getElementById('loading'); l.style.opacity = 0; setTimeout(()=>l.remove(), 520);
+    const h = document.getElementById('hint'); h.style.opacity = .85; setTimeout(()=>h.style.opacity=0, 3200);
+  });
+  tex.colorSpace = THREE.SRGBColorSpace || tex.colorSpace;
+  const sphere = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({map: tex}));
+  scene.add(sphere);
+
+  // Camera orientation driven by yaw (lon) + pitch (lat).
+  let lon = 0, lat = 2;          // degrees
+  let autoSpin = true;
+  let dragging = false, lastX = 0, lastY = 0, resumeAt = 0;
+
+  function resize(){
+    camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  }
+  addEventListener('resize', resize); resize();
+
+  // Pointer drag overrides the spin, then auto-resumes after a pause.
+  canvas.addEventListener('pointerdown', e=>{ dragging=true; lastX=e.clientX; lastY=e.clientY; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    lon -= (e.clientX-lastX)*0.13; lat += (e.clientY-lastY)*0.13;
+    lat = Math.max(-78, Math.min(78, lat));
+    lastX=e.clientX; lastY=e.clientY;
+  });
+  function endDrag(){ if(dragging){ dragging=false; resumeAt = performance.now()+1400; } }
+  canvas.addEventListener('pointerup', endDrag);
+  canvas.addEventListener('pointercancel', endDrag);
+
+  const spinBtn = document.getElementById('spin');
+  spinBtn.onclick = ()=>{ autoSpin=!autoSpin; spinBtn.classList.toggle('on',autoSpin);
+    spinBtn.textContent = '⟳ Auto-rotate: ' + (autoSpin?'on':'off'); };
+
+  let t = 0;
+  function frame(now){
+    t += 0.016;
+    const canSpin = autoSpin && !dragging && now > resumeAt;
+    if (canSpin){
+      lon += 0.12;                     // steady horizontal sweep
+      lat = 2 + Math.sin(t*0.25)*3.5;  // gentle vertical drift, feels alive
+    }
+    const phi = THREE.MathUtils.degToRad(90 - lat);
+    const theta = THREE.MathUtils.degToRad(lon);
+    camera.lookAt(
+      500*Math.sin(phi)*Math.cos(theta),
+      500*Math.cos(phi),
+      500*Math.sin(phi)*Math.sin(theta)
+    );
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
