@@ -1,5 +1,5 @@
 {
- "_README": "Add equirectangular 360 photos to assets/pano/ and put each filename in the matching scene's \"panorama\". Scenes with an empty panorama are skipped. The viewer auto-links scenes in 'order' (next/previous). To add custom links or info bubbles, see hotSpots examples in docs/PANO.md. No patients or identifiable faces — this site is public.",
+ "_README": "Add equirectangular 360 photos to assets/pano/ and put each filename in the matching scene's \"panorama\". Scenes with an empty panorama are skipped. The viewer auto-links scenes in 'order' (next/previous). To add custom links or info bubbles, see hotSpots examples in docs/PANO.md. No patients or identifiable faces \u2014 this site is public.",
  "order": [
   "lss",
   "lcs",
@@ -52,7 +52,7 @@
   "core": {
    "title": "Core Lab",
    "blurb": "Chemistry, Hematology, Coagulation, Urinalysis",
-   "panorama": "",
+   "panorama": "core.jpg",
    "hotSpots": []
   },
   "bloodbank": {
