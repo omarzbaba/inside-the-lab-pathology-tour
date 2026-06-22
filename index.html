@@ -1649,10 +1649,13 @@ scene.add(grid);
 
 const building = new THREE.Group();
 scene.add(building);
-// Walls/doors removed per design: just colored floor pads with equipment on top.
-// (buildAllWalls is still defined in case needed later, just not called.)
-// building.add(buildAllWalls(ROOMS));
 building.add(buildFloors(ROOMS));
+// Half-height "dollhouse" walls: real walls with doorways, scaled down in Y so the
+// orbit camera still sees over them into every room. Colliders stay 2-D, so the
+// first-person walkthrough still respects full-height walls.
+const wallsGroup = buildAllWalls(ROOMS);
+wallsGroup.scale.y = 0.56;            // ~3.2m -> ~1.8m (dollhouse height)
+building.add(wallsGroup);
 
 // ============================================================================
 //  DETAILED LAB INSTRUMENTS — recognizable equipment built from primitives,
@@ -1721,19 +1724,49 @@ function addDetailedInstruments(rooms){
   function serverRack(x,z){ box(x,0.9,z,0.6,1.8,0.7,M.dark); for(let i=0;i<6;i++) box(x,0.35+i*0.24,z-0.36,0.5,0.05,0.02,[M.ledG,M.accent][i%2]); }
   function dnaHelix(x,z){ for(let i=0;i<14;i++){ const t=i*0.5,y=0.7+i*0.12,r=0.2;
     cyl(x+Math.cos(t)*r,y,z+Math.sin(t)*r,0.05,0.05,0.05,M.accent,8); cyl(x-Math.cos(t)*r,y,z-Math.sin(t)*r,0.05,0.05,0.05,M.red,8); } }
+  // compact sign-out / chair office: desk + monitor + chair (+ cabinet if room is wide)
+  function office(cx,cz,w,d){ const ez=Math.min(0.55,Math.max(0,d/2-0.7));
+    box(cx,0.37,cz,1.25,0.72,0.66,M.white); box(cx,0.75,cz,1.32,0.06,0.72,M.counter);
+    box(cx-0.32,1.12,cz+0.12,0.5,0.32,0.03,M.dark); box(cx-0.32,1.12,cz+0.1,0.44,0.26,0.01,M.screen);
+    cyl(cx,0.5,cz-ez,0.17,0.19,0.5,M.dark,14); box(cx,0.96,cz-ez-0.04,0.42,0.5,0.06,M.dark);
+    if(w>2.7) box(cx+Math.min(1.0,w/2-0.4),1.0,cz,0.16,2.0,0.55,M.light); }
+  function shelf(x,z){ box(x,1.1,z,0.4,1.5,0.32,M.light); for(let i=0;i<3;i++) box(x,0.55+i*0.5,z,0.36,0.04,0.3,M.steel); }
+  function microtome(x,z){ box(x,0.86,z,0.42,0.22,0.34,M.dark); cyl(x+0.23,0.9,z,0.08,0.08,0.06,M.steel,12); box(x-0.1,0.99,z,0.1,0.04,0.1,M.steel); }
+  function processor(x,z){ box(x,0.7,z,1.0,1.4,0.8,M.white); box(x,1.42,z,0.9,0.06,0.7,M.dark); box(x-0.24,1.24,z-0.35,0.4,0.1,0.02,M.screen); }
+  function slideTray(x,z){ box(x,0.95,z,0.42,0.04,0.3,M.steel); for(let i=0;i<5;i++) box(x-0.16+i*0.08,1.0,z,0.05,0.08,0.22,M.slide); }
+  function scanner(x,z){ box(x,0.55,z,0.8,1.0,0.8,M.white); box(x+0.1,1.08,z-0.2,0.36,0.06,0.28,M.screen); }
+  function autopsyTable(x,z){ box(x,0.25,z,0.9,0.4,1.9,M.steel); box(x,0.46,z,1.0,0.1,2.0,M.steel); box(x,0.515,z,0.78,0.02,1.7,M.dark); cyl(x-0.36,0.95,z-0.78,0.03,0.03,0.55,M.steel,10); }
 
-  const C=r=>[(r.x1+r.x2)/2,(r.z1+r.z2)/2];
-  rooms.forEach(r=>{ const [cx,cz]=C(r), id=r.id;
-    if(id==='accession'){ bench(cx,cz+0.5,3); workstation(cx-1.5,cz-0.7,1); analyzer(cx+1.6,cz+0.4,0.5,0.4,0.4); }
-    else if(id==='lab_cs'){ workstation(cx,cz,2); }
-    else if(id==='gross'){ grossStation(cx-1.7,cz+0.5); multihead(cx+1.5,cz-0.3,5); }
-    else if(id==='cytopath'){ bench(cx,cz+0.5,2.6); microscope(cx-0.7,cz-0.3); petriStack(cx+0.7,cz+0.4); }
-    else if(id==='micro1'){ biosafety(cx-1.2,cz+0.4); fridge(cx-2.4,cz+0.4); petriStack(cx+0.6,cz); analyzer(cx+1.6,cz+0.4,0.8,0.6,0.5); redBin(cx+0.2,cz-0.6); }
-    else if(id==='molec1'){ sequencer(cx-1.4,cz+0.4); analyzer(cx+0.2,cz+0.4,0.8,0.6,0.5); dnaHelix(cx+1.9,cz); }
-    else if(id==='core_lab'){ for(let i=-2;i<=2;i++) analyzer(cx+i*1.3,cz+0.5,1.0,0.8,0.7); box(cx,1.3,cz+0.5,6.2,0.1,0.3,M.steel); }
-    else if(id==='bb'){ fridge(cx-1.2,cz+0.4,M.red); fridge(cx-0.1,cz+0.4,M.red); bench(cx+1.5,cz+0.5,2.2); }
-    else if(id==='quality'){ workstation(cx,cz,2); box(cx+1.9,1.3,cz+0.5,0.05,1.0,0.8,M.white); }
-    else if(id==='chair'){ workstation(cx,cz,2); serverRack(cx+1.9,cz+0.4); }
+  rooms.forEach(r=>{ const id=r.id, dept=r.dept;
+    if(dept==='corridor') return;
+    const cx=(r.x1+r.x2)/2, cz=(r.z1+r.z2)/2;
+    const w=Math.abs(r.x2-r.x1), d=Math.abs(r.z2-r.z1);
+    const ex=Math.max(0,w/2-0.9), ez=Math.max(0,d/2-0.9);
+
+    if(id==='accession'){ bench(cx,cz+Math.min(0.5,ez),Math.min(3,w*0.7)); workstation(cx-Math.min(1.5,ex),cz-Math.min(0.7,ez),1); analyzer(cx+Math.min(1.6,ex),cz+0.4,0.5,0.4,0.4); redBin(cx+ex,cz-ez); }
+    else if(id==='gross'){ grossStation(cx-Math.min(1.7,ex),cz+0.5); multihead(cx+Math.min(1.5,ex),cz-0.3,5); }
+    else if(id==='core_lab'){ const n=Math.max(3,Math.min(5,Math.floor(w/1.4))); for(let i=0;i<n;i++) analyzer(cx-(n-1)*0.65+i*1.3,cz+Math.min(0.5,ez),1.0,0.8,0.7); box(cx,1.3,cz+Math.min(0.5,ez),Math.min(w-0.6,6.2),0.1,0.3,M.steel); workstation(cx-ex,cz-ez,1); }
+    else if(dept==='bb'){ fridge(cx-Math.min(1.2,ex),cz+0.4,M.red); fridge(cx+Math.min(0.1,ex),cz+0.4,M.red); bench(cx+Math.min(1.6,ex),cz+0.4,Math.min(2.2,w*0.45)); workstation(cx-ex,cz-ez,1); }
+    else if(dept==='cytopath'){ bench(cx,cz+0.5,Math.min(2.6,w*0.6)); microscope(cx-0.7,cz-0.3); microscope(cx+0.1,cz-0.3); petriStack(cx+0.9,cz+0.4); workstation(cx-ex,cz-ez,1); }
+    else if(dept==='micro'){ biosafety(cx-Math.min(1.2,ex),cz+0.4); fridge(cx-ex,cz+0.4); petriStack(cx+0.4,cz); analyzer(cx+Math.min(1.6,ex),cz+0.4,0.8,0.6,0.5); redBin(cx,cz-ez); }
+    else if(dept==='molec'){ sequencer(cx-Math.min(1.4,ex),cz+0.4); analyzer(cx+0.2,cz+0.4,0.8,0.6,0.5); dnaHelix(cx+Math.min(1.9,ex),cz); workstation(cx-ex,cz-ez,1); }
+    else if(dept==='hla'){ analyzer(cx-Math.min(1.2,ex),cz+0.4,0.9,0.7,0.6); analyzer(cx+Math.min(1.0,ex),cz+0.4,0.9,0.7,0.6); workstation(cx,cz-ez,2); }
+    else if(dept==='special'){ bench(cx,cz+0.4,Math.min(2.4,w*0.6)); microscope(cx-0.6,cz-0.2); microscope(cx+0.2,cz-0.2); analyzer(cx+Math.min(1.4,ex),cz+0.4,0.7,0.6,0.5); }
+    else if(dept==='ihc'){ analyzer(cx-Math.min(1.0,ex),cz+0.4,1.1,0.9,0.7); analyzer(cx+Math.min(1.2,ex),cz+0.4,0.8,0.6,0.5); workstation(cx,cz-ez,1); }
+    else if(dept==='coag'){ analyzer(cx,cz,Math.min(0.9,w*0.55),0.7,Math.min(0.6,d*0.5)); }
+    else if(dept==='quality'){ workstation(cx,cz,2); box(cx+Math.min(1.9,ex),1.3,cz+0.4,0.05,1.0,0.8,M.white); shelf(cx-ex,cz+0.3); }
+    else if(dept==='lab_cs'){ workstation(cx,cz,2); }
+    else if(dept==='histology'){
+      if(id==='microtomy'){ bench(cx,cz+0.4,Math.min(2.6,w*0.7)); microtome(cx-0.6,cz+0.35); microtome(cx+0.6,cz+0.35); }
+      else if(id==='processing'){ processor(cx-Math.min(1.0,ex),cz+0.4); processor(cx+Math.min(1.0,ex),cz+0.4); }
+      else if(id==='collation'){ bench(cx,cz+0.4,Math.min(2.4,w*0.7)); slideTray(cx-0.6,cz+0.35); slideTray(cx+0.4,cz+0.35); }
+      else if(id==='scanning'){ scanner(cx-Math.min(0.7,ex),cz+0.3); scanner(cx+Math.min(0.7,ex),cz+0.3); workstation(cx,cz-ez,1); }
+      else { bench(cx,cz,Math.min(2.2,w*0.6)); }
+    }
+    else if(dept==='autopsy'){ autopsyTable(cx-Math.min(1.2,ex),cz); autopsyTable(cx+Math.min(1.2,ex),cz); biosafety(cx,cz-ez); }
+    else if(dept==='sp_office'){ office(cx,cz,w,d); }
+    else if(dept==='chair'){ workstation(cx,cz,2); serverRack(cx+Math.min(1.9,ex),cz+0.4); }
+    else { bench(cx,cz,Math.min(2.0,w*0.6)); if(ex>0.6) workstation(cx-Math.min(1.4,ex),cz-Math.min(0.8,ez),1); }
   });
   return g;
 }
