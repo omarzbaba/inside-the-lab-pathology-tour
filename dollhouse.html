@@ -3,28 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Guided Auto-Tour · Henry Ford Pathology</title>
+<title>Guided Tour · Henry Ford Pathology</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-  :root{ --hf:#0067a0; --ink:#13233d; --dim:#5a6b88; --line:rgba(14,34,66,.12); }
+  :root{ --hf:#0067a0; --ink:#13233d; --dim:#5a6b88; --line:rgba(14,34,66,.12); --sec:#0067a0; }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:#eef3fa;display:flex;flex-direction:column;overflow:hidden}
-  header{display:flex;align-items:center;gap:12px;padding:9px 16px;background:#fff;border-bottom:1px solid var(--line);z-index:8}
+  header{display:flex;align-items:center;gap:12px;padding:9px 16px;background:#fff;border-bottom:3px solid var(--sec);z-index:9;transition:border-color .5s}
   header img{height:30px}
-  header .t b{display:block;font:600 13px system-ui;color:var(--hf)} header .t span{font-size:11px;color:var(--dim)}
-  header .back{margin-left:auto;font:600 12px system-ui;color:var(--hf);text-decoration:none;border:1px solid var(--line);padding:7px 12px;border-radius:999px}
+  header .t b{display:block;font:600 13px system-ui;color:var(--sec);transition:color .5s} header .t span{font-size:11px;color:var(--dim)}
+  header .back{margin-left:auto;font:600 12px system-ui;color:var(--sec);text-decoration:none;border:1px solid var(--line);padding:7px 12px;border-radius:999px}
 
-  /* main stage */
-  #stage{flex:1;position:relative;min-height:0;background:radial-gradient(120% 120% at 70% 10%,#ffffff,#dfe9f6);overflow:hidden}
-  #room{position:absolute;inset:0;width:100%;height:100%}
-  #room-head{position:absolute;left:20px;top:16px;z-index:3;background:rgba(255,255,255,.74);backdrop-filter:blur(7px);padding:11px 15px;border-radius:14px;max-width:min(70%,420px);box-shadow:0 8px 22px rgba(10,24,52,.14)}
-  #room-head .ey{font:600 11px system-ui;letter-spacing:.16em;text-transform:uppercase;color:var(--hf)}
-  #room-head h1{font:600 28px Georgia,serif;color:var(--ink);line-height:1.05;margin:2px 0}
-  #room-head .sub{font-size:14px;color:var(--dim)}
-  #room-head .badge{display:inline-block;margin-top:8px;font:600 11px system-ui;color:#fff;background:var(--hf);padding:4px 11px;border-radius:999px}
-  #pano-load{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:#0b1426;color:#9fb4d6;font:600 13px system-ui;z-index:2}
-  #pano-hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;color:#fff;font:600 12px system-ui;text-shadow:0 2px 10px rgba(0,0,0,.55);opacity:0;transition:opacity .4s;pointer-events:none}
+  /* stage: rotating walled lab map is the hero */
+  #stage{flex:1;position:relative;min-height:0;overflow:hidden;background:radial-gradient(130% 130% at 60% 0%,#ffffff,#dde6f2)}
+  #map{position:absolute;inset:0;width:100%;height:100%}
+  #tint{position:absolute;inset:0;background:var(--sec);opacity:.07;pointer-events:none;transition:background .6s;z-index:1}
+  #here{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:3;background:rgba(255,255,255,.9);
+    backdrop-filter:blur(6px);border-radius:999px;padding:7px 16px;box-shadow:0 6px 18px rgba(10,24,52,.14);
+    font:600 12px system-ui;letter-spacing:.04em;color:var(--sec);transition:color .5s}
+  #here b{color:var(--ink)}
 
   /* welcome overlay */
   #welcome{position:absolute;inset:0;z-index:6;display:none;align-items:center;justify-content:center;text-align:center;padding:24px;
@@ -35,46 +33,57 @@
   #welcome p{font-size:16px;line-height:1.65;color:#33425c;max-width:560px;margin:0 auto 18px}
   #welcome .wc-meta{font-size:13px;color:var(--dim);margin-bottom:22px}
   #welcome #wc-start{border:0;background:var(--hf);color:#fff;font:600 15px system-ui;padding:13px 28px;border-radius:999px;cursor:pointer;box-shadow:0 12px 26px rgba(0,103,160,.32)}
-  #welcome #wc-start:hover{background:#005688}
 
-  /* inset blueprint minimap (lower-left) */
-  #mini-inset{position:absolute;left:16px;bottom:16px;z-index:5;width:244px;height:182px;
-    background:linear-gradient(180deg,#0b1426,#0f1d36);border-radius:14px;overflow:hidden;
-    box-shadow:0 10px 26px rgba(8,18,40,.42);border:1px solid rgba(255,255,255,.08)}
-  #mini{width:100%;height:100%;display:block}
-  #mini-tag{position:absolute;left:12px;top:9px;color:#8fb4e6;font:600 9px system-ui;letter-spacing:.16em;text-transform:uppercase}
-  #mini-label{position:absolute;left:0;right:0;bottom:8px;text-align:center;color:#cfe0f7;font:600 11px system-ui;padding:0 8px}
+  /* real-photo inset, lower-left */
+  #photos{position:absolute;left:16px;bottom:16px;z-index:5;width:236px;height:182px;border-radius:14px;overflow:hidden;cursor:pointer;
+    border:2px solid var(--sec);box-shadow:0 12px 28px rgba(8,18,40,.3);background:#0b1426 center/cover no-repeat;transition:border-color .5s}
+  #photos .ph-grad{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.62))}
+  #photos .ph-lbl{position:absolute;left:12px;right:12px;bottom:9px;color:#fff;font:600 12px system-ui;display:flex;justify-content:space-between;align-items:center}
+  #photos .ph-cnt{background:var(--sec);border-radius:999px;padding:2px 9px;font-size:11px;transition:background .5s}
+  #photos.hidden{display:none}
 
-  /* right info drawer */
-  #drawer-toggle{position:absolute;top:16px;right:16px;z-index:6;border:1px solid var(--line);background:rgba(255,255,255,.92);
-    color:var(--hf);font:600 13px system-ui;padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:0 6px 16px rgba(10,24,52,.12)}
-  #drawer{position:absolute;top:0;right:0;height:100%;width:372px;max-width:88%;background:#fff;border-left:1px solid var(--line);
-    box-shadow:-14px 0 34px rgba(10,24,52,.14);transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);
-    z-index:7;overflow-y:auto;padding:24px 22px 36px}
+  /* info drawer (wider) with flip-through cards */
+  #drawer-toggle{position:absolute;top:16px;right:16px;z-index:6;border:1px solid var(--line);background:rgba(255,255,255,.93);
+    color:var(--sec);font:600 13px system-ui;padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:0 6px 16px rgba(10,24,52,.12);transition:color .5s}
+  #drawer{position:absolute;top:0;right:0;height:100%;width:460px;max-width:92%;background:#fff;border-left:1px solid var(--line);
+    box-shadow:-16px 0 40px rgba(10,24,52,.16);transform:translateX(100%);transition:transform .35s cubic-bezier(.16,1,.3,1);
+    z-index:7;display:flex;flex-direction:column;padding:24px 26px 18px}
   #drawer.open{transform:none}
-  #drawer-close{position:absolute;top:12px;right:14px;border:0;background:#eef3fa;color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer}
-  .dw-eyebrow{font:600 11px system-ui;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-  .dw-badge{color:var(--hf)}
-  .dw-title{font:600 27px Georgia,serif;color:var(--ink);margin:6px 0 2px}
-  .dw-sub{color:var(--dim);font-size:14px;margin-bottom:6px}
-  .dw-lead{font-size:15.5px;line-height:1.65;color:#27364f;margin-top:8px}
-  .dw-block{margin-top:18px}
-  .dw-block h3{font:600 12px system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--hf);margin-bottom:6px}
-  .dw-block p{font-size:14.5px;line-height:1.6;color:#27364f}
-  .dw-block ul{margin:0;padding-left:18px}
-  .dw-block li{font-size:14px;line-height:1.55;color:#27364f;margin:5px 0}
-  .dw-callout{display:flex;gap:11px;background:#eaf3fb;border:1px solid #cfe3f5;border-radius:12px;padding:12px 14px;margin-top:14px}
-  .dw-callout .ic{font-size:20px;line-height:1.2}
-  .dw-callout b{font-size:13px;color:var(--hf)} .dw-callout p{font-size:14px;line-height:1.5;color:#27364f;margin-top:2px}
-  .dw-fact{display:flex;gap:10px;align-items:flex-start;margin:9px 0}
-  .dw-fact .ic{font-size:19px;line-height:1.2} .dw-fact p{font-size:14px;line-height:1.5;color:#27364f}
-  .dw-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
-  .dw-gallery .thumb{padding:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;cursor:pointer;background:#000;aspect-ratio:1/1}
-  .dw-gallery .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
-  .dw-gallery .thumb:hover img{transform:scale(1.07)}
-  .dw-note{font-size:11.5px;color:var(--dim);margin-top:7px}
-  .dw-cta{display:inline-block;margin:12px 0 2px;font:600 14px system-ui;color:#fff;background:var(--hf);padding:11px 18px;border-radius:999px;text-decoration:none;box-shadow:0 8px 20px rgba(0,103,160,.3)}
-  .dw-cta:hover{background:#005688}
+  #drawer-close{position:absolute;top:12px;right:14px;border:0;background:#eef3fa;color:var(--ink);width:32px;height:32px;border-radius:50%;font-size:18px;cursor:pointer;z-index:2}
+  .dw-eyebrow{font:600 11px system-ui;letter-spacing:.12em;text-transform:uppercase;color:var(--sec);transition:color .5s}
+  .dw-title{font:600 28px Georgia,serif;color:var(--ink);margin:6px 0 2px}
+  .dw-sub{color:var(--dim);font-size:14px;margin-bottom:14px}
+  .dw-cta{display:inline-block;margin:0 8px 8px 0;font:600 13px system-ui;color:#fff;background:var(--sec);padding:10px 15px;border-radius:999px;text-decoration:none;transition:background .5s}
+  .dw-cta.alt{background:#fff;color:var(--sec);border:1px solid var(--sec)}
+  /* one card at a time */
+  #dw-card{flex:1;overflow-y:auto;margin-top:8px;border-top:1px solid var(--line);padding-top:16px}
+  #dw-card h3{font:600 12px system-ui;letter-spacing:.08em;text-transform:uppercase;color:var(--sec);margin-bottom:8px;transition:color .5s}
+  #dw-card p{font-size:15px;line-height:1.62;color:#27364f}
+  #dw-card .dw-lead{font-size:16px;line-height:1.65}
+  #dw-card ul{margin:0;padding-left:18px} #dw-card li{font-size:14.5px;line-height:1.55;color:#27364f;margin:6px 0}
+  .dw-callout{display:flex;gap:11px;background:color-mix(in srgb,var(--sec) 9%,#fff);border:1px solid color-mix(in srgb,var(--sec) 28%,#fff);border-radius:12px;padding:13px 15px}
+  .dw-callout .ic{font-size:22px} .dw-callout p{font-size:14.5px;line-height:1.55}
+  .dw-fact{display:flex;gap:11px;align-items:flex-start;margin:10px 0} .dw-fact .ic{font-size:20px} .dw-fact p{font-size:14.5px;line-height:1.5}
+  /* card nav */
+  #dw-foot{display:flex;align-items:center;gap:10px;padding-top:12px;border-top:1px solid var(--line);margin-top:8px}
+  .cbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:#f3f8fd;color:var(--ink);font-size:16px;cursor:pointer}
+  .cbtn:hover{background:#e6eff8}
+  #dw-dots{display:flex;gap:6px;flex:1;justify-content:center}
+  .cdot{width:8px;height:8px;border-radius:50%;background:#cfd8e8;border:0;cursor:pointer}
+  .cdot.on{background:var(--sec);width:20px;border-radius:4px;transition:background .5s}
+  #dw-cardlbl{font:600 12px system-ui;color:var(--dim);min-width:78px;text-align:right}
+
+  /* bottom: stop nav (no autoplay) */
+  #dock{flex-shrink:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px}
+  #nav{display:flex;align-items:center;gap:10px}
+  .nbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#f3f8fd;color:var(--ink);font-size:18px;cursor:pointer;flex-shrink:0}
+  .nbtn:hover{background:#e6eff8}
+  #dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+  .dot{width:10px;height:10px;border-radius:50%;background:#cfd8e8;cursor:pointer;border:0}
+  .dot.on{background:var(--sec);width:24px;border-radius:5px;transition:background .5s}
+  #secname{font:600 13px system-ui;color:var(--sec);min-width:140px;text-align:right;transition:color .5s}
+
+  /* lightbox */
   #lightbox{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(6,12,24,.93);padding:30px}
   #lightbox.open{display:flex}
   #lb-img{max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
@@ -85,73 +94,63 @@
   #lb-prev,#lb-next{top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;font-size:28px}
   #lb-prev{left:20px} #lb-next{right:20px}
 
-  /* bottom controls */
-  #dock{flex-shrink:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px}
-  #nav{display:flex;align-items:center;gap:10px}
-  .nbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#f3f8fd;color:var(--ink);font-size:18px;cursor:pointer;flex-shrink:0}
-  .nbtn:hover{background:#e6eff8}
-  #dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
-  .dot{width:9px;height:9px;border-radius:50%;background:#cfd8e8;cursor:pointer;border:0}
-  .dot.on{background:var(--hf);width:22px;border-radius:4px}
-  #secname{font:600 13px system-ui;color:var(--hf);min-width:130px;text-align:right}
   @media(max-width:760px){
-    #mini-inset{width:150px;height:118px}
-    #room-head h1{font-size:21px} #room-head{max-width:62%}
-    #drawer{width:340px} #secname{display:none}
+    #drawer{width:90%}
+    #photos{width:150px;height:118px}
+    #secname{display:none}
+    #dw-title{font-size:22px}
   }
 </style>
 </head>
 <body>
 <header>
   <img src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences" />
-  <div class="t"><b>Guided Auto-Tour</b><span>Pathology &amp; Laboratory Medicine</span></div>
+  <div class="t"><b>Guided Tour</b><span>Pathology &amp; Laboratory Medicine</span></div>
   <a class="back" href="index.html">← Full map tour</a>
 </header>
 
 <div id="stage">
-  <canvas id="room"></canvas>
-  <div id="room-head"><div class="ey">Stop <span id="rh-n">1</span> of 10</div><h1 id="rh-title"></h1><div class="sub" id="rh-sub"></div><div class="badge" id="mode-badge"></div></div>
-  <div id="pano-hint">The room turns around you</div>
-  <div id="pano-load">Wrapping the photo onto the 3D room…</div>
+  <canvas id="map"></canvas>
+  <div id="tint"></div>
+  <div id="here"></div>
 
-  <!-- welcome slide -->
   <div id="welcome"><div class="wc">
     <div class="wc-ey">Medical Laboratory Science · Summer Immersion 2026</div>
     <h1>Welcome to your week in the lab</h1>
-    <p>Over five days you'll shadow the scientists who run one of the largest hospital laboratories in the country - right here at Henry Ford Hospital in Detroit. This guided tour previews every area you'll rotate through, in plain language, so you'll know exactly what you're looking at before you walk in.</p>
-    <div class="wc-meta">Phase 2 · Hospital Shadowing · Henry Ford Detroit · June 22–26, 2026</div>
-    <button id="wc-start">▶ Start the tour</button>
+    <p>Over five days you'll shadow the scientists who run one of the largest hospital laboratories in the country, right here at Henry Ford Hospital in Detroit. This tour walks you through every area you'll rotate through, in plain language, so you'll know exactly what you're looking at before you walk in.</p>
+    <div class="wc-meta">Phase 2 · Hospital Shadowing · Henry Ford Detroit · June 22-26, 2026</div>
+    <button id="wc-start">Start the tour →</button>
   </div></div>
 
-  <!-- inset blueprint -->
-  <div id="mini-inset">
-    <canvas id="mini"></canvas>
-    <div id="mini-tag">You are here</div>
-    <div id="mini-label"></div>
-  </div>
+  <div id="photos" class="hidden"><div class="ph-grad"></div><div class="ph-lbl"><span>Real photos</span><span class="ph-cnt"></span></div></div>
 
-  <!-- info drawer -->
   <button id="drawer-toggle">ℹ︎ Details</button>
   <aside id="drawer" class="open">
     <button id="drawer-close" aria-label="Close details">×</button>
-    <div id="dw-body"></div>
+    <div id="dw-head"></div>
+    <div id="dw-card"></div>
+    <div id="dw-foot">
+      <button class="cbtn" id="cprev" aria-label="Previous card">←</button>
+      <div id="dw-dots"></div>
+      <button class="cbtn" id="cnext" aria-label="Next card">→</button>
+      <div id="dw-cardlbl"></div>
+    </div>
   </aside>
-</div>
 
-<div id="lightbox">
-  <button id="lb-close" aria-label="Close">×</button>
-  <button id="lb-prev" aria-label="Previous">‹</button>
-  <img id="lb-img" alt="">
-  <div id="lb-cap"></div>
-  <button id="lb-next" aria-label="Next">›</button>
+  <div id="lightbox">
+    <button id="lb-close" aria-label="Close">×</button>
+    <button id="lb-prev" aria-label="Previous">‹</button>
+    <img id="lb-img" alt="">
+    <div id="lb-cap"></div>
+    <button id="lb-next" aria-label="Next">›</button>
+  </div>
 </div>
 
 <div id="dock">
   <div id="nav">
-    <button class="nbtn" id="play" aria-label="Play or pause the tour">⏸</button>
-    <button class="nbtn" id="prev" aria-label="Previous">←</button>
+    <button class="nbtn" id="prev" aria-label="Previous stop">←</button>
     <div id="dots"></div>
-    <button class="nbtn" id="next" aria-label="Next">→</button>
+    <button class="nbtn" id="next" aria-label="Next stop">→</button>
     <div id="secname"></div>
   </div>
 </div>
@@ -159,331 +158,219 @@
 <script>
 // ===================== content =====================
 const SECTIONS = [
-  { id:'welcome', welcome:true, title:'Welcome',
-    lead:"You're here for the Medical Laboratory Science Summer Immersion - a hands-on week inside a real hospital laboratory.",
-    about:"A quick, friendly preview of each lab section: what it does, an everyday example you'll recognize, what you'll see there, and why it matters to patients.",
-    how:["Press <b>▶</b> and the tour plays itself","Use <b>←</b> <b>→</b> to go at your own pace","Watch the map in the lower-left corner - the glowing room is where you are","Sections we've photographed rotate around you as real 360° photos; the rest show a 3D model for now"],
-    expect:["Shadow medical laboratory scientists and pathologists","Follow a single tube of blood from the door to a finished result","See how surgery samples become a cancer diagnosis","Ask questions - curiosity is the whole point"] },
+  { id:'welcome', welcome:true, title:'Welcome', color:'#0067a0', mapRooms:[],
+    lead:"You're here for the Medical Laboratory Science Summer Immersion, a hands-on week inside a real hospital laboratory.",
+    about:"A friendly walk through each lab section: what it does, an everyday example you'll recognize, what you'll see there, and why it matters to patients.",
+    how:["Use the arrows at the bottom to move between stops","Watch the lab map turn, your current section glows in its color","Open the photo inset (lower-left) to see real pictures from that area","Tap <b>Details</b> for the full story, flip through the cards"],
+    expect:["Shadow medical laboratory scientists and pathologists","Follow a single tube of blood from the door to a result","See how surgery samples become a cancer diagnosis","Ask questions, curiosity is the whole point"] },
 
-  { id:'lss', room:'accession', kit:'lss', title:'Lab Support Services', sub:'Where every sample arrives',
+  { id:'lss', room:'accession', title:'Lab Support Services', sub:'Where every sample arrives', color:'#0e9aa7', mapRooms:['accession'],
     intro:"Every blood tube, swab, urine cup, and tissue sample sent to the lab comes through here first to be checked in and routed.",
-    everyday:"It's the lab's front door and mailroom in one - every \"package\" (your sample) gets logged, labeled, and sent to the right team.",
+    everyday:"It's the lab's front door and mailroom in one, every \"package\" (your sample) gets logged, labeled, and sent to the right team.",
     see:["Pneumatic tubes shooting samples in from hospital floors","Barcoding and labeling so a sample is never mixed up","Sorting racks and refrigerated storage","Triage of STAT (urgent) vs. routine samples"],
     matters:"If a sample is mislabeled or lost here, every result after it is wrong. Accuracy literally starts at the door.",
     cards:[{i:'🩸',t:"Ever had blood drawn at a checkup? That tube starts its journey right here."},{i:'🏷️',t:"Every sample is scanned and barcoded so it's never mixed up."},{i:'⚡',t:"Urgent \"STAT\" samples get flagged to jump the line."}] },
 
-  { id:'lcs', room:'lab_cs', kit:'lcs', title:'Lab Customer Service', sub:'The voice of the lab',
+  { id:'lcs', room:'lab_cs', title:'Lab Customer Service', sub:'The voice of the lab', color:'#e8821e', mapRooms:['lab_cs'],
     intro:"The team that answers questions from doctors, nurses, clinics, and other hospitals about tests and results.",
-    everyday:"Think of it as the lab's help desk - when a nurse can't find a result or needs to add a test, they call here.",
-    see:["Looking up results in the lab computer system","Adding on tests to samples already in the lab","Tracking down urgent or missing specimens","Explaining how to collect a tricky sample"],
-    matters:"Fast, clear answers keep patient care moving - sometimes a single phone call speeds up someone's treatment.",
+    everyday:"Think of it as the lab's help desk, when a nurse can't find a result or needs to add a test, they call here.",
+    see:["Looking up results in the lab computer system","Adding tests to samples already in the lab","Tracking down urgent or missing specimens","Explaining how to collect a tricky sample"],
+    matters:"Fast, clear answers keep patient care moving, sometimes a single phone call speeds up someone's treatment.",
     cards:[{i:'📞',t:"When a doctor has a question about a test, this team picks up."},{i:'🔎',t:"They track urgent samples so results aren't delayed."}] },
 
-  { id:'surgpath', room:'gross', kit:'surgpath', title:'Surgical Pathology', sub:'Diagnosing disease in tissue',
-    intro:"Where tissue removed during surgery or a biopsy is examined under the microscope to diagnose disease - including cancer.",
+  { id:'surgpath', room:'gross', title:'Surgical Pathology', sub:'Diagnosing disease in tissue', color:'#b8860b', mapRooms:['gross','microtomy','processing','collation','scanning'],
+    intro:"Where tissue removed during surgery or a biopsy is examined under the microscope to diagnose disease, including cancer.",
     everyday:"A family member's colonoscopy polyp, a removed mole, or an appendix all come to a lab like this to find out: harmless, or something serious?",
     see:["The \"grossing\" station, where specimens are described and cut","Tissue soaked, set in wax, and sliced paper-thin on a microtome","Slides stained pink-and-purple (H&E) so structures show up","A pathologist reading the slides to make the diagnosis"],
-    matters:"This is often the exact place where a cancer diagnosis is actually made - it guides the entire treatment plan.",
+    matters:"This is often the exact place where a cancer diagnosis is actually made, it guides the entire treatment plan.",
     cards:[{i:'👪',t:"A family member's colonoscopy polyp? It comes to a lab like this."},{i:'🔬',t:"Tissue is sliced thinner than a hair and put on glass slides."},{i:'🩺',t:"A pathologist decides: harmless, or cancer?"}] },
 
-  { id:'cyto', room:'cytopath', kit:'cyto', title:'Cytology', sub:'Diagnosis from single cells',
+  { id:'cyto', room:'cytopath', title:'Cytology', sub:'Diagnosis from single cells', color:'#7e3ff2', mapRooms:['cytopath'],
     intro:"Diagnosis made from individual cells rather than whole pieces of tissue.",
-    everyday:"A Pap smear is cytology - studying just a few loose cells to catch problems incredibly early.",
+    everyday:"A Pap smear is cytology, studying just a few loose cells to catch problems incredibly early.",
     see:["Pap tests and fine-needle aspiration samples","Cells spread and stained on slides","Cytotechnologists screening for abnormal cells","Suspicious cases flagged for a pathologist"],
-    matters:"Looking at just a handful of cells can catch cancers - like cervical cancer - early enough to prevent them.",
+    matters:"Looking at just a handful of cells can catch cancers, like cervical cancer, early enough to prevent them.",
     cards:[{i:'🧫',t:"A Pap smear studies just a few loose cells."},{i:'🔬',t:"Those few cells can catch cancer super early."}] },
 
-  { id:'microsero', room:'micro1', kit:'micro', title:'Microbiology & Serology', sub:'Hunting germs',
-    intro:"Finding the bacteria, viruses, fungi, and parasites that cause infections - and figuring out how to beat them.",
+  { id:'microsero', room:'micro1', title:'Microbiology & Serology', sub:'Hunting germs', color:'#2e9e5b', mapRooms:['micro1','micro2'],
+    intro:"Finding the bacteria, viruses, fungi, and parasites that cause infections, and figuring out how to beat them.",
     everyday:"That strep-throat swab or a urine culture comes to a lab exactly like this one.",
     see:["Culture plates growing colonies of bacteria","Gram stains under the microscope","Machines that ID the germ and test which antibiotic kills it","Biosafety cabinets and blood-culture instruments"],
-    matters:"It tells doctors the exact antibiotic that will work - which also helps fight antibiotic resistance.",
+    matters:"It tells doctors the exact antibiotic that will work, which also helps fight antibiotic resistance.",
     cards:[{i:'🤒',t:"That strep-throat swab comes to a lab like this one."},{i:'💊',t:"They grow the germ and test which antibiotic beats it."}] },
 
-  { id:'molec', room:'molec1', kit:'molec', title:'Molecular Diagnostics', sub:'Reading the DNA',
+  { id:'molec', room:'molec1', title:'Molecular Diagnostics', sub:'Reading the DNA', color:'#d6336c', mapRooms:['molec1','molec2'],
     intro:"Reading DNA and RNA to detect disease at the genetic level.",
-    everyday:"Remember COVID PCR? That's molecular - copying and reading genetic code to find what's there.",
+    everyday:"Remember COVID PCR? That's molecular, copying and reading genetic code to find what's there.",
     see:["PCR machines copying tiny bits of DNA","Robots extracting DNA and RNA from samples","Next-generation sequencers reading genetic code","Tests for infections, inherited conditions, and tumor mutations"],
-    matters:"It powers personalized medicine - matching the exact treatment to a patient's own genes.",
-    cards:[{i:'🧬',t:"COVID PCR was molecular - reading genetic code."},{i:'🎯',t:"It finds the exact gene change driving a disease."}] },
+    matters:"It powers personalized medicine, matching the exact treatment to a patient's own genes.",
+    cards:[{i:'🧬',t:"COVID PCR was molecular, reading genetic code."},{i:'🎯',t:"It finds the exact gene change driving a disease."}] },
 
-  { id:'core', room:'core_lab', kit:'core', pano:'core.jpg', title:'Core Lab', sub:'Chemistry · Hematology · Coagulation · Urinalysis',
+  { id:'core', room:'core_lab', title:'Core Lab', sub:'Chemistry · Hematology · Coagulation · Urinalysis', color:'#1f7fd1', mapRooms:['core_lab'],
     intro:"The high-volume engine room that runs the most common blood and fluid tests around the clock.",
     everyday:"Your cholesterol, blood sugar, complete blood count (CBC), or kidney test runs right here.",
     see:["Automated analyzer lines linked by conveyor track","Centrifuges spinning tubes to separate blood","Analyzers counting red and white blood cells","Coagulation (clotting) and urinalysis testing"],
-    matters:"Thousands of results an hour - it's the everyday backbone of nearly every diagnosis.",
-    cards:[{i:'🩸',t:"Your cholesterol or blood-sugar test runs here."},{i:'🏎️',t:"A conveyor zips thousands of tubes to machines, 24/7."}] },
+    matters:"Thousands of results an hour, it's the everyday backbone of nearly every diagnosis.",
+    cards:[{i:'🩸',t:"Your cholesterol or blood-sugar test runs here."},{i:'🏎️',t:"A conveyor zips thousands of tubes to machines, 24/7."}],
+    ctas:[{label:'▶ Walk the automation line', href:'core-lab.html'},{label:'Open immersive 360°', href:'pano.html', alt:true}] },
 
-  { id:'bloodbank', room:'bb', kit:'bloodbank', title:'Blood Bank & Transfusion', sub:'Keeping transfusions safe',
+  { id:'bloodbank', room:'bb', title:'Blood Bank & Transfusion', sub:'Keeping transfusions safe', color:'#c0392b', mapRooms:['bb','bb_floor','coag'],
     intro:"Making sure donated blood is safe and correctly matched to each patient before a transfusion.",
-    everyday:"It's where you'd learn your blood type - and after a serious accident, this team helps keep people alive.",
+    everyday:"It's where you'd learn your blood type, and after a serious accident, this team helps keep people alive.",
     see:["Blood typing (ABO and Rh)","Crossmatching donor blood to the patient","Antibody screening for safety","Refrigerated and frozen storage of blood products"],
     matters:"A wrong match can be deadly, so this team's accuracy directly saves lives.",
-    cards:[{i:'🅰️',t:"Find out your blood type - and how blood is matched."},{i:'❤️',t:"After a bad accident, this team helps keep people alive."}] },
+    cards:[{i:'🅰️',t:"Find out your blood type, and how blood is matched."},{i:'❤️',t:"After a bad accident, this team helps keep people alive."}] },
 
-  { id:'quality', room:'quality', kit:'quality', title:'Quality', sub:'Making sure every result is right',
+  { id:'quality', room:'quality', title:'Quality', sub:'Making sure every result is right', color:'#4a6da7', mapRooms:['quality'],
     intro:"The team that makes sure every machine is accurate and every result can be trusted.",
-    everyday:"They're the referees of the lab - constantly checking that everything plays by the rules.",
+    everyday:"They're the referees of the lab, constantly checking that everything plays by the rules.",
     see:["Daily quality-control samples run on every instrument","Calibrating and verifying machines","Proficiency testing against outside standards","Audits for CAP / CLIA accreditation"],
     matters:"Without quality control you couldn't trust a single result. It's invisible to patients but absolutely essential.",
     cards:[{i:'✅',t:"They make sure every machine is accurate and every result is trustworthy."}] },
 
-  { id:'informatics', room:'chair', kit:'informatics', title:'Pathology Informatics', sub:'The technology behind the lab',
+  { id:'informatics', room:'chair', title:'Pathology Informatics', sub:'The technology behind the lab', color:'#0fa3a3', mapRooms:['chair'],
     intro:"The technology and data systems that move every result safely from the machine to your doctor's screen.",
     everyday:"Love science AND computers? This is exactly where the two meet.",
     see:["The Laboratory Information System (LIS)","Interfaces connecting every instrument to the records","Data security and patient privacy","Building reports and dashboards from lab data"],
-    matters:"Modern labs run on data - informatics keeps it accurate, fast, and private.",
-    cards:[{i:'💻',t:"This team moves every result safely from machine to your doctor's screen."},{i:'🙌',t:"Love science AND tech? This is where they meet."}] },
+    matters:"Modern labs run on data, informatics keeps it accurate, fast, and private.",
+    cards:[{i:'💻',t:"This team moves every result from machine to your doctor's screen."},{i:'🙌',t:"Love science AND tech? This is where they meet."}] },
 ];
 
 let idx = 0;
+const hex = c => parseInt(c.slice(1),16);
 
-// ===================== inset blueprint =====================
-const miniCanvas = document.getElementById('mini');
-const miniRenderer = new THREE.WebGLRenderer({canvas:miniCanvas, antialias:true, alpha:true});
-const miniScene = new THREE.Scene();
-const miniCam = new THREE.PerspectiveCamera(40, 1.35, 0.1, 2000);
-miniScene.add(new THREE.AmbientLight(0xffffff,0.95));
-const mdl = new THREE.DirectionalLight(0xffffff,0.6); mdl.position.set(40,80,30); miniScene.add(mdl);
-const miniPlan = new THREE.Group(); miniScene.add(miniPlan);
-const roomMeshes = {};
-let planReady = false;
-const GREY = 0x37425a;
+// ===================== rotating walled lab map =====================
+const mapCanvas=document.getElementById('map');
+const mr=new THREE.WebGLRenderer({canvas:mapCanvas, antialias:true, alpha:true});
+mr.setPixelRatio(Math.min(devicePixelRatio,2));
+const mscene=new THREE.Scene();
+const mcam=new THREE.PerspectiveCamera(32, 1.6, 0.5, 4000);
+mscene.add(new THREE.AmbientLight(0xffffff,0.85));
+const mdl=new THREE.DirectionalLight(0xffffff,0.6); mdl.position.set(30,80,20); mscene.add(mdl);
+const spinner=new THREE.Group(); mscene.add(spinner);
+const plan=new THREE.Group(); spinner.add(plan);
+const roomMat={}, roomGrp={}, roomCorr={}, roomLoc={};
+const GREY=0x46506a, CORR=0x2b3346;
+let planReady=false, tOff={x:0,z:0}, tDist=90, fullSpan=90, camDist=90;
 
 fetch('reference/rooms.json',{cache:'no-cache'}).then(r=>r.json()).then(rooms=>{
   const xs=[],zs=[]; rooms.forEach(r=>{xs.push(r.x1,r.x2);zs.push(r.z1,r.z2);});
   const cx=(Math.min(...xs)+Math.max(...xs))/2, cz=(Math.min(...zs)+Math.max(...zs))/2;
   rooms.forEach(r=>{
-    if(r.nested) return;
-    const w=Math.abs(r.x2-r.x1), d=Math.abs(r.z2-r.z1);
-    const mat=new THREE.MeshStandardMaterial({color:GREY,roughness:0.75,emissive:GREY,emissiveIntensity:0.05});
-    const m=new THREE.Mesh(new THREE.BoxGeometry(w-0.3,0.4,d-0.3),mat);
-    m.position.set((r.x1+r.x2)/2-cx,0.2,(r.z1+r.z2)/2-cz);
-    miniPlan.add(m); roomMeshes[r.id]=m;
+    const w=Math.abs(r.x2-r.x1), d=Math.abs(r.z2-r.z1), corr=(r.dept==='corridor');
+    const g=new THREE.Group(); g.position.set((r.x1+r.x2)/2-cx, r.nested?0.3:0, (r.z1+r.z2)/2-cz); plan.add(g);
+    const mat=new THREE.MeshStandardMaterial({color:GREY,emissive:GREY,emissiveIntensity:0.05,roughness:0.85});
+    roomMat[r.id]=mat; roomGrp[r.id]=g; roomCorr[r.id]=corr; roomLoc[r.id]={x:g.position.x,z:g.position.z};
+    const fl=new THREE.Mesh(new THREE.BoxGeometry(w-0.2,0.3,d-0.2),mat); fl.position.y=0.15; g.add(fl);
+    if(!corr){ const WH=5,T=0.5;
+      const n=new THREE.Mesh(new THREE.BoxGeometry(w,WH,T),mat); n.position.set(0,WH/2,-d/2); g.add(n);
+      const s=new THREE.Mesh(new THREE.BoxGeometry(w,WH,T),mat); s.position.set(0,WH/2, d/2); g.add(s);
+      const we=new THREE.Mesh(new THREE.BoxGeometry(T,WH,d),mat); we.position.set(-w/2,WH/2,0); g.add(we);
+      const ea=new THREE.Mesh(new THREE.BoxGeometry(T,WH,d),mat); ea.position.set( w/2,WH/2,0); g.add(ea);
+    }
   });
-  const span=Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...zs)-Math.min(...zs));
-  miniCam.position.set(0, span*0.82, span*0.58); miniCam.lookAt(0,0,0);
-  planReady=true; highlightRoom();
+  fullSpan=Math.max(Math.max(...xs)-Math.min(...xs), Math.max(...zs)-Math.min(...zs));
+  tDist=fullSpan*0.95; camDist=fullSpan*0.95;
+  planReady=true; highlight();
 });
 
-function highlightRoom(){
+function highlight(){
   if(!planReady) return;
-  const activeRoom = SECTIONS[idx].room;        // undefined on welcome -> all grey
-  for(const id in roomMeshes){
-    const m=roomMeshes[id], on=(id===activeRoom);
-    m.material.color.setHex(on?0x2f9fff:GREY);
-    m.material.emissive.setHex(on?0x2f9fff:GREY);
-    m.material.emissiveIntensity = on?0.95:0.05;
-    m.scale.y = on?3.6:1; m.position.y = on?0.72:0.2;
+  const s=SECTIONS[idx], active=new Set(s.mapRooms||[]), col=hex(s.color);
+  let ax=0,az=0,n=0,minx=1e9,maxx=-1e9,minz=1e9,maxz=-1e9;
+  for(const id in roomMat){
+    const on=active.has(id), m=roomMat[id];
+    const c = on?col : (roomCorr[id]?CORR:GREY);
+    m.color.setHex(c); m.emissive.setHex(c); m.emissiveIntensity = on?0.6:(roomCorr[id]?0.02:0.06);
+    roomGrp[id].position.y = on?0.6:0;
+    if(on){ const l=roomLoc[id]; ax+=l.x; az+=l.z; n++; minx=Math.min(minx,l.x);maxx=Math.max(maxx,l.x);minz=Math.min(minz,l.z);maxz=Math.max(maxz,l.z); }
   }
+  if(n){ tOff.x=-(ax/n); tOff.z=-(az/n); const cl=Math.max(maxx-minx,maxz-minz); tDist=Math.max(85,Math.min(130,fullSpan+cl*0.8)); }
+  else { tOff.x=0; tOff.z=0; tDist=fullSpan*1.05; }
 }
 
-// ===================== main scene (photo-sphere + 3D rooms) =====================
-const roomCanvas=document.getElementById('room');
-const roomRenderer=new THREE.WebGLRenderer({canvas:roomCanvas, antialias:true});
-roomRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
-roomRenderer.shadowMap.enabled=true; roomRenderer.outputEncoding=THREE.sRGBEncoding;
-const roomScene=new THREE.Scene(); roomScene.background=new THREE.Color(0xeaf0f8);
-const roomCam=new THREE.PerspectiveCamera(42,2,0.1,200);
-roomScene.add(new THREE.AmbientLight(0xffffff,0.42));
-roomScene.add(new THREE.HemisphereLight(0xffffff,0xccd6e6,0.28));
-const sun=new THREE.DirectionalLight(0xffffff,0.95); sun.position.set(5,11,6); sun.castShadow=true;
-sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.near=1; sun.shadow.camera.far=40;
-sun.shadow.camera.left=-8; sun.shadow.camera.right=8; sun.shadow.camera.top=8; sun.shadow.camera.bottom=-8;
-sun.shadow.bias=-0.0004; roomScene.add(sun);
-let roomGroup=new THREE.Group(); roomScene.add(roomGroup);
-
-// photo-sphere
-const panoTexLoader=new THREE.TextureLoader();
-const panoGeo=new THREE.SphereGeometry(80,48,32); panoGeo.scale(-1,1,1);
-const panoMat=new THREE.MeshBasicMaterial();
-const panoSphere=new THREE.Mesh(panoGeo,panoMat); panoSphere.visible=false; roomScene.add(panoSphere);
-const panoCache={};
-let mode='welcome', panoLon=0, panoLat=0, panoWalk=0;
-function loadPano(file){
-  const ld=document.getElementById('pano-load'); ld.style.display='flex';
-  const done=tex=>{ panoMat.map=tex; panoMat.needsUpdate=true; ld.style.display='none';
-    const h=document.getElementById('pano-hint'); h.style.opacity=.9; setTimeout(()=>h.style.opacity=0,2600); };
-  if(panoCache[file]) return done(panoCache[file]);
-  panoTexLoader.load('assets/pano/'+file, tex=>{ tex.encoding=THREE.sRGBEncoding; panoCache[file]=tex; done(tex); });
+function resizeMap(){ const w=mapCanvas.clientWidth,h=mapCanvas.clientHeight;
+  if(mapCanvas.width!==w||mapCanvas.height!==h){ mr.setSize(w,h,false); mcam.aspect=w/h; mcam.updateProjectionMatrix(); } }
+function animate(){ requestAnimationFrame(animate); resizeMap();
+  spinner.rotation.y += 0.0016;
+  plan.position.x += (tOff.x-plan.position.x)*0.06;
+  plan.position.z += (tOff.z-plan.position.z)*0.06;
+  camDist += (tDist-camDist)*0.06;
+  mcam.position.set(0, camDist*0.72, camDist*0.7); mcam.lookAt(0,1,0);
+  mr.render(mscene,mcam);
 }
 
-const M={
-  white:new THREE.MeshStandardMaterial({color:0xf2f4f8,roughness:0.5}),
-  wall:new THREE.MeshStandardMaterial({color:0xe7edf6,roughness:0.9}),
-  wallBack:new THREE.MeshStandardMaterial({color:0xcdd8e8,roughness:0.9}),
-  floor:new THREE.MeshStandardMaterial({color:0xaab2c0,roughness:0.4,metalness:0.05}),
-  base:new THREE.MeshStandardMaterial({color:0x8b96a8,roughness:0.6}),
-  steel:new THREE.MeshStandardMaterial({color:0xb4bac4,roughness:0.3,metalness:0.8}),
-  dark:new THREE.MeshStandardMaterial({color:0x252a33,roughness:0.5}),
-  counter:new THREE.MeshStandardMaterial({color:0x2a3340,roughness:0.4}),
-  screen:new THREE.MeshStandardMaterial({color:0x0a1830,emissive:0x2f6fed,emissiveIntensity:0.9}),
-  slide:new THREE.MeshStandardMaterial({color:0x6a3a8a,emissive:0x7a3fae,emissiveIntensity:0.7}),
-  glass:new THREE.MeshStandardMaterial({color:0xbfe0ff,roughness:0.08,transparent:true,opacity:0.32}),
-  accent:new THREE.MeshStandardMaterial({color:0x0067a0,roughness:0.4}),
-  red:new THREE.MeshStandardMaterial({color:0xc0392b,roughness:0.5}),
-  tan:new THREE.MeshStandardMaterial({color:0xcdbf9a,roughness:0.7}),
-  ledG:new THREE.MeshStandardMaterial({color:0x2ee06a,emissive:0x2ee06a,emissiveIntensity:1.2}),
-  ledA:new THREE.MeshStandardMaterial({color:0xffb020,emissive:0xffb020,emissiveIntensity:1.2}),
-};
-function bx(g,x,y,z,w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;g.add(o);return o;}
-function cy(g,x,y,z,rt,rb,h,m,s){const o=new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,h,s||16),m);o.position.set(x,y,z);o.castShadow=true;g.add(o);return o;}
-function bench(g,x,z,w,d){d=d||0.7;const t=0.92;bx(g,x,t/2,z,w,t,d,M.white);bx(g,x,t+0.03,z,w+0.06,0.06,d+0.06,M.counter);}
-function microscope(g,x,z){bx(g,x,0.95,z,0.34,0.06,0.42,M.dark);bx(g,x,1.04,z+0.12,0.16,0.34,0.14,M.dark);bx(g,x,1.06,z-0.02,0.24,0.03,0.24,M.steel);cy(g,x,1.25,z-0.02,0.07,0.07,0.06,M.steel,10);const e=cy(g,x,1.36,z-0.16,0.035,0.035,0.2,M.dark,10);e.rotation.x=Math.PI/3;}
-function analyzer(g,x,z,w,h,d){bx(g,x,0.12,z,w*1.04,0.24,d*1.04,M.white);bx(g,x,0.24+h/2,z,w,h,d,M.white);bx(g,x,0.24+h*0.62,z-d/2-0.01,w*0.5,h*0.32,0.02,M.screen);for(let i=0;i<3;i++)bx(g,x-w*0.3+i*0.12,0.24+h*0.86,z-d/2-0.02,0.04,0.04,0.02,[M.ledG,M.ledA,M.red][i]);}
-function workstation(g,x,z,n){n=n||1;bx(g,x,0.37,z,1.6,0.74,0.7,M.white);bx(g,x,0.78,z,1.7,0.04,0.75,M.counter);for(let i=0;i<n;i++){const ox=x-(n-1)*0.45+i*0.9;bx(g,ox,1.12,z+0.1,0.62,0.36,0.03,M.dark);bx(g,ox,1.12,z+0.085,0.56,0.3,0.01,M.screen);}}
-function sequencer(g,x,z){bx(g,x,0.6,z,0.9,0.8,0.6,M.white);bx(g,x,0.78,z-0.31,0.5,0.34,0.02,M.screen);for(let i=0;i<6;i++)cy(g,x-0.35+i*0.14,1.03,z,0.03,0.03,0.1,M.accent,8);}
-function biosafety(g,x,z){bx(g,x,0.55,z,1.3,0.7,0.7,M.white);bx(g,x,1.4,z,1.3,1.1,0.7,M.white);bx(g,x,1.35,z-0.36,1.1,0.7,0.02,M.glass);}
-function fridge(g,x,z,red){bx(g,x,1.0,z,0.9,2.0,0.7,red?M.red:M.white);bx(g,x+0.38,1.0,z-0.36,0.05,1.2,0.04,M.steel);bx(g,x,1.5,z-0.36,0.5,0.5,0.02,M.glass);}
-function petriStack(g,x,z){for(let i=0;i<4;i++)cy(g,x-0.2+i*0.13,0.97+i*0.015,z,0.07,0.07,0.02,[M.red,M.ledA,M.white,M.ledG][i],16);}
-function redBin(g,x,z){cy(g,x,0.26,z,0.16,0.18,0.52,M.red,16);cy(g,x,0.54,z,0.17,0.17,0.04,M.red,16);}
-function serverRack(g,x,z){bx(g,x,0.9,z,0.6,1.8,0.7,M.dark);for(let i=0;i<6;i++)bx(g,x,0.35+i*0.24,z-0.36,0.5,0.05,0.02,[M.ledG,M.accent][i%2]);}
-function dnaHelix(g,x,z){for(let i=0;i<14;i++){const t=i*0.5,y=0.7+i*0.12,r=0.2;cy(g,x+Math.cos(t)*r,y,z+Math.sin(t)*r,0.05,0.05,0.05,M.accent,8);cy(g,x-Math.cos(t)*r,y,z-Math.sin(t)*r,0.05,0.05,0.05,M.red,8);}}
-function multihead(g,x,z,n){n=n||5;const t=0.92;bx(g,x,t/2,z,3.0,t,0.7,M.white);bx(g,x,t+0.03,z,3.06,0.06,0.76,M.counter);bx(g,x,t+0.34,z-0.05,2.7,0.08,0.08,M.steel);for(let i=0;i<n;i++){const hx=x-1.25+i*(2.5/(n-1));bx(g,hx,t+0.2,z,0.22,0.34,0.26,M.white);const e1=cy(g,hx-0.05,t+0.5,z-0.22,0.03,0.03,0.18,M.dark,10);e1.rotation.x=Math.PI/3;const e2=cy(g,hx+0.05,t+0.5,z-0.22,0.03,0.03,0.18,M.dark,10);e2.rotation.x=Math.PI/3;cy(g,hx,0.55,z-0.45,0.16,0.18,0.55,M.dark,12);}bx(g,x+1.9,t+0.42,z+0.2,0.74,0.46,0.04,M.dark);bx(g,x+1.9,t+0.42,z+0.18,0.66,0.38,0.01,M.slide);}
-function grossStation(g,x,z){bx(g,x,0.46,z,1.3,0.92,0.8,M.steel);bx(g,x,0.95,z,1.36,0.06,0.86,M.steel);bx(g,x,1.55,z+0.42,1.4,1.2,0.06,M.steel);cy(g,x-0.45,1.85,z,0.05,0.05,1.8,M.steel,10);bx(g,x-0.1,2.7,z,0.8,0.1,0.5,M.steel);bx(g,x,0.99,z-0.12,0.6,0.05,0.42,M.tan);redBin(g,x+0.85,z+0.2);redBin(g,x-0.85,z+0.25);}
+// ===================== theme + photos inset =====================
+let PHOTOS={}, phList=[], phIdx=0, phTimer=null;
+function applyTheme(c){ document.documentElement.style.setProperty('--sec', c); }
+function updatePhotos(){
+  clearInterval(phTimer);
+  const el=document.getElementById('photos'), s=SECTIONS[idx];
+  phList = (s.welcome?[]:PHOTOS[s.id]) || [];
+  if(!phList.length){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden'); phIdx=0; showPh();
+  el.querySelector('.ph-cnt').textContent = '📷 ' + phList.length;
+  if(phList.length>1) phTimer=setInterval(()=>{ phIdx=(phIdx+1)%phList.length; showPh(); }, 2800);
+}
+function showPh(){ const el=document.getElementById('photos'), p=phList[phIdx]; if(!p)return;
+  el.style.backgroundImage = "url('assets/photos/"+p.file+"')"; }
+document.getElementById('photos').onclick=()=>{ if(phList.length) openLightbox(SECTIONS[idx].id, phIdx); };
 
-function buildKit(g,kit){
-  const zb=-3.05;
-  if(kit==='lss'){bench(g,0,zb,3.4);workstation(g,-2.2,zb+0.2,1);redBin(g,2.6,zb+0.2);analyzer(g,2.2,zb,0.5,0.4,0.4);}
-  else if(kit==='lcs'){workstation(g,0,zb,2);bench(g,2.8,zb,1.6);}
-  else if(kit==='surgpath'){grossStation(g,-2.4,zb+0.3);multihead(g,1.3,zb,5);}
-  else if(kit==='cyto'){bench(g,-1.2,zb,3.0);microscope(g,-1.4,zb-0.2);petriStack(g,0.6,zb+0.2);workstation(g,2.6,zb,1);}
-  else if(kit==='micro'){biosafety(g,-2.4,zb+0.3);fridge(g,-0.6,zb+0.3);petriStack(g,1.0,zb);analyzer(g,2.4,zb,0.8,0.6,0.5);redBin(g,0.2,zb-0.5);}
-  else if(kit==='molec'){sequencer(g,-2.4,zb+0.3);analyzer(g,-0.6,zb,0.8,0.6,0.5);dnaHelix(g,1.6,zb);workstation(g,3.0,zb,1);}
-  else if(kit==='core'){for(let i=-2;i<=2;i++)analyzer(g,i*1.5,zb+0.3,1.1,0.8,0.7);bx(g,0,1.3,zb+0.3,7.6,0.1,0.3,M.steel);}
-  else if(kit==='bloodbank'){fridge(g,-2.4,zb+0.3,true);fridge(g,-1.2,zb+0.3,true);bench(g,1.3,zb,3.0);workstation(g,2.6,zb,1);}
-  else if(kit==='quality'){workstation(g,-1.2,zb,2);bx(g,2.4,1.4,zb+0.1,0.06,1.1,1.0,M.white);bench(g,2.4,zb+0.6,1.4);}
-  else if(kit==='informatics'){workstation(g,-1.0,zb,2);serverRack(g,2.6,zb+0.3);serverRack(g,3.4,zb+0.3);}
+// ===================== drawer card carousel =====================
+function list(a){ return '<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>'; }
+function buildCards(s){
+  if(s.welcome) return [
+    {h:'Welcome', html:'<p class="dw-lead">'+s.lead+'</p>'},
+    {h:'What this tour is', html:'<p>'+s.about+'</p>'},
+    {h:'How to use it', html:list(s.how)},
+    {h:'What to expect this week', html:list(s.expect)},
+  ];
+  const cards=[
+    {h:'What it is', html:'<p>'+s.intro+'</p>'},
+    {h:'Think of it like…', html:'<div class="dw-callout"><span class="ic">💡</span><div><p>'+s.everyday+'</p></div></div>'},
+    {h:"What you'll see", html:list(s.see)},
+    {h:'Why it matters', html:'<p>'+s.matters+'</p>'},
+  ];
+  if(s.cards) cards.push({h:'Quick facts', html:s.cards.map(c=>'<div class="dw-fact"><span class="ic">'+c.i+'</span><p>'+c.t+'</p></div>').join('')});
+  return cards;
 }
-function buildRoom(){
-  roomScene.remove(roomGroup); roomGroup.traverse(o=>{if(o.geometry)o.geometry.dispose();}); roomGroup=new THREE.Group();
-  const W=9, D=6.5, H=3.2;
-  bx(roomGroup,0,-0.05,0,W,0.1,D,M.floor);
-  bx(roomGroup,0,H/2,-D/2,W,H,0.12,M.wallBack);
-  bx(roomGroup,-W/2,H/2,0,0.12,H,D,M.wall);
-  bx(roomGroup,W/2,H/2,0,0.12,H,D,M.wall);
-  bx(roomGroup,0,H-0.06,-D*0.05,W,0.12,D*0.5,M.wall);
-  bx(roomGroup,0,0.09,-D/2+0.08,W,0.18,0.05,M.base);
-  bx(roomGroup,-W/2+0.08,0.09,0,0.05,0.18,D,M.base);
-  bx(roomGroup,W/2-0.08,0.09,0,0.05,0.18,D,M.base);
-  bx(roomGroup,0,1.8,-D/2+0.07,W*0.72,1.1,0.02,M.glass);
-  buildKit(roomGroup, SECTIONS[idx].kit);
-  roomScene.add(roomGroup);
+let cards=[], cardI=0;
+function renderHead(){
+  const s=SECTIONS[idx];
+  const ey = s.welcome ? 'Your week · June 22-26, 2026' : ('Stop '+idx+' of 10');
+  let ctas='';
+  if(s.ctas) ctas = '<div>'+s.ctas.map(c=>'<a class="dw-cta'+(c.alt?' alt':'')+'" href="'+c.href+'">'+c.label+'</a>').join('')+'</div>';
+  document.getElementById('dw-head').innerHTML =
+    '<div class="dw-eyebrow">'+ey+'</div><h2 class="dw-title">'+s.title+'</h2>'+
+    (s.sub?'<p class="dw-sub">'+s.sub+'</p>':'<p class="dw-sub">A friendly preview of your week</p>')+ctas;
 }
+function renderCard(){
+  const c=cards[cardI]; if(!c)return;
+  document.getElementById('dw-card').innerHTML='<h3>'+c.h+'</h3>'+c.html;
+  document.getElementById('dw-card').scrollTop=0;
+  document.getElementById('dw-cardlbl').textContent=(cardI+1)+' / '+cards.length;
+  const dd=document.getElementById('dw-dots'); dd.innerHTML='';
+  cards.forEach((_,i)=>{ const b=document.createElement('button'); b.className='cdot'+(i===cardI?' on':''); b.onclick=()=>{cardI=i;renderCard();}; dd.appendChild(b); });
+}
+document.getElementById('cprev').onclick=()=>{ cardI=(cardI-1+cards.length)%cards.length; renderCard(); };
+document.getElementById('cnext').onclick=()=>{ cardI=(cardI+1)%cards.length; renderCard(); };
 
-function setMode(s){
-  const wel=document.getElementById('welcome'), rh=document.getElementById('room-head');
-  if(s.welcome){
-    mode='welcome'; panoSphere.visible=false; roomGroup.visible=false;
-    document.getElementById('pano-load').style.display='none';
-    wel.style.display='flex'; rh.style.display='none'; return;
-  }
-  wel.style.display='none'; rh.style.display='block';
-  if(s.pano){
-    mode='pano'; panoLon=0; panoLat=0; panoWalk=0;
-    roomGroup.visible=false; panoSphere.visible=true;
-    roomCam.fov=72; roomCam.updateProjectionMatrix();
-    loadPano(s.pano);
-  } else {
-    mode='room'; panoSphere.visible=false;
-    roomCam.fov=42; roomCam.updateProjectionMatrix();
-    document.getElementById('pano-load').style.display='none';
-    buildRoom(); roomGroup.visible=true;
-  }
-}
-
-// ===================== render loop =====================
-const clock=new THREE.Clock();
-function resize(){
-  const mw=miniCanvas.clientWidth,mh=miniCanvas.clientHeight;
-  if(miniCanvas.width!==mw||miniCanvas.height!==mh){miniRenderer.setSize(mw,mh,false);miniCam.aspect=mw/mh;miniCam.updateProjectionMatrix();}
-  const rw=roomCanvas.clientWidth,rh=roomCanvas.clientHeight;
-  if(roomCanvas.width!==rw||roomCanvas.height!==rh){roomRenderer.setSize(rw,rh,false);roomCam.aspect=rw/rh;roomCam.updateProjectionMatrix();}
-}
-let roomT=0;
-function animate(){
-  requestAnimationFrame(animate);
-  const dt=Math.min(clock.getDelta(),0.05); resize();
-  miniPlan.rotation.y += dt*0.3;
-  if(mode==='pano'){
-    panoLon += dt*6; panoWalk += dt;
-    const phi=THREE.MathUtils.degToRad(90-panoLat), th=THREE.MathUtils.degToRad(panoLon);
-    const dx=Math.sin(phi)*Math.cos(th), dy=Math.cos(phi), dz=Math.sin(phi)*Math.sin(th);
-    const push=(1-Math.cos(panoWalk*0.28))*9;
-    roomCam.position.set(dx*push, dy*push, dz*push);
-    roomCam.lookAt(dx*(push+1), dy*(push+1), dz*(push+1));
-  } else if(mode==='room'){
-    roomT += dt*0.08;
-    roomCam.position.set(Math.sin(roomT)*1.4, 3.7, 4.4);
-    roomCam.lookAt(0,0.95,-1.5);
-  }
-  const g=0.6+(Math.sin(clock.elapsedTime*1.6)*0.5+0.5)*0.5;
-  M.screen.emissiveIntensity=g; M.slide.emissiveIntensity=0.45+g*0.4;
-  miniRenderer.render(miniScene,miniCam);
-  roomRenderer.render(roomScene,roomCam);
-}
-
-// ===================== drawer + UI =====================
-function block(h,inner){return '<div class="dw-block"><h3>'+h+'</h3>'+inner+'</div>';}
-function list(arr){return '<ul>'+arr.map(x=>'<li>'+x+'</li>').join('')+'</ul>';}
-function renderDrawer(){
-  const s=SECTIONS[idx], body=document.getElementById('dw-body');
-  if(s.welcome){
-    body.innerHTML =
-      '<div class="dw-eyebrow">Your week · June 22–26, 2026</div>'+
-      '<h2 class="dw-title">Welcome!</h2>'+
-      '<p class="dw-lead">'+s.lead+'</p>'+
-      block('What this tour is','<p>'+s.about+'</p>')+
-      block('How to use it',list(s.how))+
-      block('What to expect this week',list(s.expect));
-    return;
-  }
-  const badge = s.pano ? '📷 Real 360° photo' : '🧊 3D model preview';
-  body.innerHTML =
-    '<div class="dw-eyebrow">Stop '+idx+' of 10 · <span class="dw-badge">'+badge+'</span></div>'+
-    '<h2 class="dw-title">'+s.title+'</h2>'+
-    '<p class="dw-sub">'+s.sub+'</p>'+
-    (s.id==='core'?'<a class="dw-cta" href="core-lab.html">▶ Walk the automation line</a>':'')+
-    block('What it is','<p>'+s.intro+'</p>')+
-    '<div class="dw-callout"><span class="ic">💡</span><div><b>Think of it like…</b><p>'+s.everyday+'</p></div></div>'+
-    block("What you'll see",list(s.see))+
-    block('Why it matters','<p>'+s.matters+'</p>')+
-    (s.cards?block('Quick facts',s.cards.map(c=>'<div class="dw-fact"><span class="ic">'+c.i+'</span><p>'+c.t+'</p></div>').join('')):'')+
-    galleryBlock(s.id);
-}
-function galleryBlock(id){
-  const g=PHOTOS[id]; if(!g||!g.length) return '';
-  return '<div class="dw-block"><h3>Real photos from this lab</h3><div class="dw-gallery">'+
-    g.map((p,i)=>'<button class="thumb" data-sec="'+id+'" data-i="'+i+'"><img loading="lazy" src="assets/photos/'+p.file+'" alt="'+p.caption+'"></button>').join('')+
-    '</div><p class="dw-note">Real photographs from this department. Tap to enlarge.</p></div>';
-}
-function renderDots(){const d=document.getElementById('dots');d.innerHTML='';SECTIONS.forEach((s,i)=>{const b=document.createElement('button');b.className='dot'+(i===idx?' on':'');b.title=s.title;b.onclick=()=>go(i);d.appendChild(b);});}
-
+// ===================== stop navigation (manual) =====================
+function renderDots(){ const d=document.getElementById('dots'); d.innerHTML='';
+  SECTIONS.forEach((s,i)=>{ const b=document.createElement('button'); b.className='dot'+(i===idx?' on':''); b.title=s.title; b.onclick=()=>go(i); d.appendChild(b); }); }
 function show(){
   const s=SECTIONS[idx];
-  document.getElementById('secname').textContent=s.title;
-  document.getElementById('mini-tag').textContent=s.welcome?'The lab floor':'You are here';
-  document.getElementById('mini-label').textContent=s.welcome?'Full lab map':s.title;
-  if(!s.welcome){
-    document.getElementById('rh-n').textContent=idx;
-    document.getElementById('rh-title').textContent=s.title;
-    document.getElementById('rh-sub').textContent=s.sub;
-    document.getElementById('mode-badge').textContent = s.pano?'📷 Real 360° photo':'🧊 3D model preview';
-  }
-  renderDots(); highlightRoom(); setMode(s); renderDrawer(); scheduleNext();
+  applyTheme(s.color);
+  document.getElementById('welcome').style.display = s.welcome?'flex':'none';
+  document.getElementById('secname').textContent = s.welcome?'Welcome':s.title;
+  document.getElementById('here').innerHTML = s.welcome ? 'The Henry Ford lab floor' : ('<b>'+s.title+'</b> &nbsp;·&nbsp; you are here');
+  highlight(); updatePhotos();
+  cards=buildCards(s); cardI=0; renderHead(); renderCard(); renderDots();
 }
-function go(i){idx=(i+SECTIONS.length)%SECTIONS.length;show();}
-
-// autoplay
-let autoplay=true, timer=null;
-function dwell(){return SECTIONS[idx].welcome?8000:9000;}
-function scheduleNext(){ clearTimeout(timer); if(autoplay) timer=setTimeout(()=>go(idx+1), dwell()); }
-const playBtn=document.getElementById('play');
-function setPlay(on){ autoplay=on; playBtn.textContent=on?'⏸':'▶'; if(on) scheduleNext(); else clearTimeout(timer); }
-playBtn.onclick=()=>setPlay(!autoplay);
+function go(i){ idx=(i+SECTIONS.length)%SECTIONS.length; show(); }
 document.getElementById('next').onclick=()=>go(idx+1);
 document.getElementById('prev').onclick=()=>go(idx-1);
-document.getElementById('wc-start').onclick=()=>{ setPlay(true); go(1); };
+document.getElementById('wc-start').onclick=()=>go(1);
 
 // drawer open/close
 const drawer=document.getElementById('drawer');
@@ -491,21 +378,20 @@ document.getElementById('drawer-toggle').onclick=()=>drawer.classList.add('open'
 document.getElementById('drawer-close').onclick=()=>drawer.classList.remove('open');
 if(innerWidth<760) drawer.classList.remove('open');
 
-// real-photo galleries (face-free shots only, loaded from manifest)
-let PHOTOS={};
-fetch('assets/photos/manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{PHOTOS=j||{}; renderDrawer();}).catch(()=>{});
-let lbList=[], lbIdx=0;
-const lb=document.getElementById('lightbox');
+// ===================== lightbox =====================
+let lbList=[], lbIdx=0; const lb=document.getElementById('lightbox');
 function renderLb(){ const p=lbList[lbIdx]; if(!p)return; document.getElementById('lb-img').src='assets/photos/'+p.file; document.getElementById('lb-cap').textContent=p.caption+'   ('+(lbIdx+1)+' / '+lbList.length+')'; }
-function openLightbox(sec,i){ lbList=PHOTOS[sec]||[]; lbIdx=i; renderLb(); lb.classList.add('open'); }
+function openLightbox(sec,i){ lbList=PHOTOS[sec]||[]; lbIdx=i; if(!lbList.length)return; renderLb(); lb.classList.add('open'); }
 function lbStep(d){ if(!lbList.length)return; lbIdx=(lbIdx+d+lbList.length)%lbList.length; renderLb(); }
 document.getElementById('lb-close').onclick=()=>lb.classList.remove('open');
 document.getElementById('lb-prev').onclick=()=>lbStep(-1);
 document.getElementById('lb-next').onclick=()=>lbStep(1);
 lb.addEventListener('click',e=>{ if(e.target===lb) lb.classList.remove('open'); });
-addEventListener('keydown',e=>{ if(!lb.classList.contains('open'))return; if(e.key==='Escape')lb.classList.remove('open'); if(e.key==='ArrowLeft')lbStep(-1); if(e.key==='ArrowRight')lbStep(1); });
-document.getElementById('dw-body').addEventListener('click',e=>{ const t=e.target.closest('.thumb'); if(t) openLightbox(t.dataset.sec, +t.dataset.i); });
+addEventListener('keydown',e=>{ if(lb.classList.contains('open')){ if(e.key==='Escape')lb.classList.remove('open'); if(e.key==='ArrowLeft')lbStep(-1); if(e.key==='ArrowRight')lbStep(1); return; }
+  if(e.key==='ArrowRight')go(idx+1); if(e.key==='ArrowLeft')go(idx-1); });
 
+// ===================== boot =====================
+fetch('assets/photos/manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{PHOTOS=j||{}; updatePhotos();}).catch(()=>{});
 show(); animate();
 </script>
 </body>
