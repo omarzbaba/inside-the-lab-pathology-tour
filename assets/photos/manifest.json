@@ -1,4 +1,38 @@
 {
+ "lss": [
+  {
+   "file": "lss/01.jpg",
+   "caption": "Cooler receipt - samples arrive cold"
+  },
+  {
+   "file": "lss/02.jpg",
+   "caption": "Integrated receipt station"
+  },
+  {
+   "file": "lss/03.jpg",
+   "caption": "Cooler receipt area"
+  },
+  {
+   "file": "lss/04.jpg",
+   "caption": "Specimen triage / defects desk"
+  },
+  {
+   "file": "lss/05.jpg",
+   "caption": "Accessioning workstation"
+  },
+  {
+   "file": "lss/06.jpg",
+   "caption": "Accessioning bench"
+  },
+  {
+   "file": "lss/07.jpg",
+   "caption": "Sample check-in"
+  },
+  {
+   "file": "lss/08.jpg",
+   "caption": "Accessioning area"
+  }
+ ],
  "core": [
   {
    "file": "core/01.jpg",
@@ -15,6 +49,14 @@
   {
    "file": "core/04.jpg",
    "caption": "Chemistry analyzer"
+  },
+  {
+   "file": "core/05.jpg",
+   "caption": "Manual fluids bench"
+  },
+  {
+   "file": "core/06.jpg",
+   "caption": "Core lab analyzers"
   }
  ],
  "molec": [
@@ -33,6 +75,18 @@
   {
    "file": "molec/04.jpg",
    "caption": "Illumina MiSeqDx sequencers"
+  },
+  {
+   "file": "molec/05.jpg",
+   "caption": "Molecular DNA analysis bench"
+  },
+  {
+   "file": "molec/06.jpg",
+   "caption": "Biosafety cabinet"
+  },
+  {
+   "file": "molec/07.jpg",
+   "caption": "Molecular prep bench"
   }
  ],
  "cyto": [
@@ -43,6 +97,14 @@
   {
    "file": "cyto/02.jpg",
    "caption": "Cytology prep bench & hood"
+  },
+  {
+   "file": "cyto/03.jpg",
+   "caption": "Cytology processing bench"
+  },
+  {
+   "file": "cyto/04.jpg",
+   "caption": "ThinPrep processing station"
   }
  ],
  "bloodbank": [
@@ -57,6 +119,10 @@
   {
    "file": "bloodbank/03.jpg",
    "caption": "Helmer blood & plasma storage"
+  },
+  {
+   "file": "bloodbank/04.jpg",
+   "caption": "Helmer refrigerated storage"
   }
  ],
  "surgpath": [
