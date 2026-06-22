@@ -68,6 +68,20 @@
   .dw-callout b{font-size:13px;color:var(--hf)} .dw-callout p{font-size:14px;line-height:1.5;color:#27364f;margin-top:2px}
   .dw-fact{display:flex;gap:10px;align-items:flex-start;margin:9px 0}
   .dw-fact .ic{font-size:19px;line-height:1.2} .dw-fact p{font-size:14px;line-height:1.5;color:#27364f}
+  .dw-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+  .dw-gallery .thumb{padding:0;border:1px solid var(--line);border-radius:9px;overflow:hidden;cursor:pointer;background:#000;aspect-ratio:1/1}
+  .dw-gallery .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+  .dw-gallery .thumb:hover img{transform:scale(1.07)}
+  .dw-note{font-size:11.5px;color:var(--dim);margin-top:7px}
+  #lightbox{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(6,12,24,.93);padding:30px}
+  #lightbox.open{display:flex}
+  #lb-img{max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+  #lb-cap{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#dce7f5;font:600 14px system-ui}
+  #lightbox button{position:absolute;border:0;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;backdrop-filter:blur(6px)}
+  #lightbox button:hover{background:rgba(255,255,255,.28)}
+  #lb-close{top:20px;right:22px;width:42px;height:42px;border-radius:50%;font-size:22px}
+  #lb-prev,#lb-next{top:50%;transform:translateY(-50%);width:50px;height:50px;border-radius:50%;font-size:28px}
+  #lb-prev{left:20px} #lb-next{right:20px}
 
   /* bottom controls */
   #dock{flex-shrink:0;background:#fff;border-top:1px solid var(--line);padding:12px 18px}
@@ -102,7 +116,7 @@
   <div id="welcome"><div class="wc">
     <div class="wc-ey">Medical Laboratory Science · Summer Immersion 2026</div>
     <h1>Welcome to your week in the lab</h1>
-    <p>Over five days you'll shadow the scientists who run one of the largest hospital laboratories in the country — right here at Henry Ford Hospital in Detroit. This guided tour previews every area you'll rotate through, in plain language, so you'll know exactly what you're looking at before you walk in.</p>
+    <p>Over five days you'll shadow the scientists who run one of the largest hospital laboratories in the country - right here at Henry Ford Hospital in Detroit. This guided tour previews every area you'll rotate through, in plain language, so you'll know exactly what you're looking at before you walk in.</p>
     <div class="wc-meta">Phase 2 · Hospital Shadowing · Henry Ford Detroit · June 22–26, 2026</div>
     <button id="wc-start">▶ Start the tour</button>
   </div></div>
@@ -122,6 +136,14 @@
   </aside>
 </div>
 
+<div id="lightbox">
+  <button id="lb-close" aria-label="Close">×</button>
+  <button id="lb-prev" aria-label="Previous">‹</button>
+  <img id="lb-img" alt="">
+  <div id="lb-cap"></div>
+  <button id="lb-next" aria-label="Next">›</button>
+</div>
+
 <div id="dock">
   <div id="nav">
     <button class="nbtn" id="play" aria-label="Play or pause the tour">⏸</button>
@@ -136,70 +158,70 @@
 // ===================== content =====================
 const SECTIONS = [
   { id:'welcome', welcome:true, title:'Welcome',
-    lead:"You're here for the Medical Laboratory Science Summer Immersion — a hands-on week inside a real hospital laboratory.",
+    lead:"You're here for the Medical Laboratory Science Summer Immersion - a hands-on week inside a real hospital laboratory.",
     about:"A quick, friendly preview of each lab section: what it does, an everyday example you'll recognize, what you'll see there, and why it matters to patients.",
-    how:["Press <b>▶</b> and the tour plays itself","Use <b>←</b> <b>→</b> to go at your own pace","Watch the map in the lower-left corner — the glowing room is where you are","Sections we've photographed rotate around you as real 360° photos; the rest show a 3D model for now"],
-    expect:["Shadow medical laboratory scientists and pathologists","Follow a single tube of blood from the door to a finished result","See how surgery samples become a cancer diagnosis","Ask questions — curiosity is the whole point"] },
+    how:["Press <b>▶</b> and the tour plays itself","Use <b>←</b> <b>→</b> to go at your own pace","Watch the map in the lower-left corner - the glowing room is where you are","Sections we've photographed rotate around you as real 360° photos; the rest show a 3D model for now"],
+    expect:["Shadow medical laboratory scientists and pathologists","Follow a single tube of blood from the door to a finished result","See how surgery samples become a cancer diagnosis","Ask questions - curiosity is the whole point"] },
 
   { id:'lss', room:'accession', kit:'lss', pano:'lss.jpg', title:'Lab Support Services', sub:'Where every sample arrives',
     intro:"Every blood tube, swab, urine cup, and tissue sample sent to the lab comes through here first to be checked in and routed.",
-    everyday:"It's the lab's front door and mailroom in one — every \"package\" (your sample) gets logged, labeled, and sent to the right team.",
+    everyday:"It's the lab's front door and mailroom in one - every \"package\" (your sample) gets logged, labeled, and sent to the right team.",
     see:["Pneumatic tubes shooting samples in from hospital floors","Barcoding and labeling so a sample is never mixed up","Sorting racks and refrigerated storage","Triage of STAT (urgent) vs. routine samples"],
     matters:"If a sample is mislabeled or lost here, every result after it is wrong. Accuracy literally starts at the door.",
     cards:[{i:'🩸',t:"Ever had blood drawn at a checkup? That tube starts its journey right here."},{i:'🏷️',t:"Every sample is scanned and barcoded so it's never mixed up."},{i:'⚡',t:"Urgent \"STAT\" samples get flagged to jump the line."}] },
 
   { id:'lcs', room:'lab_cs', kit:'lcs', pano:'lcs.jpg', title:'Lab Customer Service', sub:'The voice of the lab',
     intro:"The team that answers questions from doctors, nurses, clinics, and other hospitals about tests and results.",
-    everyday:"Think of it as the lab's help desk — when a nurse can't find a result or needs to add a test, they call here.",
+    everyday:"Think of it as the lab's help desk - when a nurse can't find a result or needs to add a test, they call here.",
     see:["Looking up results in the lab computer system","Adding on tests to samples already in the lab","Tracking down urgent or missing specimens","Explaining how to collect a tricky sample"],
-    matters:"Fast, clear answers keep patient care moving — sometimes a single phone call speeds up someone's treatment.",
+    matters:"Fast, clear answers keep patient care moving - sometimes a single phone call speeds up someone's treatment.",
     cards:[{i:'📞',t:"When a doctor has a question about a test, this team picks up."},{i:'🔎',t:"They track urgent samples so results aren't delayed."}] },
 
   { id:'surgpath', room:'gross', kit:'surgpath', title:'Surgical Pathology', sub:'Diagnosing disease in tissue',
-    intro:"Where tissue removed during surgery or a biopsy is examined under the microscope to diagnose disease — including cancer.",
+    intro:"Where tissue removed during surgery or a biopsy is examined under the microscope to diagnose disease - including cancer.",
     everyday:"A family member's colonoscopy polyp, a removed mole, or an appendix all come to a lab like this to find out: harmless, or something serious?",
     see:["The \"grossing\" station, where specimens are described and cut","Tissue soaked, set in wax, and sliced paper-thin on a microtome","Slides stained pink-and-purple (H&E) so structures show up","A pathologist reading the slides to make the diagnosis"],
-    matters:"This is often the exact place where a cancer diagnosis is actually made — it guides the entire treatment plan.",
+    matters:"This is often the exact place where a cancer diagnosis is actually made - it guides the entire treatment plan.",
     cards:[{i:'👪',t:"A family member's colonoscopy polyp? It comes to a lab like this."},{i:'🔬',t:"Tissue is sliced thinner than a hair and put on glass slides."},{i:'🩺',t:"A pathologist decides: harmless, or cancer?"}] },
 
   { id:'cyto', room:'cytopath', kit:'cyto', title:'Cytology', sub:'Diagnosis from single cells',
     intro:"Diagnosis made from individual cells rather than whole pieces of tissue.",
-    everyday:"A Pap smear is cytology — studying just a few loose cells to catch problems incredibly early.",
+    everyday:"A Pap smear is cytology - studying just a few loose cells to catch problems incredibly early.",
     see:["Pap tests and fine-needle aspiration samples","Cells spread and stained on slides","Cytotechnologists screening for abnormal cells","Suspicious cases flagged for a pathologist"],
-    matters:"Looking at just a handful of cells can catch cancers — like cervical cancer — early enough to prevent them.",
+    matters:"Looking at just a handful of cells can catch cancers - like cervical cancer - early enough to prevent them.",
     cards:[{i:'🧫',t:"A Pap smear studies just a few loose cells."},{i:'🔬',t:"Those few cells can catch cancer super early."}] },
 
   { id:'microsero', room:'micro1', kit:'micro', title:'Microbiology & Serology', sub:'Hunting germs',
-    intro:"Finding the bacteria, viruses, fungi, and parasites that cause infections — and figuring out how to beat them.",
+    intro:"Finding the bacteria, viruses, fungi, and parasites that cause infections - and figuring out how to beat them.",
     everyday:"That strep-throat swab or a urine culture comes to a lab exactly like this one.",
     see:["Culture plates growing colonies of bacteria","Gram stains under the microscope","Machines that ID the germ and test which antibiotic kills it","Biosafety cabinets and blood-culture instruments"],
-    matters:"It tells doctors the exact antibiotic that will work — which also helps fight antibiotic resistance.",
+    matters:"It tells doctors the exact antibiotic that will work - which also helps fight antibiotic resistance.",
     cards:[{i:'🤒',t:"That strep-throat swab comes to a lab like this one."},{i:'💊',t:"They grow the germ and test which antibiotic beats it."}] },
 
   { id:'molec', room:'molec1', kit:'molec', title:'Molecular Diagnostics', sub:'Reading the DNA',
     intro:"Reading DNA and RNA to detect disease at the genetic level.",
-    everyday:"Remember COVID PCR? That's molecular — copying and reading genetic code to find what's there.",
+    everyday:"Remember COVID PCR? That's molecular - copying and reading genetic code to find what's there.",
     see:["PCR machines copying tiny bits of DNA","Robots extracting DNA and RNA from samples","Next-generation sequencers reading genetic code","Tests for infections, inherited conditions, and tumor mutations"],
-    matters:"It powers personalized medicine — matching the exact treatment to a patient's own genes.",
-    cards:[{i:'🧬',t:"COVID PCR was molecular — reading genetic code."},{i:'🎯',t:"It finds the exact gene change driving a disease."}] },
+    matters:"It powers personalized medicine - matching the exact treatment to a patient's own genes.",
+    cards:[{i:'🧬',t:"COVID PCR was molecular - reading genetic code."},{i:'🎯',t:"It finds the exact gene change driving a disease."}] },
 
   { id:'core', room:'core_lab', kit:'core', title:'Core Lab', sub:'Chemistry · Hematology · Coagulation · Urinalysis',
     intro:"The high-volume engine room that runs the most common blood and fluid tests around the clock.",
     everyday:"Your cholesterol, blood sugar, complete blood count (CBC), or kidney test runs right here.",
     see:["Automated analyzer lines linked by conveyor track","Centrifuges spinning tubes to separate blood","Analyzers counting red and white blood cells","Coagulation (clotting) and urinalysis testing"],
-    matters:"Thousands of results an hour — it's the everyday backbone of nearly every diagnosis.",
+    matters:"Thousands of results an hour - it's the everyday backbone of nearly every diagnosis.",
     cards:[{i:'🩸',t:"Your cholesterol or blood-sugar test runs here."},{i:'🏎️',t:"A conveyor zips thousands of tubes to machines, 24/7."}] },
 
   { id:'bloodbank', room:'bb', kit:'bloodbank', title:'Blood Bank & Transfusion', sub:'Keeping transfusions safe',
     intro:"Making sure donated blood is safe and correctly matched to each patient before a transfusion.",
-    everyday:"It's where you'd learn your blood type — and after a serious accident, this team helps keep people alive.",
+    everyday:"It's where you'd learn your blood type - and after a serious accident, this team helps keep people alive.",
     see:["Blood typing (ABO and Rh)","Crossmatching donor blood to the patient","Antibody screening for safety","Refrigerated and frozen storage of blood products"],
     matters:"A wrong match can be deadly, so this team's accuracy directly saves lives.",
-    cards:[{i:'🅰️',t:"Find out your blood type — and how blood is matched."},{i:'❤️',t:"After a bad accident, this team helps keep people alive."}] },
+    cards:[{i:'🅰️',t:"Find out your blood type - and how blood is matched."},{i:'❤️',t:"After a bad accident, this team helps keep people alive."}] },
 
   { id:'quality', room:'quality', kit:'quality', title:'Quality', sub:'Making sure every result is right',
     intro:"The team that makes sure every machine is accurate and every result can be trusted.",
-    everyday:"They're the referees of the lab — constantly checking that everything plays by the rules.",
+    everyday:"They're the referees of the lab - constantly checking that everything plays by the rules.",
     see:["Daily quality-control samples run on every instrument","Calibrating and verifying machines","Proficiency testing against outside standards","Audits for CAP / CLIA accreditation"],
     matters:"Without quality control you couldn't trust a single result. It's invisible to patients but absolutely essential.",
     cards:[{i:'✅',t:"They make sure every machine is accurate and every result is trustworthy."}] },
@@ -208,7 +230,7 @@ const SECTIONS = [
     intro:"The technology and data systems that move every result safely from the machine to your doctor's screen.",
     everyday:"Love science AND computers? This is exactly where the two meet.",
     see:["The Laboratory Information System (LIS)","Interfaces connecting every instrument to the records","Data security and patient privacy","Building reports and dashboards from lab data"],
-    matters:"Modern labs run on data — informatics keeps it accurate, fast, and private.",
+    matters:"Modern labs run on data - informatics keeps it accurate, fast, and private.",
     cards:[{i:'💻',t:"This team moves every result safely from machine to your doctor's screen."},{i:'🙌',t:"Love science AND tech? This is where they meet."}] },
 ];
 
@@ -423,7 +445,14 @@ function renderDrawer(){
     '<div class="dw-callout"><span class="ic">💡</span><div><b>Think of it like…</b><p>'+s.everyday+'</p></div></div>'+
     block("What you'll see",list(s.see))+
     block('Why it matters','<p>'+s.matters+'</p>')+
-    (s.cards?block('Quick facts',s.cards.map(c=>'<div class="dw-fact"><span class="ic">'+c.i+'</span><p>'+c.t+'</p></div>').join('')):'');
+    (s.cards?block('Quick facts',s.cards.map(c=>'<div class="dw-fact"><span class="ic">'+c.i+'</span><p>'+c.t+'</p></div>').join('')):'')+
+    galleryBlock(s.id);
+}
+function galleryBlock(id){
+  const g=PHOTOS[id]; if(!g||!g.length) return '';
+  return '<div class="dw-block"><h3>Real photos from this lab</h3><div class="dw-gallery">'+
+    g.map((p,i)=>'<button class="thumb" data-sec="'+id+'" data-i="'+i+'"><img loading="lazy" src="assets/photos/'+p.file+'" alt="'+p.caption+'"></button>').join('')+
+    '</div><p class="dw-note">Real photographs from this department. Tap to enlarge.</p></div>';
 }
 function renderDots(){const d=document.getElementById('dots');d.innerHTML='';SECTIONS.forEach((s,i)=>{const b=document.createElement('button');b.className='dot'+(i===idx?' on':'');b.title=s.title;b.onclick=()=>go(i);d.appendChild(b);});}
 
@@ -458,6 +487,21 @@ const drawer=document.getElementById('drawer');
 document.getElementById('drawer-toggle').onclick=()=>drawer.classList.add('open');
 document.getElementById('drawer-close').onclick=()=>drawer.classList.remove('open');
 if(innerWidth<760) drawer.classList.remove('open');
+
+// real-photo galleries (face-free shots only, loaded from manifest)
+let PHOTOS={};
+fetch('assets/photos/manifest.json',{cache:'no-cache'}).then(r=>r.ok?r.json():{}).then(j=>{PHOTOS=j||{}; renderDrawer();}).catch(()=>{});
+let lbList=[], lbIdx=0;
+const lb=document.getElementById('lightbox');
+function renderLb(){ const p=lbList[lbIdx]; if(!p)return; document.getElementById('lb-img').src='assets/photos/'+p.file; document.getElementById('lb-cap').textContent=p.caption+'   ('+(lbIdx+1)+' / '+lbList.length+')'; }
+function openLightbox(sec,i){ lbList=PHOTOS[sec]||[]; lbIdx=i; renderLb(); lb.classList.add('open'); }
+function lbStep(d){ if(!lbList.length)return; lbIdx=(lbIdx+d+lbList.length)%lbList.length; renderLb(); }
+document.getElementById('lb-close').onclick=()=>lb.classList.remove('open');
+document.getElementById('lb-prev').onclick=()=>lbStep(-1);
+document.getElementById('lb-next').onclick=()=>lbStep(1);
+lb.addEventListener('click',e=>{ if(e.target===lb) lb.classList.remove('open'); });
+addEventListener('keydown',e=>{ if(!lb.classList.contains('open'))return; if(e.key==='Escape')lb.classList.remove('open'); if(e.key==='ArrowLeft')lbStep(-1); if(e.key==='ArrowRight')lbStep(1); });
+document.getElementById('dw-body').addEventListener('click',e=>{ const t=e.target.closest('.thumb'); if(t) openLightbox(t.dataset.sec, +t.dataset.i); });
 
 show(); animate();
 </script>

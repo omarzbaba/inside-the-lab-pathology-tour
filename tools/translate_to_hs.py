@@ -2,7 +2,7 @@
 """
 Translate the recovered interactive 3D lab map (medical-student level) into a
 high-school-friendly version. ONLY swaps text content (subtitle / overview /
-tests / methods) and a couple of UI labels — all 3D geometry and interactivity
+tests / methods) and a couple of UI labels - all 3D geometry and interactivity
 is left untouched.
 
   python3 tools/translate_to_hs.py
@@ -134,7 +134,7 @@ html = html.replace(">Common tests<", ">What they do here<")
 html = html.replace(">Methods &amp; instruments<", ">Tools they use<")
 html = html.replace(
   "A guided sequence through the department, following the journey of a specimen from intake to final diagnosis.",
-  "The sections you'll rotate through this week — tap a stop or use the arrows to see what each one does before you walk in.")
+  "The sections you'll rotate through this week - tap a stop or use the arrows to see what each one does before you walk in.")
 # friendly page title
 html = html.replace("<title>Henry Ford Pathology · 3D Floor Plan</title>",
                     "<title>Lab Tour · Summer Immersion · Henry Ford Pathology</title>")
@@ -198,7 +198,7 @@ inject = """
   <div class="hs-card">
     <form id="hs-form" novalidate>
       <h2>Tell us what you think</h2>
-      <p class="sub">A few quick questions — it helps us make this better. Thanks!</p>
+      <p class="sub">A few quick questions - it helps us make this better. Thanks!</p>
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
       <input type="hidden" name="_subject" value="New Lab Tour feedback \U0001F389">
       <input type="hidden" name="_template" value="table">
@@ -235,7 +235,7 @@ inject = """
     fetch('https://formsubmit.co/ajax/__EMAIL__',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
       .then(function(r){return r.json();})
       .then(function(){form.style.display='none';modal.querySelector('.hs-thanks').hidden=false;})
-      .catch(function(){status.textContent='Could not send — please check your connection and try again.';});
+      .catch(function(){status.textContent='Could not send - please check your connection and try again.';});
   });
 })();
 </script>
@@ -329,7 +329,7 @@ body{background:#eef3fa!important;color:#13233d!important}
   <div class="hw-card">
     <div class="hw-brand"><img class="hw-logo" src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences"><div class="hw-dept">Pathology &amp; Laboratory Medicine</div></div>
     <h1>Welcome to your <em>week in the lab</em></h1>
-    <p>You're here for the Medical Laboratory Science Summer Immersion — a week shadowing the scientists who run one of the largest hospital labs in the country. This quick tour previews each section you'll rotate through, so you know what you're looking at before you walk in.</p>
+    <p>You're here for the Medical Laboratory Science Summer Immersion - a week shadowing the scientists who run one of the largest hospital labs in the country. This quick tour previews each section you'll rotate through, so you know what you're looking at before you walk in.</p>
     <div class="hw-actions">
       <button class="hw-btn primary" id="hw-start">▶ Start the guided walkthrough</button>
       <button class="hw-btn ghost" id="hw-explore">Explore on my own</button>

@@ -662,7 +662,7 @@ body.passive .tour-stop:hover {
   <div class="sidebar-header">
     <div class="sidebar-eyebrow">Henry Ford Health · Detroit</div>
     <h1 class="sidebar-title">Pathology <em>Lab Tour</em></h1>
-    <div class="sidebar-subtitle">The sections you'll rotate through this week — tap a stop or use the arrows to see what each one does before you walk in.</div>
+    <div class="sidebar-subtitle">The sections you'll rotate through this week - tap a stop or use the arrows to see what each one does before you walk in.</div>
   </div>
   <div style="padding: 14px 24px 8px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); font-weight: 500; border-bottom: 1px solid var(--border);">
     Guided tour · <span id="hs-stopcount">10</span> stops
@@ -682,8 +682,8 @@ body.passive .tour-stop:hover {
     <div class="tp-header">
       <button class="tp-close" id="tp-close" aria-label="Close panel">×</button>
       <div class="tp-eyebrow"><span id="tp-eyebrow">Stop <strong>1</strong> of 16</span></div>
-      <div class="tp-title" id="tp-title">—</div>
-      <div class="tp-subtitle" id="tp-subtitle">—</div>
+      <div class="tp-title" id="tp-title">-</div>
+      <div class="tp-subtitle" id="tp-subtitle">-</div>
     </div>
     <div class="tp-body" id="tp-body"></div>
     <div class="tp-footer">
@@ -720,21 +720,21 @@ body.passive .tour-stop:hover {
 'use strict';
 
 // ============================================================================
-//  ROOM DATA — corner coordinates so adjacent rooms share edges exactly
+//  ROOM DATA - corner coordinates so adjacent rooms share edges exactly
 // ============================================================================
 const ROOMS = [
   // ============================================================================
   //  NORTH BUILDING (Main Hospital · Pathology Wing)
   //  Footprint: x=-36 to 24, z=-36 to 4 (60m × 40m)
   // ============================================================================
-  // Top tower — Blood Bank
+  // Top tower - Blood Bank
   { id:'bb',           name:'Blood Bank',                       dept:'bb',          x1:  2, z1:-36, x2: 22, z2:-24 },
   { id:'coag',         name:'Coagulation',                      dept:'coag',        x1: 16, z1:-36, x2: 22, z2:-28, nested:true },
 
   // North corridor connecting tower to main floor
   { id:'n_corr',       name:'North Corridor',                   dept:'corridor',    x1:-36, z1:-24, x2: 24, z2:-22 },
 
-  // Main floor — left column (Lab CS + the BIG tall narrow Core Lab)
+  // Main floor - left column (Lab CS + the BIG tall narrow Core Lab)
   { id:'lab_cs',       name:'Lab Customer Service',             dept:'lab_cs',      x1:-36, z1:-22, x2:-28, z2:-18 },
   { id:'core_lab',     name:'Core Laboratory',                  dept:'core_lab',    x1:-36, z1:-18, x2:-28, z2:  2 },
 
@@ -762,13 +762,13 @@ const ROOMS = [
   // Chair / Vice Chair office below the SP offices grid
   { id:'chair',        name:'Office of the Chair · Vice Chair', dept:'chair',       x1:-26, z1: -2, x2:-18, z2:  2 },
 
-  // Right column — Blood Bank floor · Cytopathology · Autopsy Suite
+  // Right column - Blood Bank floor · Cytopathology · Autopsy Suite
   { id:'bb_floor',     name:'Blood Bank · Floor',               dept:'bb',          x1:-18, z1:-22, x2:-10, z2:  2 },
   { id:'cytopath',     name:'Cytopathology',                    dept:'cytopath',    x1:-10, z1:-22, x2:  2, z2:  2 },
   { id:'autopsy',      name:'Autopsy Suite',                    dept:'autopsy',     x1:  2, z1:-22, x2: 24, z2:  2 },
 
   // ============================================================================
-  //  SKY BRIDGE — 16 m gap between the two buildings
+  //  SKY BRIDGE - 16 m gap between the two buildings
   // ============================================================================
   { id:'bridge',       name:'2nd-Floor Sky Bridge',             dept:'corridor',    x1: -2, z1:  2, x2:  2, z2: 18 },
 
@@ -778,7 +778,7 @@ const ROOMS = [
   // ============================================================================
   { id:'entry_corr',   name:'Entry Corridor',                   dept:'corridor',    x1:-36, z1: 18, x2: 28, z2: 20 },
 
-  // Top band — molecular · grossing · accessioning · quality · micro · HLA · spec heme
+  // Top band - molecular · grossing · accessioning · quality · micro · HLA · spec heme
   { id:'molec1',       name:'Molecular Lab',                    dept:'molec',       x1:-36, z1: 20, x2:-28, z2: 32 },
   { id:'gross',        name:'Grossing Area',                    dept:'gross',       x1:-28, z1: 20, x2:-16, z2: 32 },
   { id:'accession',    name:'Accessioning Area',                dept:'gross',       x1:-16, z1: 20, x2: -8, z2: 24 },
@@ -790,7 +790,7 @@ const ROOMS = [
   // Mid corridor
   { id:'mid_corr',     name:'Mid Corridor',                     dept:'corridor',    x1:-36, z1: 32, x2: 28, z2: 34 },
 
-  // Bottom band — histology pipeline · scanning · second molec/micro/HLA · IHC
+  // Bottom band - histology pipeline · scanning · second molec/micro/HLA · IHC
   { id:'microtomy',    name:'Microtomy',                        dept:'histology',   x1:-36, z1: 34, x2:-28, z2: 42 },
   { id:'processing',   name:'Histology · Processing',           dept:'histology',   x1:-28, z1: 34, x2:-20, z2: 38 },
   { id:'collation',    name:'Histology · Collation',            dept:'histology',   x1:-28, z1: 38, x2:-20, z2: 42 },
@@ -802,7 +802,7 @@ const ROOMS = [
 ];
 
 // ============================================================================
-//  DEPARTMENT PALETTE — distinct color per section
+//  DEPARTMENT PALETTE - distinct color per section
 // ============================================================================
 const DEPT_COLORS = {
   bb:        { floor: 0xff4628, label: 'Blood Bank' },
@@ -827,41 +827,41 @@ const DEPT_COLORS = {
 const SECTION_ORDER = ['core_lab','bb','autopsy','cytopath','gross','histology','ihc','molec','micro','hla','special','quality','sp_office','chair','lab_cs','coag','corridor'];
 
 // ============================================================================
-//  GUIDED TOUR — 16 stops following specimen flow through the department.
+//  GUIDED TOUR - 16 stops following specimen flow through the department.
 //  Each stop maps to a room (some sub-stops share a room with focusPoint
 //  pinning the camera to a different sub-zone). Educational content is
 //  written for medical students at a 10,000-foot level.
 // ============================================================================
 const TOUR_STOPS = [
   { id:"lss", title:"Lab Support Services", subtitle:"Where every sample arrives", roomId:"accession",
-    cards:[{ icon:"🩸", text:"Ever had blood drawn at a checkup? That little tube doesn't just disappear — it starts a journey, and this is where it lands first." },{ icon:"📦", text:"Tubes and samples show up here from the ER, clinics, even other hospitals — thousands every single day." },{ icon:"🏷️", text:"Each one is scanned and given a barcode, like a boarding pass, so it can never be mixed up with someone else's." },{ icon:"➡️", text:"Then it's routed to exactly the right lab. Get this wrong and a result could go to the wrong person — so this step really matters." }] },
+    cards:[{ icon:"🩸", text:"Ever had blood drawn at a checkup? That little tube doesn't just disappear - it starts a journey, and this is where it lands first." },{ icon:"📦", text:"Tubes and samples show up here from the ER, clinics, even other hospitals - thousands every single day." },{ icon:"🏷️", text:"Each one is scanned and given a barcode, like a boarding pass, so it can never be mixed up with someone else's." },{ icon:"➡️", text:"Then it's routed to exactly the right lab. Get this wrong and a result could go to the wrong person - so this step really matters." }] },
 
   { id:"lcs", title:"Lab Customer Service", subtitle:"The voice of the lab", roomId:"lab_cs",
     cards:[{ icon:"📞", text:"Picture a nurse who isn't sure which test to order, or where a sample went. Who do they call? This team." },{ icon:"🗣️", text:"They're the voice of the lab, answering doctors, nurses, and clinics all day long." },{ icon:"🔎", text:"They track down missing or urgent samples and help get the right test ordered." },{ icon:"🤝", text:"Basically, they keep the whole hospital and the lab on the same page." }] },
 
   { id:"surgpath", title:"Surgical Pathology", subtitle:"Diagnosing disease in tissue", roomId:"gross",
-    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out — and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist — a doctor who reads slides — looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop — one even watched a whole amputated leg get examined." }] },
+    cards:[{ icon:"👪", text:"Maybe a family member has had a colonoscopy. If the doctor finds a polyp, they snip it out - and it comes to a lab like this one." },{ icon:"🔬", text:"Here, a scientist describes the tissue and slices it razor-thin to turn it into a glass slide." },{ icon:"🩺", text:"Then a pathologist - a doctor who reads slides - looks at it under a microscope: is it harmless, or is it cancer?" },{ icon:"💡", text:"This is where a LOT of cancer diagnoses are actually made. Last year's students said it was their favorite stop - one even watched a whole amputated leg get examined." }] },
 
   { id:"cyto", title:"Cytology", subtitle:"Diagnosis from single cells", roomId:"cytopath",
-    cards:[{ icon:"🧫", text:"Ever heard of a Pap smear? That's cytology — studying just a few loose cells instead of a whole piece of tissue." },{ icon:"🪄", text:"A tiny, gentle sample (a quick swab or a thin needle) is all it takes." },{ icon:"🔬", text:"Under the microscope, those few cells can reveal cancer super early — when it's easiest to treat." }] },
+    cards:[{ icon:"🧫", text:"Ever heard of a Pap smear? That's cytology - studying just a few loose cells instead of a whole piece of tissue." },{ icon:"🪄", text:"A tiny, gentle sample (a quick swab or a thin needle) is all it takes." },{ icon:"🔬", text:"Under the microscope, those few cells can reveal cancer super early - when it's easiest to treat." }] },
 
   { id:"microsero", title:"Microbiology & Serology", subtitle:"Hunting germs", roomId:"micro1",
-    cards:[{ icon:"🤒", text:"Ever had a strep test when your throat was killing you? That swab comes to a lab like this one." },{ icon:"🦠", text:"Microbiology grows the bacteria, viruses, and fungi that make people sick, so they can figure out exactly what it is." },{ icon:"💊", text:"Then they test which antibiotic actually kills it — so your doctor doesn't have to guess." },{ icon:"🛡️", text:"Serology checks your blood for antibodies — the proof your immune system has fought something off, like COVID or mono." }] },
+    cards:[{ icon:"🤒", text:"Ever had a strep test when your throat was killing you? That swab comes to a lab like this one." },{ icon:"🦠", text:"Microbiology grows the bacteria, viruses, and fungi that make people sick, so they can figure out exactly what it is." },{ icon:"💊", text:"Then they test which antibiotic actually kills it - so your doctor doesn't have to guess." },{ icon:"🛡️", text:"Serology checks your blood for antibodies - the proof your immune system has fought something off, like COVID or mono." }] },
 
   { id:"molec", title:"Molecular Diagnostics", subtitle:"Reading the DNA", roomId:"molec1",
-    cards:[{ icon:"🧬", text:"Remember COVID PCR tests? That's molecular science — reading tiny bits of DNA and RNA." },{ icon:"🔬", text:"Machines read the genetic 'code' inside cells to find the exact change that's causing a disease." },{ icon:"🎯", text:"For cancer, that can tell doctors which medicine will work best for that exact tumor." },{ icon:"🚀", text:"It's some of the newest, fastest-growing science in the entire hospital." }] },
+    cards:[{ icon:"🧬", text:"Remember COVID PCR tests? That's molecular science - reading tiny bits of DNA and RNA." },{ icon:"🔬", text:"Machines read the genetic 'code' inside cells to find the exact change that's causing a disease." },{ icon:"🎯", text:"For cancer, that can tell doctors which medicine will work best for that exact tumor." },{ icon:"🚀", text:"It's some of the newest, fastest-growing science in the entire hospital." }] },
 
   { id:"core", title:"Core Lab", subtitle:"Chemistry, Hematology, Coagulation, Urinalysis", roomId:"core_lab",
-    cards:[{ icon:"🩸", text:"Ever had a blood test that checked your cholesterol or blood sugar? That happens right here." },{ icon:"🏎️", text:"A conveyor belt zips thousands of tubes to machines. It's the busiest room in the lab — and it never closes." },{ icon:"🔢", text:"It counts your blood cells, checks your body's chemistry, times how fast your blood clots, and tests urine." },{ icon:"⏱️", text:"Results come out fast because doctors use them to make decisions minute by minute." }] },
+    cards:[{ icon:"🩸", text:"Ever had a blood test that checked your cholesterol or blood sugar? That happens right here." },{ icon:"🏎️", text:"A conveyor belt zips thousands of tubes to machines. It's the busiest room in the lab - and it never closes." },{ icon:"🔢", text:"It counts your blood cells, checks your body's chemistry, times how fast your blood clots, and tests urine." },{ icon:"⏱️", text:"Results come out fast because doctors use them to make decisions minute by minute." }] },
 
   { id:"bloodbank", title:"Blood Bank & Transfusion", subtitle:"Keeping transfusions safe", roomId:"bb",
-    cards:[{ icon:"🩸", text:"Do you know your blood type? In the Blood Bank you can actually find out — last year's students loved this part." },{ icon:"🧪", text:"They type and match donated blood so it's safe to give to a patient." },{ icon:"✅", text:"Every unit is double-checked before a transfusion — giving the wrong type can be dangerous." },{ icon:"❤️", text:"When someone's in a serious accident, this is the team that helps keep them alive." }] },
+    cards:[{ icon:"🩸", text:"Do you know your blood type? In the Blood Bank you can actually find out - last year's students loved this part." },{ icon:"🧪", text:"They type and match donated blood so it's safe to give to a patient." },{ icon:"✅", text:"Every unit is double-checked before a transfusion - giving the wrong type can be dangerous." },{ icon:"❤️", text:"When someone's in a serious accident, this is the team that helps keep them alive." }] },
 
   { id:"quality", title:"Quality", subtitle:"Making sure every result is right", roomId:"quality",
     cards:[{ icon:"🤔", text:"What if a machine was a little off and your test result came back wrong? That could change someone's treatment." },{ icon:"✅", text:"The Quality team makes sure every machine is accurate and every result can be trusted." },{ icon:"📋", text:"They run control samples, follow strict safety rules, and keep the lab officially accredited." },{ icon:"🛡️", text:"Think of them as the lab's promise: you can believe the number." }] },
 
   { id:"informatics", title:"Pathology Informatics", subtitle:"The technology behind the lab", roomId:"chair",
-    cards:[{ icon:"📱", text:"Every result has to travel from a machine all the way to your doctor's screen — safely. That's informatics." },{ icon:"💻", text:"This team builds and runs the computer systems that move every order, result, and image around the hospital." },{ icon:"🔒", text:"They keep your data accurate and private — it's your health information, after all." },{ icon:"🙌", text:"Love science AND technology? This is where they meet. And don't worry, you don't have to be a coder to work in a lab." }] }
+    cards:[{ icon:"📱", text:"Every result has to travel from a machine all the way to your doctor's screen - safely. That's informatics." },{ icon:"💻", text:"This team builds and runs the computer systems that move every order, result, and image around the hospital." },{ icon:"🔒", text:"They keep your data accurate and private - it's your health information, after all." },{ icon:"🙌", text:"Love science AND technology? This is where they meet. And don't worry, you don't have to be a coder to work in a lab." }] }
 ];
 
 // ============================================================================
@@ -1115,7 +1115,7 @@ function buildFloors(rooms) {
     mesh.userData = { roomId: room.id, dept: room.dept };
     group.add(mesh);
 
-    // Thin dark perimeter line at the floor edge — gives each room a crisp boundary
+    // Thin dark perimeter line at the floor edge - gives each room a crisp boundary
     // without needing 3D walls. Built as 4 thin boxes around the rectangle.
     if (room.dept !== 'corridor') {
       const edgeMat = new THREE.MeshStandardMaterial({
@@ -1142,7 +1142,7 @@ function buildFloors(rooms) {
     }
   });
 
-  // Nested rooms (e.g. Coagulation inside Blood Bank) — drawn slightly higher
+  // Nested rooms (e.g. Coagulation inside Blood Bank) - drawn slightly higher
   rooms.forEach(room => {
     if (!room.nested) return;
     const palette = DEPT_COLORS[room.dept] || DEPT_COLORS.corridor;
@@ -1387,7 +1387,7 @@ function addFurniture(group, rooms) {
       box(cx, 0.45, room.z1 + 0.8, w * 0.7, 0.90, 0.6, M.bench);
     }
     else if (room.id === 'special') {
-      // Special heme — flow cytometer + workbench
+      // Special heme - flow cytometer + workbench
       box(cx, 0.55, cz, 1.4, 1.10, 1.0, M.equip);    // flow cytometer
       box(cx + 0.10, 1.16, cz - 0.20, 0.50, 0.06, 0.30, M.monitor);
       box(cx, 0.45, room.z2 - 0.7, w * 0.7, 0.90, 0.6, M.bench);
@@ -1462,7 +1462,7 @@ function addFurniture(group, rooms) {
 }
 
 // ============================================================================
-//  BECKMAN COULTER AUTOMATION LINE — built inside the Core Lab room
+//  BECKMAN COULTER AUTOMATION LINE - built inside the Core Lab room
 //  17 modules + conveyor track, color-coded by analyzer family.
 // ============================================================================
 function buildCoreLabInstruments(parent) {
@@ -1537,7 +1537,7 @@ function buildCoreLabInstruments(parent) {
     storage:  0x4a5366,
   };
 
-  // Layout — spread across the now-taller Core Lab.
+  // Layout - spread across the now-taller Core Lab.
   // sides: 'L' = lower x, 'R' = higher x (room is x=-36 to -28, conveyor at x=-32)
   const layout = [
     // Pre-analytics (north end)
@@ -1658,7 +1658,7 @@ wallsGroup.scale.y = 0.56;            // ~3.2m -> ~1.8m (dollhouse height)
 building.add(wallsGroup);
 
 // ============================================================================
-//  DETAILED LAB INSTRUMENTS — recognizable equipment built from primitives,
+//  DETAILED LAB INSTRUMENTS - recognizable equipment built from primitives,
 //  placed per section. Replaces the old bland box furniture.
 // ============================================================================
 function addDetailedInstruments(rooms){
@@ -1799,7 +1799,7 @@ function addAnimatedProps(rooms){
   });
   return group;
 }
-// (accent rings removed — real instruments now fill each room)
+// (accent rings removed - real instruments now fill each room)
 // building.add(addAnimatedProps(ROOMS));
 
 // ---- Optional REAL 3D models: drop .glb/.gltf files in assets/models/ and list
@@ -1840,7 +1840,7 @@ let orbitMode = false;
 let orbitT = 0;
 let cameraTransition = null;
 
-// Tour orbit — slow 360° rotation around the focus point of the current tour stop.
+// Tour orbit - slow 360° rotation around the focus point of the current tour stop.
 // Activates automatically after focusOnRoom's fly-in transition completes.
 let tourOrbit        = false;
 let tourOrbitPending = false;
@@ -1891,7 +1891,7 @@ function aerialOverview() {
 
 function focusOnRoom(room, focusPoint, focusZoom) {
   // focusPoint is optional {x, z} to override the default room-center focus.
-  // focusZoom is optional — directly sets `dim` (smaller = tighter zoom).
+  // focusZoom is optional - directly sets `dim` (smaller = tighter zoom).
   const cx = (focusPoint && typeof focusPoint.x === 'number') ? focusPoint.x : (room.x1 + room.x2) / 2;
   const cz = (focusPoint && typeof focusPoint.z === 'number') ? focusPoint.z : (room.z1 + room.z2) / 2;
   const w  = room.x2 - room.x1;
@@ -1902,11 +1902,11 @@ function focusOnRoom(room, focusPoint, focusZoom) {
   } else if (focusPoint) {
     dim = Math.max(w, d) * 0.35;
   } else {
-    // Tighter default zoom — was Math.max(w, d), now ~60% of room's max dim.
+    // Tighter default zoom - was Math.max(w, d), now ~60% of room's max dim.
     dim = Math.max(w, d) * 0.65;
   }
 
-  // Closer camera, lower height — more cinematic and easier to recognize the room.
+  // Closer camera, lower height - more cinematic and easier to recognize the room.
   const distance = dim * 1.25 + 6;
   const height   = dim * 0.55 + 5;
 
@@ -2043,7 +2043,7 @@ function buildSidebar() {
       '</div>';
     card.addEventListener('click', () => {
       // In passive mode (attendees, hosts, facilitators other than presenter),
-      // sidebar clicks are blocked — only the presenter advances the tour.
+      // sidebar clicks are blocked - only the presenter advances the tour.
       if (window.__tourPassive) {
         flashPassiveLockHint();
         return;
@@ -2100,7 +2100,7 @@ function flashPassiveLockHint() {
     hint = document.createElement('div');
     hint.id = 'passive-hint';
     hint.className = 'passive-hint';
-    hint.textContent = (window.__tourPresenter || 'The presenter') + ' is guiding the tour — sit back and follow along';
+    hint.textContent = (window.__tourPresenter || 'The presenter') + ' is guiding the tour - sit back and follow along';
     document.body.appendChild(hint);
   }
   hint.classList.add('show');
@@ -2122,7 +2122,7 @@ window.addEventListener('message', (e) => {
 });
 
 // ============================================================================
-//  TOUR PANEL — slide-in educational content from the right
+//  TOUR PANEL - slide-in educational content from the right
 // ============================================================================
 let currentStopIdx = -1;
 const visitedStops = new Set();
@@ -2228,7 +2228,7 @@ function openTourPanel(stop, idx) {
 function closeTourPanel() {
   document.getElementById('tour-panel').classList.remove('show');
   document.getElementById('tour-panel').setAttribute('aria-hidden', 'true');
-  // Don't change camera or selection — user can return to overview separately
+  // Don't change camera or selection - user can return to overview separately
 }
 
 function nextStop() {
@@ -2393,7 +2393,7 @@ function animate() {
     camera.lookAt(lookAt);
     if (tt >= 1) {
       cameraTransition = null;
-      // Fly-in finished — start the slow 360° tour orbit if one was queued.
+      // Fly-in finished - start the slow 360° tour orbit if one was queued.
       if (tourOrbitPending) {
         tourOrbit = true;
         tourOrbitPending = false;
@@ -2404,7 +2404,7 @@ function animate() {
   } else if (orbitMode) {
     updateOrbit(dt);
   } else if (tourOrbit && tourOrbitCenter) {
-    // Slow continuous orbit around the focused area — gives a sense of the
+    // Slow continuous orbit around the focused area - gives a sense of the
     // station's full layout without the user touching anything.
     tourOrbitT += dt * 0.18;  // ~35 sec per full revolution
     const cx = tourOrbitCenter.x;
@@ -2462,7 +2462,7 @@ buildSidebar();
 animate();
 setTimeout(() => document.getElementById('loading').classList.add('hidden'), 350);
 // Auto-launch Stop 1 after a brief delay so the user lands directly in the
-// guided tour experience — camera flies to Accessioning, side panel opens with
+// guided tour experience - camera flies to Accessioning, side panel opens with
 // educational content. Without this, the page just shows an aerial floor plan
 // and the tour stays hidden behind interaction.
 setTimeout(() => { selectTourStop(0); }, 1100);
@@ -2514,7 +2514,7 @@ setTimeout(() => { selectTourStop(0); }, 1100);
   <div class="hs-card">
     <form id="hs-form" novalidate>
       <h2>Tell us what you think</h2>
-      <p class="sub">A few quick questions — it helps us make this better. Thanks!</p>
+      <p class="sub">A few quick questions - it helps us make this better. Thanks!</p>
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none">
       <input type="hidden" name="_subject" value="New Lab Tour feedback 🎉">
       <input type="hidden" name="_template" value="table">
@@ -2551,7 +2551,7 @@ setTimeout(() => { selectTourStop(0); }, 1100);
     fetch('https://formsubmit.co/ajax/omar.z.baba@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
       .then(function(r){return r.json();})
       .then(function(){form.style.display='none';modal.querySelector('.hs-thanks').hidden=false;})
-      .catch(function(){status.textContent='Could not send — please check your connection and try again.';});
+      .catch(function(){status.textContent='Could not send - please check your connection and try again.';});
   });
 })();
 </script>
@@ -2639,7 +2639,7 @@ body{background:#eef3fa!important;color:#13233d!important}
   <div class="hw-card">
     <div class="hw-brand"><img class="hw-logo" src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences"><div class="hw-dept">Pathology &amp; Laboratory Medicine</div></div>
     <h1>Welcome to your <em>week in the lab</em></h1>
-    <p>You're here for the Medical Laboratory Science Summer Immersion — a week shadowing the scientists who run one of the largest hospital labs in the country. This quick tour previews each section you'll rotate through, so you know what you're looking at before you walk in.</p>
+    <p>You're here for the Medical Laboratory Science Summer Immersion - a week shadowing the scientists who run one of the largest hospital labs in the country. This quick tour previews each section you'll rotate through, so you know what you're looking at before you walk in.</p>
     <div class="hw-actions">
       <button class="hw-btn primary" id="hw-start">▶ Start the guided walkthrough</button>
       <button class="hw-btn ghost" id="hw-explore">Explore on my own</button>

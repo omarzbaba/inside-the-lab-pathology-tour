@@ -1,0 +1,104 @@
+{
+ "core": [
+  {
+   "file": "core/01.jpg",
+   "caption": "Chemistry & immunoassay analyzers"
+  },
+  {
+   "file": "core/02.jpg",
+   "caption": "DxU 850m hematology / urinalysis line"
+  },
+  {
+   "file": "core/03.jpg",
+   "caption": "Routine chemistry analyzers"
+  },
+  {
+   "file": "core/04.jpg",
+   "caption": "Chemistry analyzer"
+  }
+ ],
+ "molec": [
+  {
+   "file": "molec/01.jpg",
+   "caption": "Illumina sequencers"
+  },
+  {
+   "file": "molec/02.jpg",
+   "caption": "Genetic analyzer"
+  },
+  {
+   "file": "molec/03.jpg",
+   "caption": "Molecular workbench"
+  },
+  {
+   "file": "molec/04.jpg",
+   "caption": "Illumina MiSeqDx sequencers"
+  }
+ ],
+ "cyto": [
+  {
+   "file": "cyto/01.jpg",
+   "caption": "Specimen prep sink"
+  },
+  {
+   "file": "cyto/02.jpg",
+   "caption": "Cytology prep bench & hood"
+  }
+ ],
+ "bloodbank": [
+  {
+   "file": "bloodbank/01.jpg",
+   "caption": "Immucor NEO Iris blood-typing analyzer"
+  },
+  {
+   "file": "bloodbank/02.jpg",
+   "caption": "Immucor NEO Iris (close-up)"
+  },
+  {
+   "file": "bloodbank/03.jpg",
+   "caption": "Helmer blood & plasma storage"
+  }
+ ],
+ "surgpath": [
+  {
+   "file": "surgpath/01.jpg",
+   "caption": "Grossing station"
+  },
+  {
+   "file": "surgpath/02.jpg",
+   "caption": "Tissue processors"
+  },
+  {
+   "file": "surgpath/03.jpg",
+   "caption": "Microtome"
+  },
+  {
+   "file": "surgpath/04.jpg",
+   "caption": "Histology processors"
+  },
+  {
+   "file": "surgpath/05.jpg",
+   "caption": "Wax bath / glassware cleaner"
+  },
+  {
+   "file": "surgpath/06.jpg",
+   "caption": "Automated stainer & cover-slipper"
+  },
+  {
+   "file": "surgpath/07.jpg",
+   "caption": "Leica Aperio GT 450 slide scanner"
+  },
+  {
+   "file": "surgpath/08.jpg",
+   "caption": "Freshly stained slides"
+  },
+  {
+   "file": "surgpath/09.jpg",
+   "caption": "Slide archive (file room)"
+  },
+  {
+   "file": "surgpath/10.jpg",
+   "caption": "Slide archive (file room)"
+  }
+ ]
+}
