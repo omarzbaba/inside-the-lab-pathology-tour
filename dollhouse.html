@@ -73,6 +73,8 @@
   .dw-gallery .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
   .dw-gallery .thumb:hover img{transform:scale(1.07)}
   .dw-note{font-size:11.5px;color:var(--dim);margin-top:7px}
+  .dw-cta{display:inline-block;margin:12px 0 2px;font:600 14px system-ui;color:#fff;background:var(--hf);padding:11px 18px;border-radius:999px;text-decoration:none;box-shadow:0 8px 20px rgba(0,103,160,.3)}
+  .dw-cta:hover{background:#005688}
   #lightbox{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;background:rgba(6,12,24,.93);padding:30px}
   #lightbox.open{display:flex}
   #lb-img{max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
@@ -441,6 +443,7 @@ function renderDrawer(){
     '<div class="dw-eyebrow">Stop '+idx+' of 10 · <span class="dw-badge">'+badge+'</span></div>'+
     '<h2 class="dw-title">'+s.title+'</h2>'+
     '<p class="dw-sub">'+s.sub+'</p>'+
+    (s.id==='core'?'<a class="dw-cta" href="core-lab.html">▶ Walk the automation line</a>':'')+
     block('What it is','<p>'+s.intro+'</p>')+
     '<div class="dw-callout"><span class="ic">💡</span><div><b>Think of it like…</b><p>'+s.everyday+'</p></div></div>'+
     block("What you'll see",list(s.see))+

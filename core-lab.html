@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Core Lab Automation Line · Henry Ford Pathology</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root{ --hf:#0067a0; --ink:#13233d; --dim:#5a6b88; --line:rgba(14,34,66,.12); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:var(--ink);background:#dfe8f4}
+  header{position:fixed;inset:0 0 auto 0;display:flex;align-items:center;gap:13px;padding:10px 16px;z-index:6;
+    background:linear-gradient(180deg,rgba(255,255,255,.97),rgba(255,255,255,0));pointer-events:none}
+  header img{height:32px}
+  header .t b{display:block;font:600 13px system-ui;color:var(--hf)}
+  header .t span{font-size:11px;color:var(--dim)}
+  header .back{margin-left:auto;pointer-events:auto;font:600 12px system-ui;color:var(--hf);text-decoration:none;
+    background:#fff;border:1px solid var(--line);padding:8px 13px;border-radius:999px}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block}
+  /* current-station caption */
+  #cap{position:fixed;left:18px;bottom:84px;z-index:4;max-width:min(420px,82%);
+    background:rgba(255,255,255,.93);backdrop-filter:blur(7px);border-radius:14px;padding:13px 17px;box-shadow:0 10px 28px rgba(10,24,52,.18)}
+  #cap .ey{font:600 11px system-ui;letter-spacing:.14em;text-transform:uppercase;color:var(--hf)}
+  #cap h1{font:600 23px Georgia,serif;color:var(--ink);line-height:1.06;margin:3px 0}
+  #cap p{font-size:14px;color:#33425c;line-height:1.5}
+  #cap .rate{display:inline-block;margin-top:8px;font:600 12px system-ui;color:#fff;background:var(--hf);padding:4px 11px;border-radius:999px}
+  /* controls */
+  #bar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;gap:10px;justify-content:center;
+    padding:13px 18px;background:rgba(255,255,255,.92);border-top:1px solid var(--line)}
+  .nbtn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:#f3f8fd;color:var(--ink);font-size:18px;cursor:pointer}
+  .nbtn:hover{background:#e6eff8}
+  #prog{font:600 13px system-ui;color:var(--hf);min-width:96px;text-align:center}
+  #hint{position:fixed;left:50%;top:64px;transform:translateX(-50%);z-index:4;color:var(--dim);font:600 12px system-ui;opacity:.85;transition:opacity .5s}
+  #loading{position:fixed;inset:0;z-index:9;display:flex;align-items:center;justify-content:center;background:#dfe8f4;color:var(--hf);font:600 14px system-ui;transition:opacity .5s}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<header>
+  <img src="assets/brand/hfh-logo.png" alt="Henry Ford Health + Michigan State University Health Sciences" />
+  <div class="t"><b>Core Lab - Automation Line</b><span>Chemistry · Hematology · Coagulation · Immunoassay</span></div>
+  <a class="back" href="dollhouse.html">← Back to the tour</a>
+</header>
+<div id="hint">Riding the line - drag to look around</div>
+<div id="cap"><div class="ey">Station <span id="cap-n">1</span> of <span id="cap-t">12</span></div><h1 id="cap-name"></h1><p id="cap-sub"></p><span class="rate" id="cap-rate"></span></div>
+<div id="bar">
+  <button class="nbtn" id="play" aria-label="Play or pause">⏸</button>
+  <button class="nbtn" id="prev" aria-label="Previous">←</button>
+  <div id="prog">1 / 12</div>
+  <button class="nbtn" id="next" aria-label="Next">→</button>
+</div>
+<div id="loading">Building the automation line…</div>
+<script>
+// ---------- the line, in the diagram's order ----------
+const STATIONS = [
+  { name:'Dynamic Inlet',         sub:"Where tubes enter the line - they're scanned and sent on.", rate:'103 tubes / 5 min', kind:'inlet',   accent:0x3bba6a },
+  { name:'Centrifuges',           sub:'Spin tubes fast to separate serum and plasma from cells.',  rate:'180 tubes / 10 min', kind:'centrifuge', accent:0x2f6fed },
+  { name:'Aliquoter',             sub:'Splits each sample into smaller child tubes for testing.',   rate:'50 tubes / 5 min', kind:'small',   accent:0x2f6fed },
+  { name:'Decapper',              sub:'Pops the caps off tubes so analyzers can sample them.',      rate:'', kind:'small', accent:0x8a93a6 },
+  { name:'Coagulation (STAGO)',   sub:'Measures how fast blood clots.',                             rate:'16 tubes / 5 min', kind:'analyzer', accent:0xc0392b },
+  { name:'Hematology (DxH)',      sub:'Counts red cells, white cells, and platelets (the CBC).',    rate:'62 tubes / 5 min', kind:'analyzer', accent:0x2f6fed },
+  { name:'Immunoassay 1 (DxI)',   sub:'Measures hormones, vitamins, cardiac and tumor markers.',    rate:'', kind:'analyzer', accent:0x6b3acc },
+  { name:'Immunoassay 2 (DxI)',   sub:'A second immunoassay analyzer for high volume.',             rate:'45 tubes / 5 min', kind:'analyzer', accent:0x6b3acc },
+  { name:'Chemistry (AU 1 & 2)',  sub:'Runs metabolic panels: glucose, kidney, liver, lipids.',     rate:'200 tubes / 5 min', kind:'analyzerBig', accent:0x0067a0 },
+  { name:'Cobas / Outlet',        sub:'Added-on chemistry tests, then tubes exit the line.',        rate:'25 tubes / 5 min', kind:'analyzer', accent:0x0067a0 },
+  { name:'Recapper',              sub:'Re-caps finished tubes so they can be safely stored.',       rate:'', kind:'small', accent:0xea8b1e },
+  { name:'Stockyards 1-4',        sub:'Refrigerated robotic storage - holds tubes for re-testing.', rate:'', kind:'stockyard', accent:0x2f6fed },
+];
+const SPACING = 2.6, X = i => i*SPACING, LEN = (STATIONS.length-1)*SPACING;
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled = true; renderer.outputEncoding = THREE.sRGBEncoding;
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xccd7e8);
+const camera = new THREE.PerspectiveCamera(50, innerWidth/innerHeight, 0.1, 200);
+
+scene.add(new THREE.AmbientLight(0xffffff,0.42));
+scene.add(new THREE.HemisphereLight(0xffffff,0xc6d2e4,0.34));
+const sun = new THREE.DirectionalLight(0xffffff,1.0); sun.position.set(LEN*0.4,22,14); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.near=1; sun.shadow.camera.far=120;
+sun.shadow.camera.left=-LEN; sun.shadow.camera.right=LEN; sun.shadow.camera.top=30; sun.shadow.camera.bottom=-30;
+scene.add(sun);
+
+const M = {
+  white:  new THREE.MeshStandardMaterial({color:0xeef1f6, roughness:0.55}),
+  light:  new THREE.MeshStandardMaterial({color:0xdde4ee, roughness:0.6}),
+  grey:   new THREE.MeshStandardMaterial({color:0xaab4c2, roughness:0.5}),
+  steel:  new THREE.MeshStandardMaterial({color:0xb4bac4, roughness:0.3, metalness:0.8}),
+  dark:   new THREE.MeshStandardMaterial({color:0x2a3340, roughness:0.5}),
+  glass:  new THREE.MeshStandardMaterial({color:0xbfe0ff, roughness:0.08, transparent:true, opacity:0.3}),
+  floor:  new THREE.MeshStandardMaterial({color:0xcfd8e6, roughness:0.7}),
+};
+const box=(g,x,y,z,w,h,d,m)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;g.add(o);return o;};
+const cyl=(g,x,y,z,r,h,m,s)=>{const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,s||20),m);o.position.set(x,y,z);o.castShadow=true;g.add(o);return o;};
+function accentMat(c){ return new THREE.MeshStandardMaterial({color:c, roughness:0.45}); }
+function screenMat(){ return new THREE.MeshStandardMaterial({color:0x0a1830, emissive:0x2f6fed, emissiveIntensity:0.85, roughness:0.3}); }
+
+// floor + low back wall
+const root = new THREE.Group(); scene.add(root);
+box(root, LEN/2, -0.05, 0, LEN+8, 0.1, 9, M.floor);
+box(root, LEN/2, 1.4, -2.6, LEN+8, 2.8, 0.12, M.light);
+
+// conveyor spine (in front of the modules, z = +0.7)
+const CZ = 0.7;
+box(root, LEN/2, 0.84, CZ, LEN+2.2, 0.12, 0.46, M.steel);   // belt deck
+box(root, LEN/2, 0.78, CZ+0.26, LEN+2.2, 0.22, 0.04, M.dark); // front rail
+box(root, LEN/2, 0.78, CZ-0.26, LEN+2.2, 0.22, 0.04, M.dark); // back rail
+box(root, LEN/2, 0.95, CZ, LEN+2.2, 0.10, 0.30, M.glass);     // tube channel cover
+
+const screenMats=[];
+function numberSprite(n){
+  const c=document.createElement('canvas'); c.width=c.height=128; const x=c.getContext('2d');
+  x.beginPath(); x.arc(64,64,54,0,7); x.fillStyle='#0067a0'; x.fill();
+  x.lineWidth=8; x.strokeStyle='#fff'; x.stroke();
+  x.fillStyle='#fff'; x.font='bold 68px system-ui'; x.textAlign='center'; x.textBaseline='middle'; x.fillText(String(n),64,70);
+  const t=new THREE.CanvasTexture(c);
+  const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t, depthTest:false, transparent:true}));
+  s.scale.set(0.95,0.95,0.95); return s;
+}
+
+const numberSprites=[];
+function buildStation(st, i){
+  const g=new THREE.Group(); root.add(g);
+  const x=X(i), z=-0.3, ac=accentMat(st.accent);
+  if(st.kind==='inlet'){
+    box(g,x,0.5,z,1.5,1.0,1.4,M.white); box(g,x,1.05,z,1.6,0.12,1.5,ac);
+    box(g,x-0.2,1.25,z+0.5,0.9,0.4,0.5,M.grey);   // angled input tray
+    box(g,x+0.55,1.2,z-0.2,0.5,0.7,0.4,M.white); box(g,x+0.55,1.35,z-0.42,0.4,0.3,0.02,screenMatPush());
+  } else if(st.kind==='centrifuge'){
+    box(g,x,0.55,z,1.5,1.1,1.4,M.white); cyl(g,x-0.3,1.2,z,0.34,0.18,M.grey,24); cyl(g,x-0.3,1.32,z,0.3,0.06,M.glass,24);
+    cyl(g,x+0.35,1.2,z,0.34,0.18,M.grey,24); cyl(g,x+0.35,1.32,z,0.3,0.06,M.glass,24);
+    box(g,x,1.15,z-0.6,0.5,0.3,0.02,screenMatPush());
+  } else if(st.kind==='small'){
+    box(g,x,0.45,z,1.0,0.9,1.2,M.white); box(g,x,0.94,z,1.06,0.08,1.26,ac);
+    cyl(g,x,1.2,z,0.04,0.5,M.steel,10); box(g,x,1.45,z+0.1,0.4,0.12,0.3,M.dark); // little robotic arm
+  } else if(st.kind==='stockyard'){
+    box(g,x,1.1,z-0.1,1.6,2.2,1.5,M.white); box(g,x,1.1,z+0.62,1.4,2.0,0.04,M.glass);
+    box(g,x,2.0,z+0.65,0.5,0.3,0.02,screenMatPush()); box(g,x,2.25,z,1.62,0.12,1.5,ac);
+  } else { // analyzer / analyzerBig
+    const w = st.kind==='analyzerBig' ? 2.4 : 1.7;
+    box(g,x,0.45,z,w,0.9,1.4,M.white);              // lower cabinet
+    box(g,x,1.3,z,w,0.8,1.5,M.white);               // upper body
+    box(g,x,1.78,z,w+0.04,0.14,1.54,ac);            // accent stripe near top
+    box(g,x-w*0.2,1.4,z+0.76,w*0.5,0.42,0.03,screenMatPush()); // touchscreen (faces +z)
+    for(let k=0;k<3;k++) box(g,x+w*0.18+k*0.16,1.66,z+0.76,0.06,0.06,0.02,
+      accentMat([0x2ee06a,0xffb020,0xc0392b][k]));  // status LEDs
+  }
+  const spr=numberSprite(i+1); spr.position.set(x, st.kind==='stockyard'?2.9:2.5, 0.1); root.add(spr); numberSprites.push(spr);
+  return g;
+}
+function screenMatPush(){ const m=screenMat(); screenMats.push(m); return m; }
+STATIONS.forEach(buildStation);
+
+// sample tubes riding the belt
+const tubeCap=[0xc0392b,0x6b3acc,0x2f6fed,0x3bba6a,0xffb020];
+const tubes=[];
+for(let i=0;i<14;i++){
+  const g=new THREE.Group();
+  cyl(g,0,0,0,0.05,0.22,new THREE.MeshStandardMaterial({color:0xdfe9f3,roughness:0.2,transparent:true,opacity:0.85}),12);
+  cyl(g,0,0.14,0,0.052,0.06,accentMat(tubeCap[i%tubeCap.length]),12);
+  g.position.set(-1 + i*(LEN+2)/14, 1.06, CZ);
+  root.add(g); tubes.push(g);
+}
+
+// ---------- camera fly-through ----------
+let cur=0, autoplay=true, timer=null;
+const camPos = new THREE.Vector3(X(0)-2, 2.2, 5.6);
+const lookAt = new THREE.Vector3(X(0)+1.5, 1.0, 0);
+let userYaw=0, dragging=false, lastX=0;
+function targetFor(i){ return { pos:new THREE.Vector3(X(i)-3.0, 2.5, 7.3), look:new THREE.Vector3(X(i)+0.4, 1.2, -0.1) }; }
+let tPos = targetFor(0).pos.clone(), tLook = targetFor(0).look.clone();
+
+function setStation(i){
+  cur=(i+STATIONS.length)%STATIONS.length; const st=STATIONS[cur];
+  const t=targetFor(cur); tPos.copy(t.pos); tLook.copy(t.look);
+  document.getElementById('cap-n').textContent=cur+1;
+  document.getElementById('cap-t').textContent=STATIONS.length;
+  document.getElementById('cap-name').textContent=st.name;
+  document.getElementById('cap-sub').textContent=st.sub;
+  const r=document.getElementById('cap-rate'); r.textContent=st.rate; r.style.display=st.rate?'inline-block':'none';
+  document.getElementById('prog').textContent=(cur+1)+' / '+STATIONS.length;
+  numberSprites.forEach((s,k)=>s.scale.setScalar(k===cur?1.5:0.95));
+  schedule();
+}
+function schedule(){ clearTimeout(timer); if(autoplay) timer=setTimeout(()=>setStation(cur+1), 4200); }
+const playBtn=document.getElementById('play');
+playBtn.onclick=()=>{ autoplay=!autoplay; playBtn.textContent=autoplay?'⏸':'▶'; if(autoplay) schedule(); else clearTimeout(timer); };
+document.getElementById('next').onclick=()=>setStation(cur+1);
+document.getElementById('prev').onclick=()=>setStation(cur-1);
+
+canvas.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId);});
+canvas.addEventListener('pointermove',e=>{ if(dragging){ userYaw+=(e.clientX-lastX)*0.005; userYaw=Math.max(-0.9,Math.min(0.9,userYaw)); lastX=e.clientX; }});
+canvas.addEventListener('pointerup',()=>dragging=false);
+canvas.addEventListener('pointercancel',()=>dragging=false);
+
+function resize(){ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); }
+addEventListener('resize',resize); resize();
+
+let started=false;
+function animate(){
+  requestAnimationFrame(animate);
+  // ease the camera toward the current station
+  camPos.lerp(tPos,0.045); lookAt.lerp(tLook,0.045);
+  if(!dragging) userYaw*=0.95;
+  const off=camPos.clone().sub(lookAt); off.applyAxisAngle(new THREE.Vector3(0,1,0), userYaw);
+  camera.position.copy(lookAt.clone().add(off)); camera.lookAt(lookAt);
+  // belt motion
+  const t=performance.now()*0.001;
+  tubes.forEach((tb,i)=>{ tb.position.x += 0.018; if(tb.position.x> X(STATIONS.length-1)+1.5) tb.position.x=-1.5; });
+  const pulse=0.6+(Math.sin(t*2.2)*0.5+0.5)*0.5; screenMats.forEach(m=>m.emissiveIntensity=pulse);
+  renderer.render(scene,camera);
+  if(!started){ started=true; const l=document.getElementById('loading'); l.style.opacity=0; setTimeout(()=>l.remove(),520);
+    const h=document.getElementById('hint'); setTimeout(()=>h.style.opacity=0,4200); }
+}
+setStation(0); animate();
+</script>
+</body>
+</html>
