@@ -16,9 +16,6 @@ SAFE = {
     ("LSS 3.jpg", "Cooler receipt area"),
     ("LSS 4.jpg", "Specimen triage / defects desk"),
     ("Accessioning 1.jpg", "Accessioning workstation"),
-    ("Accessioning 2.jpg", "Accessioning bench"),
-    ("Accessioning 3.jpg", "Sample check-in"),
-    ("Accessioning 4.jpg", "Accessioning area"),
   ],
   "core": [
     ("Core 1.jpg", "Chemistry & immunoassay analyzers"),

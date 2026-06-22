@@ -16,13 +16,13 @@
   "lss": {
    "title": "Lab Support Services",
    "blurb": "Where every sample arrives",
-   "panorama": "lss.jpg",
+   "panorama": "",
    "hotSpots": []
   },
   "lcs": {
    "title": "Lab Customer Service",
    "blurb": "The voice of the lab",
-   "panorama": "lcs.jpg",
+   "panorama": "",
    "hotSpots": []
   },
   "surgpath": {

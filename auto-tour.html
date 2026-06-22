@@ -39,7 +39,7 @@
   <div class="t"><b>Auto-Rotating 3D Lab Tour</b><span>Pathology &amp; Laboratory Medicine</span></div>
   <a class="back" href="pano.html">Manual 360° viewer →</a>
 </header>
-<div id="label"><b>Lab Support Services</b><span>Where every sample arrives - the room turns around you</span></div>
+<div id="label"><b>Core Lab</b><span>The automated line - the room turns around you</span></div>
 <div class="ctrls">
   <button id="spin" class="on">⟳ Auto-rotate: on</button>
 </div>
@@ -56,7 +56,7 @@
   // Sphere with the panorama mapped onto the INSIDE (flip on X to face inward).
   const geo = new THREE.SphereGeometry(500, 64, 48);
   geo.scale(-1, 1, 1);
-  const tex = new THREE.TextureLoader().load('assets/pano/lss.jpg', () => {
+  const tex = new THREE.TextureLoader().load('assets/pano/core.jpg', () => {
     const l = document.getElementById('loading'); l.style.opacity = 0; setTimeout(()=>l.remove(), 520);
     const h = document.getElementById('hint'); h.style.opacity = .85; setTimeout(()=>h.style.opacity=0, 3200);
   });
